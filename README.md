@@ -42,7 +42,7 @@ System mail is delivered to an alias mapped to a virtual user served by the serv
 e.g. puffy@mercury.example.com is wheel with an alias mapped to (virtual) puffy@example.com and user (puffy) can be different for each.
 
 ## Getting started
-Install the needed packages:
+Install packages:
 ```sh
 pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras
 ```
