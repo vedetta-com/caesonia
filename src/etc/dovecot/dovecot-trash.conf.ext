@@ -1,0 +1,8 @@
+# Spam mailbox is emptied before Trash
+1 Spam
+# Trash mailbox is emptied before Sent
+2 Trash
+# If both Sent and "Sent Messages" mailboxes exist, the next oldest message
+# to be deleted is looked up from both of the mailboxes.
+3 Sent
+3 Sent Messages

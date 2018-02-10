@@ -1,0 +1,7 @@
+-inet
+-inet6
+dhcp
+inet6 -autoconfprivacy
+inet6 autoconf # slaac
+#inet6 2606:2800:220:1:248:1893:25c8:1946 64 # fix
+#inet6 alias 2001:1002:2:1::face 64 # prefixlen 56 for gateways on different network

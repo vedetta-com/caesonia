@@ -1,0 +1,5 @@
+check_quotas=NO
+httpd_flags=
+pkg_scripts=dkimproxy_out rspamd dovecot
+sndiod_flags=NO
+syslogd_flags="${syslogd_flags}"

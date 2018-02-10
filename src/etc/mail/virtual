@@ -1,0 +1,18 @@
+# Virtual aliases for all virtual domains
+#
+# RFC 2142: NETWORK OPERATIONS MAILBOX NAMES
+abuse				postmaster
+security			postmaster
+# RFC 2142: SUPPORT MAILBOX NAMES FOR SPECIFIC INTERNET SERVICES
+hostmaster			postmaster
+webmaster			postmaster
+dmarcreports			postmaster
+postmaster			puffy@example.com
+
+# Virtual aliases for example.net
+#
+puffy@example.net		puffy@example.com
+
+# Virtual users are mapped to system user "vmail"
+#
+puffy@example.com		vmail
