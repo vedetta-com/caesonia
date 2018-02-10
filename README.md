@@ -99,6 +99,8 @@ DKIM selector: obsd
 
 Permissions are described in [usr/local/bin/hier.sh](src/usr/local/bin/hier.sh)
 
+Ansible: [ansible-role-mailserver](https://github.com/gonzalo-/ansible-role-mailserver/)
+
 ## Prerequisites
 A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows edditing the following record types: A, AAAA, MX, CAA, TXT, SSHFP, (SPF)
 
@@ -182,8 +184,14 @@ obsd._domainkey.example.com.	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
 
 ```
 
+### Domain-based Message Authentication, Reporting & Conformance (DMARC)
+Each domain name needs a TXT record for subdomain "_dmarc" with DMARC data:
+```
+_dmarc.example.com.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.com
+```
+
 ## Support
-Via [issues](https://github.com/vedetta-com/vedetta/issues) and #openbsd:[matrix.org](https://matrix.org/)
+Via [issues](https://github.com/vedetta-com/caesonia/issues) and #openbsd:[matrix.org](https://matrix.org/)
 
 ## Contribute
 :)
