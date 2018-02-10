@@ -102,7 +102,7 @@ Permissions are described in [usr/local/bin/hier.sh](src/usr/local/bin/hier.sh)
 Ansible: [ansible-role-mailserver](https://github.com/gonzalo-/ansible-role-mailserver/)
 
 ## Prerequisites
-A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows edditing the following record types: A, AAAA, MX, CAA, TXT, SSHFP, (SPF)
+A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows edditing the following record types: A, AAAA, MX, CAA, TXT, SSHFP
 
 ### Forward-confirmed reverse DNS (FCrDNS)
 Each MX subdomain has record types A, and AAAA with the VPS IPv4, and IPv6
