@@ -1,6 +1,8 @@
 # caesonia (alpha)
 *Open*BSD Email Service
 
+![Public Domain](src/var/www/htdocs/mercury.example.com/Milonia_Caesonia-250x259.jpg)
+
 ## About
 > a free-email alternative for ~$2.50/mo.
 
