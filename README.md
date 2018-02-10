@@ -152,7 +152,7 @@ mercury.example.com.	86400	IN	SSHFP	4 1 7...
 mercury.example.com.	86400	IN	SSHFP	4 2 a...
 ```
 
-### Sender Policy Framework (SFP) http://www.openspf.org/
+### Sender Policy Framework (SFP)
 Each domain and subdomain needs a TXT record with SPF data:
 ```
 example.com.		86400	IN	TXT	"v=spf1 mx mx:example.com -all"
