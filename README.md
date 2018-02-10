@@ -191,7 +191,7 @@ _dmarc.example.com.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcre
 ```
 
 ## Support
-Via [issues](https://github.com/vedetta-com/vedetta/issues) and #openbsd:[matrix.org](https://matrix.org/)
+Via [issues](https://github.com/vedetta-com/caesonia/issues) and #openbsd:[matrix.org](https://matrix.org/)
 
 ## Contribute
 :)
