@@ -186,7 +186,9 @@ obsd._domainkey.example.com.	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
 
 ### Domain-based Message Authentication, Reporting & Conformance (DMARC)
 Each domain name needs a TXT record for subdomain "_dmarc" with DMARC data:
+```
 _dmarc.example.com.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.com
+```
 
 ## Support
 Via [issues](https://github.com/vedetta-com/vedetta/issues) and #openbsd:[matrix.org](https://matrix.org/)
