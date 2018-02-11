@@ -84,6 +84,8 @@ autoexpunge: autoexpunge\ =\ 30d
 quota: storage=15G
 full text search: fts
 DKIM selector: obsd
+
+external (egress) interface: vio0
 ```
 #### Layout
 
