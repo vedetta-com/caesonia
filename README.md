@@ -15,11 +15,11 @@ Root your Inbox - take full control of an email address.
 - Email messages are gzip compressed, at least 1/3 more space with level 6 default
 - Server side full text search (headers and body) can be enabled (to use the extra space)
 - Mobile data friendly: IMAPS connections are compressed
-- Subaddress (+tag) support, to filter and monitor your email address
+- Subaddress (+tag) support, to filter and monitor email addresses
 - Virtual domains, aliases, and credentials in files, Berkeley DB, or SQLite3
 - Naive Bayes rspamd filtering with supervized learning: the lowest false positive spam detection rates
 - Carefree automated Spam/ and Trash/ cleaning service (default: older than 30 days)
-- Automated quota management, gently assists you when over quota
+- Automated quota management, gently assists when over quota
 - Easy backup MX setup: using the same configuration, install in minutes on a different host
 - Worry-free automated master/master replication with backup MX, prevents accidental loss of email messages
 - Resilient: the backup MX can be used as primary, even when the primary is not down, both perfect replicas
@@ -35,7 +35,7 @@ Given our low memory requirements, and the single-purpose concept of email servi
 
 Antivirus software users (usually) have the service running on their devices. ClamAV can easily be incorporated into this configuration, if affected by the [types of malware](https://www.shadowserver.org/wiki/pmwiki.php/AV/Virus180-DayStats) it protects against, but will require around 1GB additional RAM (or another VPS).
 
-Every email message is important, if properly delivered, for Bayes classification. At least 200 ham and 200 spam messages are required to learn what one considers junk. By default (change to your use case), a rspamd score above 50% will send the message to Spam/. Moving messages in and out of Spam/ changes this score. After 95%, the message is flagged as "seen" and can be safely ignored.
+Every email message is important, if properly delivered, for Bayes classification. At least 200 ham and 200 spam messages are required to learn what one considers junk. By default (change to use case), a rspamd score above 50% will send the message to Spam/. Moving messages in and out of Spam/ changes this score. After 95%, the message is flagged as "seen" and can be safely ignored.
 
 Spamd is effective at greylisting and stopping high volume spam, if it becomes a problem. It will be an option when IPv6 is supported, along with [bgp-spamd](https://bgp-spamd.net/).
 
