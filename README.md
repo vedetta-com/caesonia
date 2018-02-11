@@ -10,6 +10,7 @@ Root your Inbox - take full control of an email address.
 
 ## Features
 - Efficient: configured to run on 512MB RAM and 20GB HDD, a KVM (cloud) VPS for around $2.50/mo
+- *`/var` grows when upgrading SSD storage, the "20GB" value is used as example*
 - 15GB uncompressed Maildir, rivals top free-email providers
 - Email messages are gzip compressed, at least 1/3 more space with level 6 default
 - Server side full text search (headers and body) can be enabled (to use the extra space)
@@ -79,7 +80,9 @@ backup MX host: hermes.example.com
 backup MX IPv4: 200.100.2.200
 backup MX IPv6: 2001:1002:2:1::babe
 
-autoexpunge: 30d
+autoexpunge = 30d
+quota: storage=15G
+full text search: fts
 
 DKIM selector: obsd
 ```
