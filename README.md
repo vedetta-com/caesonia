@@ -80,12 +80,13 @@ backup MX host: hermes.example.com
 backup MX IPv4: 200.100.2.200
 backup MX IPv6: 2001:1002:2:1::babe
 
+DKIM selector: obsd
+external (egress) interface: vio0
+
 autoexpunge: autoexpunge\ =\ 30d
 quota: storage=15G
 full text search: fts
-DKIM selector: obsd
-
-external (egress) interface: vio0
+full sync: replication_full_sync_interval\ =\ 1h
 ```
 #### Layout
 
