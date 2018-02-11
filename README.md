@@ -52,7 +52,7 @@ useradd -m -u 2000 -g =uid -c "Virtual Mail" -d /var/vmail -s /sbin/nologin vmai
 useradd -m -u 2001 -g =uid -c "Dsync User" -d /home/dsync -s /bin/sh dsync
 ```
 ## Cheatsheet
-### A quick way around
+#### A quick way around
 Let's assume we want to change the (default) virtual domain name from `example.net` to `example.org`
 ```sh
 cd src/
@@ -63,7 +63,7 @@ After close inspection
 find . -type f -exec sed -i 's|example.net|example.org|g' {} +
 ```
 
-### Defaults to customize
+#### Defaults to customize
 ```console
 primary domain name: example.com
 virtual domain names: example.com, example.net
@@ -83,7 +83,7 @@ autoexpunge: 30d
 
 DKIM selector: obsd
 ```
-### Layout
+#### Layout
 
 | Filesystem | Mount       | Size    |
 |:---------- |:----------- | -------:|
@@ -104,7 +104,7 @@ Ansible: [ansible-role-mailserver](https://github.com/gonzalo-/ansible-role-mail
 ## Prerequisites
 A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows edditing the following record types: A, AAAA, MX, CAA, TXT, SSHFP
 
-### Forward-confirmed reverse DNS (FCrDNS)
+#### Forward-confirmed reverse DNS (FCrDNS)
 Each MX subdomain has record types A, and AAAA with the VPS IPv4, and IPv6:
 ```console
 mercury.example.com.	86400	IN	A	93.184.216.34
@@ -127,7 +127,7 @@ dig +short -x 2606:2800:220:1:248:1893:25c8:1946
 > mercury.example.com.
 ```
 
-### MX
+#### MX
 Each domain has first priority MX record "mercury.example.com"
 
 Each domain has second priority MX record "hermes.example.com"
@@ -136,14 +136,14 @@ example.com.	86400	IN	MX	10 mercury.example.com.
 example.com.	86400	IN	MX	20 hermes.example.com.
 ```
 
-### CAA
+#### CAA
 Primary domain name's CAA record sets "letsencrypt.org" as the only CA allowed to issue certificates:
 ```console
 example.com.	86400	IN	CAA	128 issue "letsencrypt.org"
 example.com.	86400	IN	CAA	128 issuewild ";"
 ```
 
-### SSHFP
+#### SSHFP
 Each MX subdomain needs their hosts's SSHFP records:
 ```sh
 ssh-keygen -r mercury.example.com
@@ -159,7 +159,7 @@ mercury.example.com.	86400	IN	SSHFP	4 1 7...
 mercury.example.com.	86400	IN	SSHFP	4 2 a...
 ```
 
-### Sender Policy Framework (SFP)
+#### Sender Policy Framework (SFP)
 Each domain and subdomain needs a TXT record with SPF data:
 ```console
 example.com.		86400	IN	TXT	"v=spf1 mx mx:example.com -all"
@@ -168,7 +168,7 @@ hermes.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:200.100.2.200 ip6:2001:1002:2:
 www.example.com.	86400	IN	TXT	"v=spf1 -all"
 ```
 
-### Domain Keys Identified Mail (DKIM)
+#### Domain Keys Identified Mail (DKIM)
 Generate a private and public key:
 ```sh
 mkdir -p /etc/ssl/dkim/private
@@ -187,7 +187,7 @@ obsd._domainkey.example.com.	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
 
 ```
 
-### Domain-based Message Authentication, Reporting & Conformance (DMARC)
+#### Domain-based Message Authentication, Reporting & Conformance (DMARC)
 Each domain name needs a TXT record for subdomain "_dmarc" with DMARC data:
 ```console
 _dmarc.example.com.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.com
