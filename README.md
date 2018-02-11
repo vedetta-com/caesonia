@@ -25,21 +25,21 @@ Root your Inbox - take full control of an email address.
 - Flexible: switching roles is easy, making the process of changing VPS hosts a breeze (no downtime)
 - DMARC (with DKIM and SPF) email-validation system, to detect and prevent email spoofing
 - Daily (spartan) stats, to keep track of things
-- Your sieve scripts and managesieve configuration, this is just getting started
+- Your sieve scripts and managesieve configuration, let's get started
 
 ## Considerations
 By design, email message headers need to be public, for exchanges to happen. The body of the message can be encrypted by the user, if desired. Moreover, there is no way to prevent the host from having access to the virtual machine. Therefore, full disk encryption (at rest) may not be necessary.
 
 Given our low memory requirements, and the single-purpose concept of email service, Roundcube or other web-based IMAP email clients should be on a different VPS.
 
-Antivirus software users (usually) have the service running on each device. ClamAV can easily be incorporated in this configuration, if affected by the [types of malware](https://www.shadowserver.org/wiki/pmwiki.php/AV/Virus180-DayStats) it protects against, but will require around 1GB additional RAM (or another VPS).
+Antivirus software users (usually) have the service running on their devices. ClamAV can easily be incorporated into this configuration, if affected by the [types of malware](https://www.shadowserver.org/wiki/pmwiki.php/AV/Virus180-DayStats) it protects against, but will require around 1GB additional RAM (or another VPS).
 
 Every email message is important, if properly delivered, for Bayes classification. At least 200 ham and 200 spam messages are required to learn what one considers junk. By default (change to your use case), a rspamd score above 50% will send the message to Spam/. Moving messages in and out of Spam/ changes this score. After 95%, the message is marked as "seen" and can be safely ignored.
 
 Spamd is effective at greylisting and stopping high volume spam, if it becomes a problem. It will be an option when IPv6 is supported, along with [bgp-spamd](https://bgp-spamd.net/).
 
 System mail is delivered to an alias mapped to a virtual user served by the service. This way, messages are guaranteed to be delivered via encrypted connection. It is not possible for real users to alias, nor `mail`, to an external mail address with the default configuration.
-e.g. puffy@mercury.example.com is wheel with an alias mapped to (virtual) puffy@example.com and user (puffy) can be different for each.
+e.g. puffy@mercury.example.com is wheel, with an alias mapped to (virtual) puffy@example.com, and user (puffy) can be different for each.
 
 ## Getting started
 Install packages:
@@ -105,16 +105,16 @@ Ansible: [ansible-role-mailserver](https://github.com/gonzalo-/ansible-role-mail
 A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows edditing the following record types: A, AAAA, MX, CAA, TXT, SSHFP
 
 ### Forward-confirmed reverse DNS (FCrDNS)
-Each MX subdomain has record types A, and AAAA with the VPS IPv4, and IPv6
+Each MX subdomain has record types A, and AAAA with the VPS IPv4, and IPv6:
 ```console
 mercury.example.com.	86400	IN	A	93.184.216.34
 mercury.example.com.	86400	IN	AAAA	2606:2800:220:1:248:1893:25c8:1946
 ```
-Each IPv4 and IPv6 has record type PTR with the MX subdomain (reverse DNS configured by VPS host)
+Each IPv4 and IPv6 has record type PTR with the MX subdomain (reverse DNS configured on VPS host):
 ```console
 ...6				IN	PTR 	mercury.example.com.
 ```
-Verify
+Verify:
 ```sh
 dig +short mercury.example.com a
 > 93.184.216.34
@@ -129,6 +129,7 @@ dig +short -x 2606:2800:220:1:248:1893:25c8:1946
 
 ### MX
 Each domain has first priority MX record "mercury.example.com"
+
 Each domain has second priority MX record "hermes.example.com"
 ```console
 example.com.	86400	IN	MX	10 mercury.example.com.
@@ -136,7 +137,7 @@ example.com.	86400	IN	MX	20 hermes.example.com.
 ```
 
 ### CAA
-Primary domain name's CAA record sets "letsencrypt.org" as the only CA allowed to issue certificates.
+Primary domain name's CAA record sets "letsencrypt.org" as the only CA allowed to issue certificates:
 ```console
 example.com.	86400	IN	CAA	128 issue "letsencrypt.org"
 example.com.	86400	IN	CAA	128 issuewild ";"
