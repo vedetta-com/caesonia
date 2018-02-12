@@ -5,17 +5,15 @@
 
 passdb {
   driver = passwd-file
-# args = scheme=CRYPT username_format=%u /etc/dovecot/users
   args = scheme=blf-crypt /etc/mail/passwd # username = user@domain
 }
 
 userdb {
   driver = passwd-file
   args = username_format=%u /etc/mail/passwd
-  default_fields = uid=vmail gid=vmail home=/var/vmail/%d/%n quota_rule=*:storage=4G
 
   # Default fields that can be overridden by passwd-file
-  #default_fields = quota_rule=*:storage=15G
+  default_fields = uid=vmail gid=vmail home=/var/vmail/%d/%n quota_rule=*:storage=15G
 
   # Override fields from passwd-file
   #override_fields = home=/home/virtual/%u
