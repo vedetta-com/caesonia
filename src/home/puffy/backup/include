@@ -1,6 +1,5 @@
 /etc/acme
 /etc/acme-client.conf
-/etc/bgpd.conf
 /etc/dhclient.conf
 /etc/dkimproxy_out.conf
 /etc/doas.conf
@@ -21,14 +20,10 @@
 /etc/dovecot/conf.d/90-replication.conf
 /etc/dovecot/conf.d/90-sieve-extprograms.conf
 /etc/dovecot/conf.d/90-sieve.conf
-/etc/dovecot/conf.d/auth-deny.conf.ext
-/etc/dovecot/conf.d/auth-dict.conf.ext
-/etc/dovecot/conf.d/auth-master.conf.ext
 /etc/dovecot/conf.d/auth-passwdfile.conf.ext
 
 /etc/group
 /etc/hostname.vio0
-/etc/hostname.vio1
 /etc/hosts
 /etc/httpd.conf
 /etc/installurl
