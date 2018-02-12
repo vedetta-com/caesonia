@@ -1,4 +1,6 @@
 #!/bin/sh
+# Get OCSP response "example.com.ocsp.resp.der":
+# `./get-ocsp.sh example.com`
 
 set -o errexit
 set -o nounset
