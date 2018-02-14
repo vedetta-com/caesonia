@@ -66,10 +66,8 @@ find . -type f -exec sed -i 's|example.net|example.org|g' {} +
 #### Defaults to customize
 ```console
 primary domain name: example.com
-virtual domain names: example.com, example.net
-
-system and virtual user: puffy
-replication user: dsync
+virtual domain name: example.com
+                     example.net
 
 primary MX host: mercury.example.com
 primary MX IPv4: 93.184.216.34
@@ -81,6 +79,10 @@ backup MX IPv6: 2001:1002:2:1::babe
 
 DKIM selector: obsd
 external (egress) interface: vio0
+
+wheel user: puffy
+replication user: dsync
+virtual user: puffy
 
 autoexpunge: autoexpunge\ =\ 30d
 quota: storage=15G
