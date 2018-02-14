@@ -1,3 +1,5 @@
+# Local sender whitelist
+# https://man.openbsd.org/smtpd.conf#sender
 @example.com
 @hermes.example.com
 @mercury.example.com

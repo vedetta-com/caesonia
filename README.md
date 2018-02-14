@@ -9,9 +9,8 @@
 Root your Inbox
 
 ## Features
-- Efficient: configured to run on min. 512MB RAM and 20GB HDD, a KVM (cloud) VPS for around $2.50/mo
-- *`/var` grows when upgrading SSD storage, the "20GB" value is used as example*
-- 15GB uncompressed Maildir, rivals top free-email providers
+- Efficient: configured to run on min. 512MB RAM and 20GB SSD, a KVM (cloud) VPS for around $2.50/mo
+- 15GB+ uncompressed Maildir, rivals top free-email providers (grow by upgrading SSD)
 - Email messages are gzip compressed, at least 1/3 more space with level 6 default
 - Server side full text search (headers and body) can be enabled (to use the extra space)
 - Mobile data friendly: IMAPS connections are compressed
@@ -67,10 +66,8 @@ find . -type f -exec sed -i 's|example.net|example.org|g' {} +
 #### Defaults to customize
 ```console
 primary domain name: example.com
-virtual domain names: example.com, example.net
-
-system and virtual user: puffy
-replication user: dsync
+virtual domain name: example.com
+                     example.net
 
 primary MX host: mercury.example.com
 primary MX IPv4: 93.184.216.34
@@ -82,6 +79,10 @@ backup MX IPv6: 2001:1002:2:1::babe
 
 DKIM selector: obsd
 external (egress) interface: vio0
+
+wheel user: puffy
+replication user: dsync
+virtual user: puffy
 
 autoexpunge: autoexpunge\ =\ 30d
 quota: storage=15G
