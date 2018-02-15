@@ -1,0 +1,35 @@
+anchor "all" {
+ # (!) disable "log" with small /var/log
+ block log all
+}
+
+anchor "in-quick-scan" in proto tcp {
+ # Confound network scanners
+ block log quick proto tcp all flags SF/SFRA
+ ##block log quick proto tcp all flags SFUP/SFRAU
+ block log quick proto tcp all flags FPU/SFRAUP
+ block log quick proto tcp all flags /SFRA
+ block log quick proto tcp all flags F/SFRA
+ block log quick proto tcp all flags U/SFRAU
+ ##block log quick proto tcp all flags P
+ block log quick proto tcp all flags FUP/FUP
+}
+
+anchor "in-quick-bad" in on egress {
+ # Block incoming bad packets
+ block log quick inet  proto icmp  all icmp-type  redir
+ block log quick inet6 proto icmp6 all icmp6-type redir
+
+ # Block incoming traffic from the undesirable
+ block log quick \
+  from { <martians> no-route urpf-failed <temporaryban> <permanentban> <malware> }
+}
+
+anchor "out-quick-bad" out on egress {
+ # Block outgoing traffic to the undesirable, and tell us it's blocked
+ block return log quick \
+  to { <martians> no-route <adhosts> <malware> }
+
+ # Block outgoing traffic that hasn't been translated
+ block log quick inet from ! (egress:0)
+}
