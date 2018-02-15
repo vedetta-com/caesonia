@@ -1,0 +1,88 @@
+anchor "ipv4-icmp" inet proto icmp {
+ # https://datatracker.ietf.org/doc/draft-ietf-opsec-icmp-filtering/history/
+ # https://tools.ietf.org/html/draft-ietf-opsec-icmp-filtering-04
+ pass     log inet proto icmp             icmp-type  3 code  0 keep state (max 32)
+ pass     log inet proto icmp             icmp-type  3 code  1 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type  3 code  2 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  3 code  2 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type  3 code  3 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  3 code  3 keep state (max 32)
+ pass     log inet proto icmp             icmp-type  3 code  4 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type  3 code  5 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  3 code  5 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  3 code  7 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type  3 code 11 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  3 code 11 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type  3 code 12 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  3 code 12 keep state (max 32)
+ pass     log inet proto icmp             icmp-type  3 code 13 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type  3 code 14 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  3 code 14 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type  3 code 15 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  3 code 15 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type  5 code  0 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  5 code  0 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type  5 code  1 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  5 code  1 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type  5 code  2 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  5 code  2 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type  5 code  3 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  5 code  3 keep state (max 32)
+ pass     log inet proto icmp             icmp-type 11 code  0 keep state (max 32)
+ pass     log inet proto icmp             icmp-type 11 code  1 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type 12 code  0 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type 12 code  0 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type 12 code  1 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type 12 code  1 keep state (max 32)
+ pass     log inet proto icmp             icmp-type  8 code  0 keep state (max 32)
+ pass     log inet proto icmp             icmp-type  0 code  0 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type 10 code  0 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type 10 code  0 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type  9 code  0 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type  9 code  0 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type 13 code  0 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type 13 code  0 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type 14 code  0 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type 14 code  0 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type 17 code  0 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type 17 code  0 keep state (max 32)
+ pass in  log inet proto icmp to   (self) icmp-type 18 code  0 keep state (max 32)
+ pass out log inet proto icmp from (self) icmp-type 18 code  0 keep state (max 32)
+
+ # tag for NAT
+ match log \
+  from ! (egress:network) \
+  tag LAN_INET
+}
+anchor "ipv6-icmp" inet6 proto icmp6 {
+ # RFC 4890: Recommendations for Filtering ICMPv6 Messages in Firewalls
+ pass     log inet6 proto icmp6             icmp6-type   1 code  0 keep state (max 32)
+ pass     log inet6 proto icmp6             icmp6-type   1 code  1 keep state (max 32)
+ pass in  log inet6 proto icmp6 to   (self) icmp6-type   1 code  2 keep state (max 32)
+ pass out log inet6 proto icmp6 from (self) icmp6-type   1 code  2 keep state (max 32)
+ pass     log inet6 proto icmp6             icmp6-type   1 code  3 keep state (max 32)
+ pass     log inet6 proto icmp6             icmp6-type   1 code  4 keep state (max 32)
+ pass in  log inet6 proto icmp6 to   (self) icmp6-type   1 code  5 keep state (max 32)
+ pass out log inet6 proto icmp6 from (self) icmp6-type   1 code  5 keep state (max 32)
+ pass     log inet6 proto icmp6             icmp6-type   1 code  6 keep state (max 32)
+ pass     log inet6 proto icmp6             icmp6-type   2 code  0 keep state (max 32)
+ pass     log inet6 proto icmp6             icmp6-type   3 code  0 keep state (max 32)
+ pass     log inet6 proto icmp6             icmp6-type   3 code  1 keep state (max 32)
+ pass in  log inet6 proto icmp6 to   (self) icmp6-type   4 code  0 keep state (max 32)
+ pass out log inet6 proto icmp6 from (self) icmp6-type   4 code  0 keep state (max 32)
+ pass in  log inet6 proto icmp6 to   (self) icmp6-type   4 code  1 keep state (max 32)
+ pass out log inet6 proto icmp6 from (self) icmp6-type   4 code  1 keep state (max 32)
+ pass     log inet6 proto icmp6             icmp6-type   4 code  2 keep state (max 32)
+ pass     log inet6 proto icmp6             icmp6-type 128 code  0 keep state (max 32)
+ pass     log inet6 proto icmp6             icmp6-type 129 code  0 keep state (max 32)
+
+ # Mobile IPv6 messages that are needed to assist mobility
+ pass log inet6 proto icmp6 icmp6-type { 144 145 146 147 } keep state (max 32)
+
+ # RFC 4890, section 4.4
+ # ff02::1: ff00:2:
+ pass log inet6 proto icmp6 \
+  to { (self) ff02::/16 } \
+  icmp6-type { 130 131 132 133 134 135 136 137 141 142 143 148 149 151 152 153 } \
+  keep state (max 32)
+}
