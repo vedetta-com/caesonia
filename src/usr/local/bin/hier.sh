@@ -4,11 +4,10 @@
 set -o errexit
 set -o nounset
 
-chmod 600 /etc/{dhclient.conf,doas.conf,pf.conf,pf.permanentban}
+chmod 600 /etc/{dhclient.conf,doas.conf,pf.conf,pf.conf.anchor.block,pf.conf.anchor.icmp,pf.permanentban}
 
 chmod 640 /etc/mail/{blacklist,mailname,relays,vdomains,virtual,whitelist}
 chown root:_smtpd /etc/mail/{blacklist,mailname,relays,vdomains,virtual,whitelist}
-
 chmod 440 /etc/mail/passwd
 chown _smtpd:_dovecot /etc/mail/passwd
 
