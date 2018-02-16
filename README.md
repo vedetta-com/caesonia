@@ -103,6 +103,8 @@ full sync: replication_full_sync_interval\ =\ 1h
 | i          | /var        |       * |
 | *Total*    |             | **20G+**|
 
+Disklabel: [var/www/htdocs/mercury.example.com/disklabel.min](src/var/www/htdocs/mercury.example.com/disklabel.min)
+
 Permissions are described in [usr/local/bin/hier.sh](src/usr/local/bin/hier.sh)
 
 Ansible: [ansible-role-mailserver](https://github.com/gonzalo-/ansible-role-mailserver/)
