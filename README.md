@@ -16,7 +16,7 @@ Root your Inbox :mailbox_with_mail:
 - Mobile data friendly: IMAPS connections are compressed
 - Subaddress (+tag) support, to filter and monitor email addresses
 - Virtual domains, aliases, and credentials in files, Berkeley DB, or SQLite3
-- Naive Bayes rspamd filtering with supervized learning: the lowest false positive spam detection rates
+- Naive Bayes rspamd filtering with supervised learning: the lowest false positive spam detection rates
 - Carefree automated Spam/ and Trash/ cleaning service (default: older than 30 days)
 - Automated quota management, gently assists when over quota
 - Easy backup MX setup: using the same configuration, install in minutes on a different host
@@ -110,7 +110,7 @@ Permissions are described in [usr/local/bin/hier.sh](src/usr/local/bin/hier.sh)
 Ansible: [ansible-role-mailserver](https://github.com/gonzalo-/ansible-role-mailserver/)
 
 ## Prerequisites
-A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows edditing the following record types: A, AAAA, MX, CAA, TXT, SSHFP
+A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows editing the following record types: A, AAAA, MX, CAA, TXT, SSHFP
 
 #### Forward-confirmed reverse DNS (FCrDNS)
 Each MX subdomain has record types A, and AAAA with the VPS IPv4, and IPv6:
