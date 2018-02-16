@@ -6,7 +6,7 @@
 ## About
 > a free-email alternative for ~$2.50/mo.
 
-Root your Inbox
+Root your Inbox :mailbox_with_mail:
 
 ## Features
 - Efficient: configured to run on min. 512MB RAM and 20GB SSD, a KVM (cloud) VPS for around $2.50/mo
