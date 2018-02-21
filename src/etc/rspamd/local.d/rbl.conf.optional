@@ -1,0 +1,29 @@
+# https://rspamd.com/doc/modules/rbl.html
+
+# Disable RBL module
+rbls {
+	spamhaus {
+		disabled = true;
+	}
+	spamhaus_xbl {
+		disabled = true;
+	}
+	mailspike {
+		disabled = true;
+	}
+	senderscore {
+		disabled = true;
+	}
+	abusech {
+		disabled = true;
+	}
+	sem {
+		disabled = true;
+	}
+	semIPv6 {
+		disabled = true;
+	}
+	dnswl {
+		disabled = true;
+	}
+}

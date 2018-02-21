@@ -44,3 +44,6 @@ chmod 550 /usr/local/bin/{dovecot-lda.sh,learn_ham.sh,learn_spam.sh,quota-warnin
 chgrp vmail /usr/local/bin/{dovecot-lda.sh,learn_ham.sh,learn_spam.sh,quota-warning.sh}
 
 mkdir -m 700 /var/crash/rspamd
+
+touch /var/rspamd/dmarc_reports_last_sent
+chown _rspamd:_rspamd /var/rspamd/dmarc_reports_last_sent

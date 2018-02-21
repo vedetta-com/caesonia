@@ -1,0 +1,17 @@
+# https://rspamd.com/doc/modules/emails.html
+
+rules {
+	# Enable emails filtering based on static lists
+	EMAILS_STATIC {
+		map = "/etc/rspamd/local.d/bad_emails.list";
+		enabled = true;
+	}
+
+	# Disable emails filtering based on 3rd party DNS lists
+	RAMBLER_EMAILBL {
+		enabled = false;
+	}
+	MSBL_EBL {
+		enabled = false;
+	}
+}

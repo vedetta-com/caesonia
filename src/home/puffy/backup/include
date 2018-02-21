@@ -52,14 +52,7 @@
 /etc/rc.conf.local
 /etc/resolv.conf.tail
 
-/etc/rspamd/local.d/antivirus.conf
-/etc/rspamd/local.d/classifier-bayes.conf
-/etc/rspamd/local.d/options.inc
-/etc/rspamd/local.d/replies.conf
-/etc/rspamd/local.d/surbl.conf
-/etc/rspamd/local.d/worker-controller.inc
-/etc/rspamd/local.d/worker-normal.inc
-/etc/rspamd/local.d/worker-proxy.inc
+/etc/rspamd/local.d
 
 /etc/ssh/sshd_banner
 /etc/ssh/sshd_config
