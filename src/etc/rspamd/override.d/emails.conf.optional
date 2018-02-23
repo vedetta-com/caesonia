@@ -3,8 +3,7 @@
 rules {
 	# Enable emails filtering based on static lists
 	EMAILS_STATIC {
-		map = "/etc/rspamd/local.d/bad_emails.list";
-		enabled = true;
+		map = "/etc/rspamd/override.d/bad_emails.list";
 	}
 
 	# Disable emails filtering based on 3rd party DNS lists
