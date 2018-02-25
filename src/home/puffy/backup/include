@@ -53,6 +53,7 @@
 /etc/resolv.conf.tail
 
 /etc/rspamd/local.d
+/etc/rspamd/override.d
 
 /etc/ssh/sshd_banner
 /etc/ssh/sshd_config
