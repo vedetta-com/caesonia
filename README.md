@@ -182,9 +182,9 @@ Generate a private and public key:
 mkdir -p /etc/ssl/dkim/private
 chmod 750 /etc/ssl/dkim/private
 ```
-Some web-interfaces only allow TXT record with max 1024 bits key:
+Some web-interfaces allow TXT record with max **1024** bits [key](https://tools.ietf.org/html/rfc8301#section-3.2):
 ```sh
-openssl genrsa -out /etc/ssl/dkim/private/private.key 1024
+openssl genrsa -out /etc/ssl/dkim/private/private.key 2048
 openssl rsa -in /etc/ssl/dkim/private/private.key -pubout -out /etc/ssl/dkim/public.key
 chgrp -R _dkimproxy /etc/ssl/dkim/private
 chmod 440 /etc/ssl/dkim/private/private.key
