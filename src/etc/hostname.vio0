@@ -1,7 +1,8 @@
--inet
--inet6
-dhcp
-inet6 -autoconfprivacy
+# https://man.openbsd.org/hostname.if
+-inet # reset interface to its default state
+-inet6 # reset interface to its default state
+dhcp # static IP
+inet6 -autoconfprivacy # static IP
 inet6 autoconf # slaac
-#inet6 2606:2800:220:1:248:1893:25c8:1946 64 # fix
-#inet6 alias 2001:1002:2:1::face 64 # prefixlen 56 for gateways on different network
+#inet6 2606:2800:220:1:248:1893:25c8:1946 64 # no slaac
+#inet6 alias 2001:1002:2:1::babe 64 # prefixlen 56 for gateways on different network
