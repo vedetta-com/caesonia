@@ -86,6 +86,7 @@ virtual user: puffy
 
 autoexpunge: autoexpunge\ =\ 30d
 quota: storage=15G
+max message size: 35M
 full text search: fts
 full sync: replication_full_sync_interval\ =\ 1h
 ```
