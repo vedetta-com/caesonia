@@ -208,7 +208,6 @@ install -o root -g wheel -m 0500 -b src/usr/local/bin/learn_ham.sh /usr/local/bi
 install -o root -g wheel -m 0500 -b src/usr/local/bin/learn_spam.sh /usr/local/bin/
 install -o root -g wheel -m 0500 -b src/usr/local/bin/quota-warning.sh /usr/local/bin/
 
-
 install -o root -g wheel -m 0755 -d src/var/dovecot/sieve-pipe /var/dovecot/sieve-pipe
 
 install -o root -g vmail -m 0750 -d src/var/dovecot/imapsieve/after /var/dovecot/imapsieve/after
@@ -222,6 +221,8 @@ install -o root -g vmail -m 0640 -b src/var/dovecot/sieve/before/spamtest.sieve 
 
 install -o root -g daemon -m 0755 -d src/var/www/htdocs/mercury.example.com /var/www/htdocs/$(hostname)
 install -o root -g daemon -m 0644 -b src/var/www/htdocs/mercury.example.com/index.html /var/www/htdocs/$(hostname)/
+
+install -o root -g wheel -m 0644 -b src/root/.ssh/config /root/.ssh/
 
 mkdir -m 700 /var/crash/rspamd
 ```
