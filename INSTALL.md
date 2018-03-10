@@ -204,9 +204,9 @@ install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_banner /etc/ssh/
 
 install -o root -g wheel -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/dovecot-lda.sh /usr/local/bin/
-install -o root -g wheel -m 0500 -b src/usr/local/bin/learn_ham.sh /usr/local/bin/
-install -o root -g wheel -m 0500 -b src/usr/local/bin/learn_spam.sh /usr/local/bin/
-install -o root -g wheel -m 0500 -b src/usr/local/bin/quota-warning.sh /usr/local/bin/
+install -o root -g vmail -m 0550 -b src/usr/local/bin/learn_ham.sh /usr/local/bin/
+install -o root -g vmail -m 0550 -b src/usr/local/bin/learn_spam.sh /usr/local/bin/
+install -o root -g vmail -m 0550 -b src/usr/local/bin/quota-warning.sh /usr/local/bin/
 
 install -o root -g wheel -m 0755 -d src/var/dovecot/sieve-pipe /var/dovecot/sieve-pipe
 
