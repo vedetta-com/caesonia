@@ -182,7 +182,7 @@ install -o root -g wheel -m 0644 -b src/etc/sysctl.conf /etc/
 install -o root -g wheel -m 0755 -d src/etc/dovecot/conf.d /etc/dovecot/conf.d
 install -o root -g wheel -m 0644 -b src/etc/dovecot/local.conf /etc/local.conf
 install -o root -g wheel -m 0644 -b src/etc/dovecot/dovecot-trash.conf.ext /etc/dovecot/
-install -o root -g wheel -m 0644 -b src/etc/dovecot/conf.d/* /tmp/dovecot/conf.d/
+install -o root -g wheel -m 0644 -b src/etc/dovecot/conf.d/* /etc/dovecot/conf.d/
 
 install -o root -g wheel -m 0644 -b src/etc/mail/aliases /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/blacklist /etc/mail/
@@ -199,8 +199,8 @@ install -o root -g wheel -m 0755 -d src/etc/rspamd/override.d /etc/mail/rspamd/o
 install -o root -g wheel -m 0644 -b src/etc/rspamd/local.d/* /etc/mail/rspamd/local.d/
 install -o root -g wheel -m 0644 -b src/etc/rspamd/override.d/* /etc/mail/rspamd/override.d/
 
-install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_config src/etc/ssh/
-install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_banner src/etc/ssh/
+install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_config /etc/ssh/
+install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_banner /etc/ssh/
 
 install -o root -g wheel -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/dovecot-lda.sh /usr/local/bin/
