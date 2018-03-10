@@ -15,7 +15,7 @@ Minimum system requirements:
 - 512MB RAM
 - 20GB SSD/HDD
 
-The host must be able to mount a recent OpenBSD ISO image. Some hosting companies do not advertise OpenBSD in their offering, but will mount cdXX.iso or installXX.iso when asked. It may be a good idea to open a ticket with them, and verify if mounting a custom ISO is supported.
+The host must be able to mount a recent [OpenBSD ISO](https://www.openbsd.org/faq/faq4.html#Download) image. Some hosting companies do not advertise OpenBSD in their offering, but will mount cdXX.iso or installXX.iso when asked. It may be a good idea to open a ticket with them, and verify if mounting a custom ISO is supported.
 
 **n.b.** now is a good time to make sure the [prerequisites](README.md#prerequisites) are met. The substitutions below depend on DNS records, otherwise customize.
 
