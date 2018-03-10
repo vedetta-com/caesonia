@@ -19,7 +19,7 @@ The host must be able to mount a recent OpenBSD ISO image. Some hosting companie
 
 **n.b.** now is a good time to make sure the [prerequisites](README.md#prerequisites) are met. The substitutions below depend on DNS records, otherwise customize.
 
-## Install OpenBSD
+## OpenBSD Installation
 
 A response file is used to provide [answers](src/var/www/htdocs/mercury.example.com/install.conf) to the installation questions, as well as an autopartitioning template for [disklabel](src/var/www/htdocs/mercury.example.com/disklabel.min). Edit and upload these files to a web server, or use default as presented.
 
@@ -298,9 +298,9 @@ shutdown -r now
 
 ## What's next
 
-Add your own sieve scripts in /var/vmail/example.com/puffy/sieve
+Add your own sieve scripts in `/var/vmail/example.com/puffy/sieve`, then:
 ```sh
-cd /var/vmail/example.com/puffy/ 
+cd /var/vmail/example.com/puffy/
 ln -s sieve/script.sieve .dovecot.sieve
 sievec .dovecot.sieve
 ```
