@@ -152,6 +152,7 @@ Update primary and backup MX IP in [`src/etc/mail/relays`](src/etc/mail/relays)
 
 Update wheel user name "puffy":
 ```sh
+cd ../
 sed -e -i "s|puffy|$USER|g" src/etc/pf.conf \
 src/etc/mail/aliases \
 src/etc/ssh/sshd_config
@@ -240,11 +241,11 @@ sievec /var/dovecot/imapsieve/before/spamtest.sieve
 
 Turn off `httpd` tls:
 ```sh
-sed "s|^$(echo -e "\t")tls|$(echo -e "\t")#tls|" /etc/httpd.conf
+sed -i "s|^$(echo -e "\t")tls|$(echo -e "\t")#tls|" /etc/httpd.conf
 ```
 
 Start `httpd`
-```
+```sh
 rcctl start httpd
 ```
 
@@ -260,7 +261,7 @@ OCSP response:
 
 Turn on `httpd` tls:
 ```sh
-sed "s|^$(echo -e "\t")#tls|$(echo -e "\t")tls|" /etc/httpd.conf
+sed -i "s|^$(echo -e "\t")#tls|$(echo -e "\t")tls|" /etc/httpd.conf
 ```
 
 Restart `httpd`
