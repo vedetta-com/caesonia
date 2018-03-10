@@ -100,7 +100,7 @@ ssh -6 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
 
 ## Email Service Configuration
 
-Download a recent release:
+Download a recent [release](https://github.com/vedetta-com/caesonia/releases):
 ```sh
 cd ~ && ftp https://github.com/vedetta-com/caesonia/archive/vX.X.X.tar.gz
 tar -C ~ -xzf ~/vX.X.X.tar.gz
