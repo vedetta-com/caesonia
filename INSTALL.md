@@ -124,7 +124,7 @@ grep -r vio0 .
 find . -type f -exec sed -i "s|vio0|$(ifconfig egress | awk 'NR == 1{print $1;}' | sed 's/://')|g" {} +
 ```
 
-Primary domain name (from `example.com` to local `domainname`):
+Primary domain name (from `example.com` to `domainname`):
 ```sh
 grep -r example.com .
 find . -type f -exec sed -i "s|example.com|$(hostname | sed "s/$(hostname -s).//")|g" {} +
