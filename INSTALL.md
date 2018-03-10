@@ -19,7 +19,7 @@ The host must be able to mount a recent OpenBSD ISO image. Some hosting companie
 
 **n.b.** now is a good time to make sure the [prerequisites](README.md#prerequisites) are met. The substitutions below depend on DNS records, otherwise customize.
 
-## Install
+## Install OpenBSD
 
 A response file is used to provide [answers](src/var/www/htdocs/mercury.example.com/install.conf) to the installation questions, as well as an autopartitioning template for [disklabel](src/var/www/htdocs/mercury.example.com/disklabel.min). Edit and upload these files to a web server, or use default as presented.
 
@@ -98,7 +98,8 @@ ssh -4 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
 ssh -6 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
 ```
 
-## Configuration
+## Email Service Configuration
+
 Download a recent release:
 ```sh
 cd ~ && ftp https://github.com/vedetta-com/caesonia/archive/vX.X.X.tar.gz
@@ -162,7 +163,9 @@ src/etc/mail/passwd
 src/etc/mail/virtual
 ```
 
-## Install src, after review
+## Email Service Installation
+
+After review:
 ```sh
 install -o root -g wheel -m 0640 -b src/etc/acme-client.conf /etc/
 install -o root -g wheel -m 0640 -b src/etc/dhclient.conf /etc/
@@ -219,6 +222,8 @@ install -o root -g vmail -m 0640 -b src/var/dovecot/sieve/before/spamtest.sieve 
 
 install -o root -g daemon -m 0755 -d src/var/www/htdocs/mercury.example.com /var/www/htdocs/$(hostname)
 install -o root -g daemon -m 0644 -b src/var/www/htdocs/mercury.example.com/index.html /var/www/htdocs/$(hostname)/
+
+mkdir -m 700 /var/crash/rspamd
 ```
 
 ## Sieve
