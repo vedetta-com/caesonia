@@ -106,12 +106,12 @@ cd ~ && ftp https://github.com/vedetta-com/caesonia/archive/vX.X.X.tar.gz
 tar -C ~ -xzf ~/vX.X.X.tar.gz
 ```
 
-Update [default values](README.md#a-quick-way-around) in the local copy.
+Update [default values](README.md#a-quick-way-around) in the local copy:
 ```sh
 cd src/
 ```
 
-Backup MX instructions may be skipped, if not necessary, and disable replication:
+*n.b.*: Backup MX instructions may be skipped, if not necessary, and disable replication:
 ```sh
 mv src/etc/dovecot/conf.d/90-replication.conf src/etc/dovecot/conf.d/90-replication.conf.optional
 ```
@@ -153,9 +153,10 @@ Update primary and backup MX IP in [`src/etc/mail/relays`](src/etc/mail/relays)
 Update wheel user name "puffy":
 ```sh
 cd ../
-sed -e -i "s|puffy|$USER|g" src/etc/pf.conf \
-src/etc/mail/aliases \
-src/etc/ssh/sshd_config
+sed -e -i "s|puffy|$USER|g" \
+	src/etc/pf.conf \
+	src/etc/mail/aliases \
+	src/etc/ssh/sshd_config
 ```
 
 Update virtual users and domains:
@@ -234,7 +235,7 @@ Compile sieve scripts:
 ```sh
 sievec /var/dovecot/imapsieve/before/report-ham.sieve
 sievec /var/dovecot/imapsieve/before/report-spam.sieve
-sievec /var/dovecot/imapsieve/before/spamtest.sieve
+sievec /var/dovecot/sieve/before/spamtest.sieve
 ```
 
 ## LetsEncrypt
@@ -244,7 +245,7 @@ Turn off `httpd` tls:
 sed -i "s|^$(echo -e "\t")tls|$(echo -e "\t")#tls|" /etc/httpd.conf
 ```
 
-Start `httpd`
+Start `httpd`:
 ```sh
 rcctl start httpd
 ```
@@ -264,7 +265,7 @@ Turn on `httpd` tls:
 sed -i "s|^$(echo -e "\t")#tls|$(echo -e "\t")tls|" /etc/httpd.conf
 ```
 
-Restart `httpd`
+Restart `httpd`:
 ```sh
 rcctl restart httpd
 ```
