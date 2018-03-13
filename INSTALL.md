@@ -167,7 +167,7 @@ grep -r hermes .
 find . -type f -exec sed -i "s|hermes|$(dig +short $(hostname | sed "s/$(hostname -s).//") mx | awk -vhostname="$(hostname)" '{if ($2 != hostname".") print $2;}')|g" {} +
 ```
 
-Update primary and backup MX IP in [`src/etc/mail/relays`](src/etc/mail/relays)
+Update primary and backup MX IP [source table](https://man.openbsd.org/table.5#Source_tables) [`src/etc/mail/relays`](src/etc/mail/relays).
 
 Update wheel user name "puffy":
 ```sh
