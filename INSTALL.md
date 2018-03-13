@@ -115,7 +115,7 @@ cd ~ && ftp https://github.com/vedetta-com/caesonia/archive/vX.X.X.tar.gz
 tar -C ~ -xzf ~/vX.X.X.tar.gz
 ```
 
-*n.b.*: Use [Git or SVN](https://help.github.com/articles/which-remote-url-should-i-use/):
+*n.b.*: to use [Git or SVN](https://help.github.com/articles/which-remote-url-should-i-use/):
 ```sh
 pkg_add git
 ```
