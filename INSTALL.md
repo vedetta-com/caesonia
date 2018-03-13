@@ -40,7 +40,7 @@ Install OpenBSD:
 install -af /tmp/install.conf
 ```
 
-After `reboot`, configure [doas.conf](src/etc/doas.conf):
+After `reboot`, `syspatch`, and `mail`, configure [doas.conf](src/etc/doas.conf):
 ```sh
 doas tmux
 ```
@@ -61,14 +61,19 @@ Update [hostname.if](src/etc/hostname.vio0) and reset:
 sh /etc/netstart $(ifconfig egress | awk 'NR == 1{print $1;}' | sed 's/://')
 ```
 
-Update OpenBSD:
-```sh
-syspatch
-```
-
 Install packages:
 ```sh
 pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras
+```
+
+*n.b.*: dovecot package comes with instructions for using self-signed certificates, which are not used in this guide.
+```sh
+pkg_info -M dovecot
+```
+
+*n.b.*: python 2.7 is used by devel/glib2. If desired, the package contains instructions to set as default system python:
+```sh
+pkg_info -M python
 ```
 
 Services:
@@ -77,13 +82,17 @@ rcctl enable httpd dkimproxy_out rspamd dovecot
 rcctl disable check_quotas sndiod
 ```
 
-Add users:
+Dovecot [Virtual Users](https://wiki.dovecot.org/VirtualUsers) are mapped to system user "vmail":
 ```sh
 useradd -m -u 2000 -g =uid -c "Virtual Mail" -d /var/vmail -s /sbin/nologin vmail
+```
+
+Dovecot [Replication](https://wiki.dovecot.org/Replication) needs a user to `dsync`:
+```sh
 useradd -m -u 2001 -g =uid -c "Dsync Replication" -d /home/dsync -s /bin/sh dsync
 ```
 
-dsync SSH:
+dsync SSH limited to one "command" restricted in [`doas.conf`](src/etc/doas.conf) to match "[dsync_remote_cmd](src/etc/dovecot/conf.d/90-replication.conf)":
 ```sh
 su - dsync
 ssh-keygen
@@ -104,6 +113,11 @@ Download a recent [release](https://github.com/vedetta-com/caesonia/releases):
 ```sh
 cd ~ && ftp https://github.com/vedetta-com/caesonia/archive/vX.X.X.tar.gz
 tar -C ~ -xzf ~/vX.X.X.tar.gz
+```
+
+*n.b.*: or use [Git or SVN](https://help.github.com/articles/which-remote-url-should-i-use/):
+```sh
+pkg_add git
 ```
 
 Update [default values](README.md#a-quick-way-around) in the local copy:
@@ -130,10 +144,10 @@ grep -r example.com .
 find . -type f -exec sed -i "s|example.com|$(hostname | sed "s/$(hostname -s).//")|g" {} +
 ```
 
-Virtua domain name (from `example.net` to `example.org`):
+Virtual domain name (from `example.net` to `example.org`):
 ```sh
 grep -r example.net .
-find . -t`ype f -exec sed -i 's|example.net|example.org|g' {} +
+find . -type f -exec sed -i 's|example.net|example.org|g' {} +
 ```
 
 Primary's hostname (from `mercury` to `hostname -s`):
@@ -153,7 +167,7 @@ Update primary and backup MX IP in [`src/etc/mail/relays`](src/etc/mail/relays)
 Update wheel user name "puffy":
 ```sh
 cd ../
-sed -e -i "s|puffy|$USER|g" \
+sed -i "s|puffy|$USER|g" \
 	src/etc/pf.conf \
 	src/etc/mail/aliases \
 	src/etc/ssh/sshd_config
@@ -252,12 +266,12 @@ rcctl start httpd
 
 Initialize a new account and domain key:
 ```sh
-acme-client -vAD mercury.example.com
+acme-client -vAD $(hostname)
 ```
 
 OCSP response:
 ```sh
-/usr/local/bin/get-ocsp.sh mercury.example.com
+/usr/local/bin/get-ocsp.sh $(hostname)
 ```
 
 Turn on `httpd` tls:
