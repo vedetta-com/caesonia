@@ -66,7 +66,7 @@ Install packages:
 pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras
 ```
 
-*n.b.*: dovecot package comes with instructions for using self-signed certificates, which are not used in this guide.
+*n.b.*: dovecot package comes with instructions for using self-signed certificates, which are not used in this guide:
 ```sh
 pkg_info -M dovecot
 ```
@@ -92,7 +92,7 @@ Dovecot [Replication](https://wiki.dovecot.org/Replication) needs a user to `dsy
 useradd -m -u 2001 -g =uid -c "Dsync Replication" -d /home/dsync -s /bin/sh dsync
 ```
 
-dsync SSH limited to one "command" restricted in [`doas.conf`](src/etc/doas.conf) to match "[dsync_remote_cmd](src/etc/dovecot/conf.d/90-replication.conf)":
+dsync SSH limited to one "[command](src/home/dsync/.ssh/authorized_keys)" restricted in [`doas.conf`](src/etc/doas.conf) to match "[dsync_remote_cmd](src/etc/dovecot/conf.d/90-replication.conf)":
 ```sh
 su - dsync
 ssh-keygen
@@ -101,7 +101,7 @@ echo "command=\"doas -u vmail \${SSH_ORIGINAL_COMMAND#*}\" $(cat ~/.ssh/id_rsa.p
 exit
 ```
 
-Update `/root/.ssh/known_hosts`:
+Update [`/root/.ssh/known_hosts`](src/root/.ssh/known_hosts):
 ```sh
 ssh -4 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
 ssh -6 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
