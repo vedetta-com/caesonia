@@ -45,6 +45,11 @@ After `reboot`, `syspatch`, and `mail`, configure [doas.conf](src/etc/doas.conf)
 doas tmux
 ```
 
+*n.b.*: if `syspatch` installed a kernel patch:
+```sh
+shutdown -r now
+```
+
 Verify if egress IP **matches** DNS record:
 ```sh
 ping -vc1 \
@@ -289,15 +294,10 @@ crontab -e
 
 ## Restart
 
-Restart:
+Restart the email service:
 ```sh
 pfctl -f /etc/pf.conf
 rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
-```
-
-If `syspatch` installed a kernel patch:
-```sh
-shutdown -r now
 ```
 
 ## Logs
