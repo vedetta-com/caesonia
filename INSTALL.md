@@ -173,11 +173,9 @@ sed -i "s|puffy|$USER|g" \
 	src/etc/ssh/sshd_config
 ```
 
-Update virtual users and domains:
-```console
-src/etc/mail/passwd
-src/etc/mail/virtual
-```
+Update virtual users [credentials table](https://man.openbsd.org/table.5#Credentials_tables) [`src/etc/mail/passwd`](src/etc/mail/passwd) using [`smtpctl encrypt`](https://man.openbsd.org/smtpctl#encrypt).
+
+Update [virtual domains](https://man.openbsd.org/makemap#VIRTUAL_DOMAINS) [aliasing table](https://man.openbsd.org/table.5#Aliasing_tables) `[src/etc/mail/virtual](src/etc/mail/virtual)`.
 
 ## Email Service Installation
 
