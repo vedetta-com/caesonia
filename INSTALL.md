@@ -87,7 +87,7 @@ Dovecot [Virtual Users](https://wiki.dovecot.org/VirtualUsers) are mapped to sys
 useradd -m -u 2000 -g =uid -c "Virtual Mail" -d /var/vmail -s /sbin/nologin vmail
 ```
 
-Dovecot [Replication](https://wiki.dovecot.org/Replication) needs a user to `dsync`:
+With backup MX, Dovecot [Replication](https://wiki.dovecot.org/Replication) needs a user to `dsync`:
 ```sh
 useradd -m -u 2001 -g =uid -c "Dsync Replication" -d /home/dsync -s /bin/sh dsync
 ```
