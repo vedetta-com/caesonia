@@ -106,6 +106,15 @@ echo "command=\"doas -u vmail \${SSH_ORIGINAL_COMMAND#*}\" $(cat ~/.ssh/id_rsa.p
 exit
 ```
 
+Update [/home/dsync](src/home/dsync), on primary and backup MX:
+```sh
+chown -R root:dsync /home/dsync
+chmod 750 /home/dsync/.ssh
+chmod 640 /home/dsync/.ssh/{authorized_keys,id_rsa.pub,config}
+chmod 400 /home/dsync/.ssh/id_rsa
+chown dsync /home/dsync/.ssh/id_rsa
+```
+
 Update [`/root/.ssh/known_hosts`](src/root/.ssh/known_hosts):
 ```sh
 ssh -4 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
