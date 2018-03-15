@@ -336,7 +336,7 @@ Autodetect IMAP namespace :check:
 Use compression :ballot_box_with_check:
 Poll when connecting for push :ballot_box_with_check:
 
-SMTP server: mercury.caesonia.com (or hermes.caesonia.com)
+SMTP server: mercury.example.com (or hermes.example.com)
 Security: STARTTLS
 Port: 587
 Require sign-in :ballot_box_with_check:
