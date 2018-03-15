@@ -327,22 +327,22 @@ rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 
 ## Client Configuration
 
-IMAP server: mercury.example.com (or hermes.example.com)
-Security: TLS
-Port: 993
-Username: puffy@example.com
-Password: ********
-Autodetect IMAP namespace :check:
-Use compression :ballot_box_with_check:
-Poll when connecting for push :ballot_box_with_check:
+- IMAP server: mercury.example.com (or hermes.example.com)
+  - Security: TLS
+  - Port: 993
+  - Username: puffy@example.com
+  - Password: ********
+  - Autodetect IMAP namespace :ballot_box_with_check:
+  - Use compression :ballot_box_with_check:
+  - Poll when connecting for push :ballot_box_with_check:
 
-SMTP server: mercury.example.com (or hermes.example.com)
-Security: STARTTLS
-Port: 587
-Require sign-in :ballot_box_with_check:
-Username: puffy@example.com
-Authentication: Normal password
-Password: ********
+- SMTP server: mercury.example.com (or hermes.example.com)
+  - Security: STARTTLS
+  - Port: 587
+  - Require sign-in :ballot_box_with_check:
+  - Username: puffy@example.com
+  - Authentication: Normal password
+  - Password: ********
 
 ## What's next
 
