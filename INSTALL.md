@@ -344,14 +344,7 @@ rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
   - Authentication: Normal password
   - Password: ********
 
-## What's next
-
-Add your own sieve scripts in `/var/vmail/example.com/puffy/sieve`, then:
-```sh
-cd /var/vmail/example.com/puffy/
-ln -s sieve/script.sieve .dovecot.sieve
-sievec .dovecot.sieve
-```
+## Administration
 
 Suppose "**john@example.ca**" address needs to be added, with "**johndoe**" alias.
 
@@ -428,5 +421,14 @@ echo IP >> /etc/pf.permanentban
 and reload the table:
 ```sh
 pfctl -t permanentban -T replace -f /etc/pf.permanentban
+```
+
+## What's next
+
+Add your own sieve scripts in `/var/vmail/example.com/puffy/sieve`, then:
+```sh
+cd /var/vmail/example.com/puffy/
+ln -s sieve/script.sieve .dovecot.sieve
+sievec .dovecot.sieve
 ```
 
