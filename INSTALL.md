@@ -134,17 +134,17 @@ tar -C ~ -xzf ~/vX.X.X.tar.gz
 pkg_add git
 ```
 
-Update [default values](README.md#a-quick-way-around) in the local copy:
-```sh
-cd src/
-```
-
 *n.b.*: Backup MX instructions may be skipped, if not necessary, and disable replication:
 ```sh
 mv src/etc/dovecot/conf.d/90-replication.conf src/etc/dovecot/conf.d/90-replication.conf.optional
 ```
 
-Backup MX role may be enabled in [`src/etc/mail/smtpd.conf`](src/etc/mail/smtpd.conf) and depends on DNS record.
+Update [default values](README.md#a-quick-way-around) in the local copy:
+```sh
+cd src/
+```
+
+Backup MX role may be enabled in [`etc/mail/smtpd.conf`](src/etc/mail/smtpd.conf) and depends on DNS record.
 
 Update interface name:
 ```sh
@@ -346,7 +346,7 @@ rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 
 ## Administration
 
-Suppose "**john@example.ca**" address needs to be added, with "**johndoe**" alias.
+Suppose "john@example.ca" address needs to be added, with "johndoe" alias.
 
 *n.b.*: Assuming the DNS [Prerequisites](README.md#prerequisites) for Virtual Domains are met
 
@@ -425,7 +425,7 @@ pfctl -t permanentban -T replace -f /etc/pf.permanentban
 
 ## What's next
 
-Add your own sieve scripts in `/var/vmail/example.com/puffy/sieve`, then:
+Add your own [Sieve](https://tools.ietf.org/html/rfc6785) scripts in `/var/vmail/example.com/puffy/sieve`, then:
 ```sh
 cd /var/vmail/example.com/puffy/
 ln -s sieve/script.sieve .dovecot.sieve
