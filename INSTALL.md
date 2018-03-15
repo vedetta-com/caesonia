@@ -189,6 +189,11 @@ sed -i "s|puffy|$USER|g" \
 
 Update virtual users [credentials table](https://man.openbsd.org/table.5#Credentials_tables) [`src/etc/mail/passwd`](src/etc/mail/passwd) using [`smtpctl encrypt`](https://man.openbsd.org/smtpctl#encrypt).
 
+*n.b.*: user [quota](src/etc/dovecot/conf.d/90-quota.conf) limit can be [overriden](src/etc/dovecot/conf.d/auth-passwdfile.conf.ext) from [src/etc/mail/passwd](src/etc/mail/passwd):
+```console
+user@example.com:$2b$...encrypted...passphrase...::::::userdb_quota_rule=*:storage=7G
+```
+
 Update [virtual domains](https://man.openbsd.org/makemap#VIRTUAL_DOMAINS) [aliasing table](https://man.openbsd.org/table.5#Aliasing_tables)  [`src/etc/mail/virtual`](src/etc/mail/virtual).
 
 ## Email Service Installation
@@ -320,6 +325,25 @@ rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 /var/www/logs/error.log
 ```
 
+## Client Configuration
+
+IMAP server: mercury.example.com (or hermes.example.com)
+Security: TLS
+Port: 993
+Username: puffy@example.com
+Password: ********
+Autodetect IMAP namespace :check:
+Use compression :ballot_box_with_check:
+Poll when connecting for push :ballot_box_with_check:
+
+SMTP server: mercury.caesonia.com (or hermes.caesonia.com)
+Security: STARTTLS
+Port: 587
+Require sign-in :ballot_box_with_check:
+Username: puffy@example.com
+Authentication: Normal password
+Password: ********
+
 ## What's next
 
 Add your own sieve scripts in `/var/vmail/example.com/puffy/sieve`, then:
@@ -327,5 +351,82 @@ Add your own sieve scripts in `/var/vmail/example.com/puffy/sieve`, then:
 cd /var/vmail/example.com/puffy/
 ln -s sieve/script.sieve .dovecot.sieve
 sievec .dovecot.sieve
+```
+
+Suppose "**john@example.ca**" address needs to be added, with "**johndoe**" alias.
+
+*n.b.*: Assuming the DNS [Prerequisites](README.md#prerequisites) for Virtual Domains are met
+
+Add virtual domain:
+```sh
+echo "example.ca" >> /etc/mail/vdomains
+```
+
+Add DKIM signature:
+```sh
+sed -i '/^domain/s/$/,example.ca/' /etc/dkimproxy_out.conf
+```
+
+Whitelist local sender:
+```sh
+echo "@example.ca" >> /etc/mail/whitelist
+```
+
+Add virtual alias:
+```sh
+echo "johndoe@example.ca \t\tjohn@example.ca" >> /etc/mail/virtual
+```
+
+Add virtual user:
+```sh
+echo "john@example.ca \t\tvmail" >> /etc/mail/virtual
+```
+
+Add virtual password:
+```sh
+smtpctl encrypt
+> secret
+> $2b$...encrypted...passphrase...
+vi /etc/mail/passwd
+> john@example.ca:$2b$...encrypted...passphrase...::::::
+```
+
+Reload:
+```sh
+rcctl restart dkimproxy_out
+rcctl reload dovecot
+smtpctl update table virtuals
+smtpctl update table vdomains                                   
+smtpctl update table passwd   
+smtpctl update table whitelist-senders
+```
+
+Suppose "jane@example.meh" address behaves badly.
+
+Blacklist external sender:
+```sh
+echo "jane@example.meh" >> /etc/mail/blacklist
+smtpctl update table blacklist-senders
+```
+
+Suppose everybody "@example.meh" behaves badly:
+```sh
+echo "@example.meh" >> /etc/mail/blacklist
+smtpctl update table blacklist-senders
+```
+
+Suppose "example.meh" is a lost cause:
+```sh
+dig +short example.meh mx
+```
+
+for each bad subdomain, add IP (A and AAAA record):
+```sh
+echo IP >> /etc/pf.permanentban
+```
+
+and reload the table:
+```sh
+pfctl -t permanentban -T replace -f /etc/pf.permanentban
 ```
 

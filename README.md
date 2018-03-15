@@ -42,6 +42,9 @@ System mail is delivered to an alias mapped to a virtual user served by the serv
 e.g. puffy@mercury.example.com is wheel, with an alias mapped to (virtual) puffy@example.com, and user (puffy) can be different for each.
 
 ## Getting started
+
+See the [**Installation Guide**](INSTALL.md) for details.
+
 Install packages:
 ```sh
 pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras
@@ -145,6 +148,14 @@ example.com.	86400	IN	MX	10 mercury.example.com.
 example.com.	86400	IN	MX	20 hermes.example.com.
 ```
 
+Each *virtual* domain has first priority MX record "mercury.example.com"
+
+Each *virtual* domain has second priority MX record "hermes.example.com"
+```console
+example.net.	86400	IN	MX	10 mercury.example.com.
+example.net.	86400	IN	MX	20 hermes.example.com.
+```
+
 #### CAA
 Primary domain name's CAA record sets "letsencrypt.org" as the only CA allowed to issue certificates:
 ```console
@@ -177,6 +188,11 @@ hermes.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:200.100.2.200 ip6:2001:1002:2:
 www.example.com.	86400	IN	TXT	"v=spf1 -all"
 ```
 
+Each *virtual* domain and *virtual* subdomain needs a TXT record with SPF data:
+```console
+example.net.		86400	IN	TXT	"v=spf1 include:example.com ~all"
+```
+
 #### Domain Keys Identified Mail (DKIM)
 Generate a private and public key:
 ```sh
@@ -193,13 +209,22 @@ chmod 440 /etc/ssl/dkim/private/private.key
 Add public key in TXT record:
 ```console
 obsd._domainkey.example.com.	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
+```
 
+Each *virtual* domain name needs a TXT record with the (same) public key:
+```console
+obsd._domainkey.example.net.	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
 ```
 
 #### Domain-based Message Authentication, Reporting & Conformance (DMARC)
 Each domain name needs a TXT record for subdomain "_dmarc" with DMARC data:
 ```console
 _dmarc.example.com.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.com
+```
+
+Each *virtual* domain name needs a TXT record for subdomain "_dmarc" with DMARC data:
+```console
+_dmarc.example.net	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.net
 ```
 
 ## Support
