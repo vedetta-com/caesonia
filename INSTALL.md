@@ -1,6 +1,12 @@
 # caesonia (beta) *draft* **please report errors**
 *Open*BSD Email Service
 
+* [OpenBSD Installation](#openbsd-installation)
+* [Email Service Configuration](#email-service-configuration)
+* [Email Service Installation](#email-service-installation)
+* [Client Configuration](#client-configuration)
+* [Administration](#administration)
+
 ## Preface
 While there are many ways to install, on different hosts, this guide will focus on Kernel-based Virtual Machine (KVM), a popular offer for Virtual Private Server (VPS).
 
@@ -71,7 +77,7 @@ Install packages:
 pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras
 ```
 
-*n.b.*: dovecot package comes with instructions for using self-signed certificates, which are not used in this guide:
+*n.b.*: dovecot package comes with instructions for self-signed certificates, which are not used in this guide:
 ```sh
 pkg_info -M dovecot
 ```
@@ -176,7 +182,7 @@ grep -r hermes .
 find . -type f -exec sed -i "s|hermes|$(dig +short $(hostname | sed "s/$(hostname -s).//") mx | awk -vhostname="$(hostname)" '{if ($2 != hostname".") print $2;}')|g" {} +
 ```
 
-Update primary and backup MX IP [source table](https://man.openbsd.org/table.5#Source_tables) [`src/etc/mail/relays`](src/etc/mail/relays).
+Update the allowed mail relays [source table](https://man.openbsd.org/table.5#Source_tables) [`src/etc/mail/relays`](src/etc/mail/relays).
 
 Update wheel user name "puffy":
 ```sh
@@ -260,7 +266,7 @@ install -o root -g wheel -m 0644 -b src/root/.ssh/config /root/.ssh/
 mkdir -m 700 /var/crash/rspamd
 ```
 
-## Sieve
+### Sieve
 
 Compile sieve scripts:
 ```sh
@@ -269,7 +275,7 @@ sievec /var/dovecot/imapsieve/before/report-spam.sieve
 sievec /var/dovecot/sieve/before/spamtest.sieve
 ```
 
-## LetsEncrypt
+### LetsEncrypt
 
 Turn off `httpd` tls:
 ```sh
@@ -306,7 +312,7 @@ Edit [`crontab`](src/var/cron/tabs/root):
 crontab -e
 ```
 
-## Restart
+### Restart
 
 Restart the email service:
 ```sh
@@ -314,7 +320,7 @@ pfctl -f /etc/pf.conf
 rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 ```
 
-## Logs
+### Logs
 
 ```console
 /var/log/messages
