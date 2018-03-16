@@ -23,7 +23,7 @@ The host must be able to mount a recent [OpenBSD ISO](https://www.openbsd.org/fa
 
 A response file is used to provide [answers](src/var/www/htdocs/mercury.example.com/install.conf) to the installation questions, as well as an autopartitioning template for [disklabel](src/var/www/htdocs/mercury.example.com/disklabel.min). Edit and upload these files to a web server, or use default as presented.
 
-At the (I)nstall, (U)pgrade, (S)hell prompt, pick "shell"
+At the (I)nstall, (U)pgrade, (**S**)hell prompt, pick "shell"
 
 Next, aquire an IP address:
 ```sh
@@ -346,9 +346,9 @@ rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 
 ## Administration
 
-Suppose "john@example.ca" address needs to be added, with "johndoe" alias.
+Suppose the address "john@example.ca" needs to be hosted, with a "johndoe" alias.
 
-*n.b.*: Assuming the DNS [Prerequisites](README.md#prerequisites) for Virtual Domains are met
+*n.b.*: Assuming DNS [Prerequisites](README.md#prerequisites) for Virtual Domains are met
 
 Add virtual domain:
 ```sh
@@ -394,7 +394,7 @@ smtpctl update table passwd
 smtpctl update table whitelist-senders
 ```
 
-Suppose "jane@example.meh" address behaves badly.
+Suppose the foreign address "jane@example.meh" behaves badly.
 
 Blacklist external sender:
 ```sh
@@ -402,23 +402,25 @@ echo "jane@example.meh" >> /etc/mail/blacklist
 smtpctl update table blacklist-senders
 ```
 
-Suppose everybody "@example.meh" behaves badly:
+or blacklist everybody "@example.meh" for bad behaviour:
 ```sh
 echo "@example.meh" >> /etc/mail/blacklist
 smtpctl update table blacklist-senders
 ```
 
 Suppose "example.meh" is a lost cause:
+
+Gather relevant bad subdomains:
 ```sh
 dig +short example.meh mx
 ```
 
-for each bad subdomain, add IP (A and AAAA record):
+for each bad subdomain, add its IP (A and AAAA record) to `pf`:
 ```sh
 echo IP >> /etc/pf.permanentban
 ```
 
-and reload the table:
+and reload the `pf` table:
 ```sh
 pfctl -t permanentban -T replace -f /etc/pf.permanentban
 ```
