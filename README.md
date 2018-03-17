@@ -73,12 +73,12 @@ virtual domain name: example.com
                      example.net
 
 primary MX host: mercury.example.com
-primary MX IPv4: 93.184.216.34
-primary MX IPv6: 2606:2800:220:1:248:1893:25c8:1946
+primary MX IPv4: 203.0.113.1
+primary MX IPv6: 2001:0db8::1
 
 backup MX host: hermes.example.com
-backup MX IPv4: 200.100.2.200
-backup MX IPv6: 2001:1002:2:1::babe
+backup MX IPv4: 203.0.113.2
+backup MX IPv6: 2001:0db8::2
 
 DKIM selector: obsd
 external (egress) interface: vio0
@@ -119,8 +119,8 @@ A DNS name server (from a registrar, a free service, VPS host, or self-hosted) i
 #### Forward-confirmed reverse DNS (FCrDNS)
 Each MX subdomain has record types A, and AAAA with the VPS IPv4, and IPv6:
 ```console
-mercury.example.com.	86400	IN	A	93.184.216.34
-mercury.example.com.	86400	IN	AAAA	2606:2800:220:1:248:1893:25c8:1946
+mercury.example.com.	86400	IN	A	203.0.113.1
+mercury.example.com.	86400	IN	AAAA	2001:0db8::1
 ```
 Each IPv4 and IPv6 has record type PTR with the MX subdomain (reverse DNS configured on VPS host):
 ```console
@@ -129,13 +129,13 @@ Each IPv4 and IPv6 has record type PTR with the MX subdomain (reverse DNS config
 Verify:
 ```sh
 dig +short mercury.example.com a
-> 93.184.216.34
-dig +short -x 93.184.216.34
+> 203.0.113.1
+dig +short -x 203.0.113.1
 > mercury.example.com.
 
 dig +short mercury.example.com aaaa
-> 2606:2800:220:1:248:1893:25c8:1946
-dig +short -x 2606:2800:220:1:248:1893:25c8:1946
+> 2001:0db8::1
+dig +short -x 2001:0db8::1
 > mercury.example.com.
 ```
 
@@ -183,8 +183,8 @@ mercury.example.com.	86400	IN	SSHFP	4 2 a...
 Each domain and subdomain needs a TXT record with SPF data:
 ```console
 example.com.		86400	IN	TXT	"v=spf1 mx mx:example.com -all"
-mercury.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:93.184.216.34 ip6:2606:2800:220:1:248:1893:25c8:194 -all"
-hermes.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:200.100.2.200 ip6:2001:1002:2:1::/64 -all"
+mercury.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.1 ip6:2606:2800:220:1:248:1893:25c8:194 -all"
+hermes.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.2 ip6:2001:0db8::2 -all"
 www.example.com.	86400	IN	TXT	"v=spf1 -all"
 ```
 

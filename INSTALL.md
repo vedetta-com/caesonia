@@ -182,7 +182,7 @@ grep -r hermes .
 find . -type f -exec sed -i "s|hermes|$(dig +short $(hostname | sed "s/$(hostname -s).//") mx | awk -vhostname="$(hostname)" '{if ($2 != hostname".") print $2;}')|g" {} +
 ```
 
-Update the allowed mail relays [source table](https://man.openbsd.org/table.5#Source_tables) [`src/etc/mail/relays`](src/etc/mail/relays).
+Update the allowed mail relays [source table](https://man.openbsd.org/table.5#Source_tables) [`etc/mail/relays`](src/etc/mail/relays).
 
 Update wheel user name "puffy":
 ```sh
@@ -408,7 +408,7 @@ echo "jane@example.meh" >> /etc/mail/blacklist
 smtpctl update table blacklist-senders
 ```
 
-or blacklist everybody "@example.meh" for bad behaviour:
+or blacklist everybody "@example.meh" for bad behavior:
 ```sh
 echo "@example.meh" >> /etc/mail/blacklist
 smtpctl update table blacklist-senders
