@@ -183,7 +183,7 @@ mercury.example.com.	86400	IN	SSHFP	4 2 a...
 Each domain and subdomain needs a TXT record with SPF data:
 ```console
 example.com.		86400	IN	TXT	"v=spf1 mx mx:example.com -all"
-mercury.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.1 ip6:2606:2800:220:1:248:1893:25c8:194 -all"
+mercury.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.1 ip6:2001:0db8::1 -all"
 hermes.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.2 ip6:2001:0db8::2 -all"
 www.example.com.	86400	IN	TXT	"v=spf1 -all"
 ```
