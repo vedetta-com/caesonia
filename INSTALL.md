@@ -1,5 +1,5 @@
-# caesonia (beta) *draft* **please report errors**
-*Open*BSD Email Service
+# caesonia (beta)
+*Open*BSD Email Service - Installation Guide
 
 * [OpenBSD Installation](#openbsd-installation)
 * [Email Service Configuration](#email-service-configuration)
