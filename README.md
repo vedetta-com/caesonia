@@ -139,7 +139,7 @@ dig +short -x 2001:0db8::1
 > mercury.example.com.
 ```
 
-#### MX
+#### Mail eXchanger ([MX](https://tools.ietf.org/html/rfc5321))
 Each domain has first priority MX record "mercury.example.com"
 
 Each domain has second priority MX record "hermes.example.com"
@@ -156,15 +156,15 @@ example.net.	86400	IN	MX	10 mercury.example.com.
 example.net.	86400	IN	MX	20 hermes.example.com.
 ```
 
-#### CAA
-Primary domain name's [CAA](https://tools.ietf.org/html/rfc6844) record sets "letsencrypt.org" as the only CA allowed to issue certificates:
+#### Certification Authority Authorization ([CAA](https://tools.ietf.org/html/rfc6844))
+Primary domain name's CAA record sets "[letsencrypt.org](https://letsencrypt.org/)" as the only CA allowed to issue certificates:
 ```console
 example.com.	86400	IN	CAA	128 issue "letsencrypt.org"
 example.com.	86400	IN	CAA	128 issuewild ";"
 ```
 
-#### SSHFP
-Each MX subdomain needs their hosts's [SSHFP](http://man.openbsd.org/ssh#VERIFYING_HOST_KEYS) records:
+#### Secure Shell Fingerprint ([SSHFP](https://man.openbsd.org/ssh#VERIFYING_HOST_KEYS))
+Each MX subdomain needs their hosts's SSHFP records:
 ```sh
 ssh-keygen -r mercury.example.com
 ```
