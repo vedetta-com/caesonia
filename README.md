@@ -116,7 +116,7 @@ Ansible: [ansible-role-mailserver](https://github.com/gonzalo-/ansible-role-mail
 ## Prerequisites
 A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows editing the following record types: A, AAAA, MX, CAA, TXT, SSHFP
 
-#### Forward-confirmed reverse DNS (FCrDNS)
+#### Forward-confirmed reverse DNS ([FCrDNS](https://tools.ietf.org/html/draft-ietf-dnsop-reverse-mapping-considerations-06))
 Each MX subdomain has record types A, and AAAA with the VPS IPv4, and IPv6:
 ```console
 mercury.example.com.	86400	IN	A	203.0.113.1
@@ -157,14 +157,14 @@ example.net.	86400	IN	MX	20 hermes.example.com.
 ```
 
 #### CAA
-Primary domain name's CAA record sets "letsencrypt.org" as the only CA allowed to issue certificates:
+Primary domain name's [CAA](https://tools.ietf.org/html/rfc6844) record sets "letsencrypt.org" as the only CA allowed to issue certificates:
 ```console
 example.com.	86400	IN	CAA	128 issue "letsencrypt.org"
 example.com.	86400	IN	CAA	128 issuewild ";"
 ```
 
 #### SSHFP
-Each MX subdomain needs their hosts's SSHFP records:
+Each MX subdomain needs their hosts's [SSHFP](http://man.openbsd.org/ssh#VERIFYING_HOST_KEYS) records:
 ```sh
 ssh-keygen -r mercury.example.com
 ```
@@ -179,7 +179,7 @@ mercury.example.com.	86400	IN	SSHFP	4 1 7...
 mercury.example.com.	86400	IN	SSHFP	4 2 a...
 ```
 
-#### Sender Policy Framework (SPF)
+#### Sender Policy Framework ([SPF](http://www.openspf.org/))
 Each domain and subdomain needs a TXT record with SPF data:
 ```console
 example.com.		86400	IN	TXT	"v=spf1 mx mx:example.com -all"
@@ -193,7 +193,7 @@ Each *virtual* domain and *virtual* subdomain needs a TXT record with SPF data:
 example.net.		86400	IN	TXT	"v=spf1 include:example.com ~all"
 ```
 
-#### Domain Keys Identified Mail (DKIM)
+#### Domain Keys Identified Mail ([DKIM](http://www.dkim.org))
 Generate a private and public key:
 ```sh
 mkdir -p /etc/ssl/dkim/private
@@ -216,7 +216,7 @@ Each *virtual* domain name needs a TXT record with the (same) public key:
 obsd._domainkey.example.net.	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
 ```
 
-#### Domain-based Message Authentication, Reporting & Conformance (DMARC)
+#### Domain-based Message Authentication, Reporting & Conformance ([DMARC](https://dmarc.org/))
 Each domain name needs a TXT record for subdomain "_dmarc" with DMARC data:
 ```console
 _dmarc.example.com.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.com
@@ -224,7 +224,7 @@ _dmarc.example.com.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcre
 
 Each *virtual* domain name needs a TXT record for subdomain "_dmarc" with DMARC data:
 ```console
-_dmarc.example.net	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.net
+_dmarc.example.net.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.net
 ```
 
 ## Support
