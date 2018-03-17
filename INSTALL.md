@@ -8,7 +8,7 @@
 * [Administration](#administration)
 
 ## Preface
-While there are many ways to install, on different hosts, this guide will focus on Kernel-based Virtual Machine (KVM), a popular offer for Virtual Private Server (VPS).
+While there are many ways to [install](https://www.openbsd.org/faq/faq4.html), on different hosts, this guide will focus on Kernel-based Virtual Machine (KVM), a popular offer for Virtual Private Server (VPS).
 
 ## Hosting
 When searching for a hosting company, some useful keywords are "KVM" and "VPS", with "unmanaged" or "self-managed" type of service.
