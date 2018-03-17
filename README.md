@@ -42,6 +42,9 @@ System mail is delivered to an alias mapped to a virtual user served by the serv
 e.g. puffy@mercury.example.com is wheel, with an alias mapped to (virtual) puffy@example.com, and user (puffy) can be different for each.
 
 ## Getting started
+
+See the [**Installation Guide**](INSTALL.md) for details.
+
 Install packages:
 ```sh
 pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras
@@ -70,12 +73,12 @@ virtual domain name: example.com
                      example.net
 
 primary MX host: mercury.example.com
-primary MX IPv4: 93.184.216.34
-primary MX IPv6: 2606:2800:220:1:248:1893:25c8:1946
+primary MX IPv4: 203.0.113.1
+primary MX IPv6: 2001:0db8::1
 
 backup MX host: hermes.example.com
-backup MX IPv4: 200.100.2.200
-backup MX IPv6: 2001:1002:2:1::babe
+backup MX IPv4: 203.0.113.2
+backup MX IPv6: 2001:0db8::2
 
 DKIM selector: obsd
 external (egress) interface: vio0
@@ -113,11 +116,11 @@ Ansible: [ansible-role-mailserver](https://github.com/gonzalo-/ansible-role-mail
 ## Prerequisites
 A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows editing the following record types: A, AAAA, MX, CAA, TXT, SSHFP
 
-#### Forward-confirmed reverse DNS (FCrDNS)
+#### Forward-confirmed reverse DNS ([FCrDNS](https://tools.ietf.org/html/draft-ietf-dnsop-reverse-mapping-considerations-06))
 Each MX subdomain has record types A, and AAAA with the VPS IPv4, and IPv6:
 ```console
-mercury.example.com.	86400	IN	A	93.184.216.34
-mercury.example.com.	86400	IN	AAAA	2606:2800:220:1:248:1893:25c8:1946
+mercury.example.com.	86400	IN	A	203.0.113.1
+mercury.example.com.	86400	IN	AAAA	2001:0db8::1
 ```
 Each IPv4 and IPv6 has record type PTR with the MX subdomain (reverse DNS configured on VPS host):
 ```console
@@ -126,17 +129,17 @@ Each IPv4 and IPv6 has record type PTR with the MX subdomain (reverse DNS config
 Verify:
 ```sh
 dig +short mercury.example.com a
-> 93.184.216.34
-dig +short -x 93.184.216.34
+> 203.0.113.1
+dig +short -x 203.0.113.1
 > mercury.example.com.
 
 dig +short mercury.example.com aaaa
-> 2606:2800:220:1:248:1893:25c8:1946
-dig +short -x 2606:2800:220:1:248:1893:25c8:1946
+> 2001:0db8::1
+dig +short -x 2001:0db8::1
 > mercury.example.com.
 ```
 
-#### MX
+#### Mail eXchanger ([MX](https://tools.ietf.org/html/rfc5321))
 Each domain has first priority MX record "mercury.example.com"
 
 Each domain has second priority MX record "hermes.example.com"
@@ -145,14 +148,22 @@ example.com.	86400	IN	MX	10 mercury.example.com.
 example.com.	86400	IN	MX	20 hermes.example.com.
 ```
 
-#### CAA
-Primary domain name's CAA record sets "letsencrypt.org" as the only CA allowed to issue certificates:
+Each *virtual* domain has first priority MX record "mercury.example.com"
+
+Each *virtual* domain has second priority MX record "hermes.example.com"
+```console
+example.net.	86400	IN	MX	10 mercury.example.com.
+example.net.	86400	IN	MX	20 hermes.example.com.
+```
+
+#### Certification Authority Authorization ([CAA](https://tools.ietf.org/html/rfc6844))
+Primary domain name's CAA record sets "[letsencrypt.org](https://letsencrypt.org/)" as the only CA allowed to issue certificates:
 ```console
 example.com.	86400	IN	CAA	128 issue "letsencrypt.org"
 example.com.	86400	IN	CAA	128 issuewild ";"
 ```
 
-#### SSHFP
+#### Secure Shell Fingerprint ([SSHFP](https://man.openbsd.org/ssh#VERIFYING_HOST_KEYS))
 Each MX subdomain needs their hosts's SSHFP records:
 ```sh
 ssh-keygen -r mercury.example.com
@@ -168,16 +179,21 @@ mercury.example.com.	86400	IN	SSHFP	4 1 7...
 mercury.example.com.	86400	IN	SSHFP	4 2 a...
 ```
 
-#### Sender Policy Framework (SPF)
+#### Sender Policy Framework ([SPF](http://www.openspf.org/))
 Each domain and subdomain needs a TXT record with SPF data:
 ```console
 example.com.		86400	IN	TXT	"v=spf1 mx mx:example.com -all"
-mercury.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:93.184.216.34 ip6:2606:2800:220:1:248:1893:25c8:194 -all"
-hermes.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:200.100.2.200 ip6:2001:1002:2:1::/64 -all"
+mercury.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.1 ip6:2001:0db8::1 -all"
+hermes.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.2 ip6:2001:0db8::2 -all"
 www.example.com.	86400	IN	TXT	"v=spf1 -all"
 ```
 
-#### Domain Keys Identified Mail (DKIM)
+Each *virtual* domain and *virtual* subdomain needs a TXT record with SPF data:
+```console
+example.net.		86400	IN	TXT	"v=spf1 include:example.com ~all"
+```
+
+#### Domain Keys Identified Mail ([DKIM](http://www.dkim.org))
 Generate a private and public key:
 ```sh
 mkdir -p /etc/ssl/dkim/private
@@ -193,13 +209,22 @@ chmod 440 /etc/ssl/dkim/private/private.key
 Add public key in TXT record:
 ```console
 obsd._domainkey.example.com.	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
-
 ```
 
-#### Domain-based Message Authentication, Reporting & Conformance (DMARC)
+Each *virtual* domain name needs a TXT record with the (same) public key:
+```console
+obsd._domainkey.example.net.	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
+```
+
+#### Domain-based Message Authentication, Reporting & Conformance ([DMARC](https://dmarc.org/))
 Each domain name needs a TXT record for subdomain "_dmarc" with DMARC data:
 ```console
 _dmarc.example.com.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.com
+```
+
+Each *virtual* domain name needs a TXT record for subdomain "_dmarc" with DMARC data:
+```console
+_dmarc.example.net.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.net
 ```
 
 ## Support
