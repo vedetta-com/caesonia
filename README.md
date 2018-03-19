@@ -4,7 +4,7 @@
 ![Public Domain](src/var/www/htdocs/mercury.example.com/Milonia_Caesonia-250x259.jpg)
 
 ## About
-> a free-email alternative for ~$2.50/mo.
+> a free-email alternative
 
 Root your Inbox :mailbox_with_mail:
 
@@ -231,4 +231,4 @@ _dmarc.example.net.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcre
 Via [issues](https://github.com/vedetta-com/caesonia/issues) and #openbsd:[matrix.org](https://matrix.org/)
 
 ## Contribute
-:pray:
+[:pray:](https://github.com/vedetta-com/caesonia#fork-destination-box)
