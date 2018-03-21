@@ -18,6 +18,6 @@ HOME=/var/log
 30	3	*	*	6	/bin/sh /etc/weekly
 30	5	1	*	*	/bin/sh /etc/monthly
 #0	*	*	*	*	sleep $((RANDOM \% 2048)) && /usr/libexec/spamd-setup
-30	7	*	*	*	smtpctl show stats; /usr/local/bin/rspamc -h /var/run/rspamd/rspamd.sock stat; /usr/local/bin/doveadm replicator status '*'
+30	7	*	*	*	smtpctl show stats; printf '\n'; /usr/local/bin/rspamc -h /var/run/rspamd/rspamd.sock stat; /usr/local/bin/doveadm -f pager replicator status '*'; printf '\n'; /usr/local/bin/doveadm -f pager quota get -A
 30	9	*	*	*	syspatch -c
 20	6	*	*	*	/usr/sbin/acme-client mercury.example.com && /usr/local/bin/get-ocsp.sh mercury.example.com
