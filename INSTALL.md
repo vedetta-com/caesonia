@@ -277,7 +277,7 @@ Unbound DNS validating resolver from root nameservers, with fallback:
 unbound-anchor -a "/var/unbound/db/root.key"
 ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache
 rcctl restart unbound
-install -o root -g wheel -m 0644 -b src/etc/resolv.conf /etc/
+cp src/etc/resolv.conf /etc/
 ```
 
 ### Sieve
