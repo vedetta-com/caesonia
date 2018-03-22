@@ -17,6 +17,11 @@ Disable block log in pf, with small /var/log:
 cp src/etc/pf.conf.anchor.block /etc/
 ```
 
+DNS Transport over TCP ([rfc7766](https://tools.ietf.org/html/rfc7766)):
+```sh
+awk '/port domain/{sub(/udp/, "{ tcp udp }", last)} NR>1{print last} {last=$0} END {print last}' /etc/pf.conf > /tmp/pf.conf && cp /tmp/pf.conf /etc/pf.conf && rm /tmp/pf.conf
+```
+
 Include quota usage in daily stats, with formatting for small screens:
 ```sh
 crontab -e
@@ -54,7 +59,7 @@ crontab -e
 
 *n.b.*: Unbound configured to use ~10MB RAM
 ```sh
-ps -U _unbound -o rss | awk '{sum += $1} END {print "RSS for _unbound", sum/1024 "MB"}'  
+ps -U _unbound -o rss | awk '{sum += $1} END {print "RSS for _unbound", sum/1024 "MB"}'
 > RSS for _unbound 6.66406MB
 ```
 
