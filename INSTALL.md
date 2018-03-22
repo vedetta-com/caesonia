@@ -247,6 +247,8 @@ install -o root -g vmail -m 0550 -b src/usr/local/bin/learn_ham.sh /usr/local/bi
 install -o root -g vmail -m 0550 -b src/usr/local/bin/learn_spam.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/quota-warning.sh /usr/local/bin/
 
+install -o root -g crontab -m 0640 -b src/var/cron/cron.allow /var/cron/
+
 install -o root -g wheel -m 0755 -d src/var/dovecot/sieve-pipe /var/dovecot/sieve-pipe
 
 install -o root -g vmail -m 0750 -d src/var/dovecot/imapsieve/after /var/dovecot/imapsieve/after
@@ -258,12 +260,24 @@ install -o root -g vmail -m 0750 -d src/var/dovecot/sieve/after /var/dovecot/sie
 install -o root -g vmail -m 0750 -d src/var/dovecot/sieve/before /var/dovecot/sieve/before
 install -o root -g vmail -m 0640 -b src/var/dovecot/sieve/before/spamtest.sieve /var/dovecot/sieve/before/
 
+install -o root -g wheel -m 0644 -b src/var/unbound/etc/unbound.conf /var/unbound/etc/
+
 install -o root -g daemon -m 0755 -d src/var/www/htdocs/mercury.example.com /var/www/htdocs/$(hostname)
 install -o root -g daemon -m 0644 -b src/var/www/htdocs/mercury.example.com/index.html /var/www/htdocs/$(hostname)/
 
 install -o root -g wheel -m 0644 -b src/root/.ssh/config /root/.ssh/
 
 mkdir -m 700 /var/crash/rspamd
+```
+
+### DNS resolver
+
+Unbound DNS validating resolver from root nameservers, with fallback:
+```sh
+unbound-anchor -a "/var/unbound/db/root.key"
+ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache
+rcctl restart unbound
+install -o root -g wheel -m 0644 -b src/etc/resolv.conf /etc/
 ```
 
 ### Sieve
@@ -438,5 +452,18 @@ Add your own [Sieve](https://tools.ietf.org/html/rfc6785) scripts in `/var/vmail
 cd /var/vmail/example.com/puffy/
 ln -s sieve/script.sieve .dovecot.sieve
 sievec .dovecot.sieve
+```
+
+To disable filtering based on 3rd party blocking lists:
+```sh
+mv /etc/rspamd/local.d/rbl.conf.optional \
+   /etc/rspamd/local.d/rbl.conf
+
+sed -i '|enabled|s|^#||' /etc/rspamd/local.d/surbl.conf
+
+mv /etc/rspamd/override.d/emails.conf.optional \
+   /etc/rspamd/override.d/emails.conf
+vi /etc/rspamd/override.d/bad_emails.list
+rcctl reload rspamd
 ```
 

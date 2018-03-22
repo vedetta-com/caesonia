@@ -1,5 +1,5 @@
 # resolv.conf.tail
-nameserver 2001:4860:4860::8888
-nameserver 2001:4860:4860::8844
+nameserver 2001:470:20::2 # he.net
+nameserver 2001:4860:4860::8888 # google.com
 family inet6 inet4 # prefer IPv6
 lookup file bind

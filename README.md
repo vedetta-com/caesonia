@@ -24,6 +24,7 @@ Root your Inbox :mailbox_with_mail:
 - Resilient: the backup MX can be used as primary, even when the primary is not down, both perfect replicas
 - Flexible: switching roles is easy, making the process of changing VPS hosts a breeze (no downtime)
 - DMARC (with DKIM and SPF) email-validation system, to detect and prevent email spoofing
+- Uncensored DNS validating resolver from root nameservers
 - Daily (spartan) stats, to keep track of things
 - Your sieve scripts and managesieve configuration, let's get started
 
