@@ -7,29 +7,29 @@
 
 ## Upgrade Guide
 
-Fix rspamd log rotation
+Fix rspamd log rotation:
 ```sh
 sed '/rspamd.log/s|HUP|USR1|' /etc/newsyslog.conf
 ```
 
-Disable block log in pf, with small /var/log
+Disable block log in pf, with small /var/log:
 ```sh
 install -o root -g wheel -m 0600 -b src/etc/pf.conf.anchor.block /etc/
 ```
 
-Include quota usage in daily stats, with formatting for small screens
+Include quota usage in daily stats, with formatting for small screens:
 ```sh
 crontab -e
 > 30 7 * * * smtpctl show stats; printf '\n'; /usr/local/bin/rspamc -h /var/run/rspamd/rspamd.sock stat; /usr/local/bin/doveadm -f pager replicator status '*'; printf '\n'; /usr/local/bin/doveadm -f pager quota get -A
 ```
 
-Mailbox [auto-creation](https://wiki2.dovecot.org/MailLocation)
+Mailbox [auto-creation](https://wiki2.dovecot.org/MailLocation):
 ```sh
 sed -i 's|^#mail_location =|mail_location = maildir:/var/vmail/%d/%n/Maildir:LAYOUT=fs|' \
 	/etc/dovecot/conf.d/10-mail.conf
 ```
 
-Optional [Listescape plugin](https://wiki2.dovecot.org/Plugins/Listescape)
+Optional [Listescape plugin](https://wiki2.dovecot.org/Plugins/Listescape):
 ```sh
 sed -i '/^mail_plugins/s|$mail_plugins|& listescape|' \
 	/etc/dovecot/conf.d/10-mail.conf
@@ -52,14 +52,20 @@ crontab -e
 > 20	4	1	May,Nov	*	ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache && rcctl restart unbound
 ```
 
-crontab whitelist
+*n.b.*: Unbound configured to use ~10MB RAM
+```sh
+ps -U _unbound -o rss | awk '{sum += $1} END {print "RSS for _unbound", sum/1024 "MB"}'  
+> RSS for _unbound 6.66406MB
+```
+
+crontab whitelist:
 ```sh
 echo root > /var/cron/cron.allow
 chgrp crontab /var/cron/cron.allow
 chmod 640 /var/cron/cron.allow
 ```
 
-Apply changes
+Apply changes:
 ```sh
 pfctl -f /etc/pf.conf
 rcctl reload dovecot
