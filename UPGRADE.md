@@ -35,13 +35,6 @@ sed -i '/^mail_plugins/s|$mail_plugins|& listescape|' \
 	/etc/dovecot/conf.d/10-mail.conf
 ```
 
-crontab whitelist
-```sh
-echo root > /var/cron/cron.allow
-chgrp crontab /var/cron/cron.allow
-chmod 640 /var/cron/cron.allow
-```
-
 Unbound DNS validating resolver from root nameservers, with fallback:
 ```sh
 rcctl enable unbound
@@ -57,6 +50,13 @@ install -o root -g wheel -m 0644 -b src/etc/resolv.conf /etc/
 crontab -e
 > 20	2	1,14	*	*	unbound-anchor -a "/var/unbound/db/root.key" && rcctl restart unbound
 > 20	4	1	May,Nov	*	ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache && rcctl restart unbound
+```
+
+crontab whitelist
+```sh
+echo root > /var/cron/cron.allow
+chgrp crontab /var/cron/cron.allow
+chmod 640 /var/cron/cron.allow
 ```
 
 Apply changes
