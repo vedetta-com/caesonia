@@ -1,7 +1,7 @@
 # caesonia (beta)
 *Open*BSD Email Service - Upgrade an existing installation
 
-`[6.2.4-beta](https://github.com/vedetta-com/caesonia/tree/v6.2.4-beta)` to `[6.2.5-beta](https://github.com/vedetta-com/caesonia/tree/v6.2.5-beta)`
+[`6.2.4-beta`](https://github.com/vedetta-com/caesonia/tree/v6.2.4-beta) to [`6.2.5-beta`](https://github.com/vedetta-com/caesonia/tree/v6.2.5-beta)
 
 > Upgrades are only supported from one release to the release immediately following it. Read through and understand this process before attempting it. For critical or physically remote machines, test it on an identical, local system first. - [OpenBSD Upgrade Guide](http://www.openbsd.org/faq/index.html)
 
@@ -23,13 +23,13 @@ crontab -e
 > 30 7 * * * smtpctl show stats; printf '\n'; /usr/local/bin/rspamc -h /var/run/rspamd/rspamd.sock stat; /usr/local/bin/doveadm -f pager replicator status '*'; printf '\n'; /usr/local/bin/doveadm -f pager quota get -A
 ```
 
-Mailbox auto-creation <https://wiki2.dovecot.org/MailLocation>
+Mailbox [auto-creation](https://wiki2.dovecot.org/MailLocation)
 ```sh
 sed -i 's|^#mail_location =|mail_location = maildir:/var/vmail/%d/%n/Maildir:LAYOUT=fs|' \
 	/etc/dovecot/conf.d/10-mail.conf
 ```
 
-Optional Listescape plugin <https://wiki2.dovecot.org/Plugins/Listescape>
+Optional [Listescape plugin](https://wiki2.dovecot.org/Plugins/Listescape)
 ```sh
 sed -i '/^mail_plugins/s|$mail_plugins|& listescape|' \
 	/etc/dovecot/conf.d/10-mail.conf
