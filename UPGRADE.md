@@ -14,7 +14,12 @@ sed '/rspamd.log/s|HUP|USR1|' /etc/newsyslog.conf
 
 Disable block log in pf, with small /var/log:
 ```sh
-install -o root -g wheel -m 0600 -b src/etc/pf.conf.anchor.block /etc/
+cp src/etc/pf.conf.anchor.block /etc/
+```
+
+DNS Transport over TCP ([rfc7766](https://tools.ietf.org/html/rfc7766)):
+```sh
+awk '/port domain/{sub(/udp/, "{ tcp udp }", last)} NR>1{print last} {last=$0} END {print last}' /etc/pf.conf > /tmp/pf.conf && cp /tmp/pf.conf /etc/pf.conf && rm /tmp/pf.conf
 ```
 
 Include quota usage in daily stats, with formatting for small screens:
@@ -43,9 +48,9 @@ unbound-anchor -a "/var/unbound/db/root.key"
 ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache
 rcctl restart unbound
 
-install -o root -g wheel -m 0640 -b src/etc/dhclient.conf /etc/
+cp src/etc/dhclient.conf /etc/
 sh /etc/netstart vio0
-install -o root -g wheel -m 0644 -b src/etc/resolv.conf /etc/
+cp src/etc/resolv.conf /etc/
 
 crontab -e
 > 20	2	1,14	*	*	unbound-anchor -a "/var/unbound/db/root.key" && rcctl restart unbound
@@ -54,7 +59,7 @@ crontab -e
 
 *n.b.*: Unbound configured to use ~10MB RAM
 ```sh
-ps -U _unbound -o rss | awk '{sum += $1} END {print "RSS for _unbound", sum/1024 "MB"}'  
+ps -U _unbound -o rss | awk '{sum += $1} END {print "RSS for _unbound", sum/1024 "MB"}'
 > RSS for _unbound 6.66406MB
 ```
 
