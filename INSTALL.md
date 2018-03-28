@@ -456,16 +456,16 @@ To add a new IPv4 to Microsoft's reputation based greylist, manual intervention 
 1. Delist IP from other blocking lists http://multirbl.valli.org/
 
 2. Add IP to Microsoft's greylist
-  * If sending to hotmail.com live.com msn.com outlook.com or any domain hosted on those services, use the following form: http://go.microsoft.com/fwlink/?LinkID=614866
-  * If sending to office.com or any domain hosted on this service, use the following form: https://sender.office.com/
+  * If sending to *hotmail.com* *live.com* *msn.com* *outlook.com* or any domain hosted on those services, use the following form: http://go.microsoft.com/fwlink/?LinkID=614866
+  * If sending to *office.com* or any domain hosted on this service, use the following form: https://sender.office.com/
 
 3. Check Inbox/ for an auto-reply email, followed by a response
-  * "conditionally mitigated" meaning the IP has been added to the greylist
-  * or that the IP is not eligible for delisting
+  * *conditionally mitigated* meaning the IP has been added to the greylist
+  * or the IP is not eligible for delisting
     * Politely reply, asking the reason why the IP is not eligible for delisting
     * A human will delist the IP in a few hours
 
-Microsoft recommends postmasters to join [Smart Network Data Service](https://postmaster.live.com/snds/) to monitor the new IP's reputation score, and the associated Junk Mail Reporting Program (*n.b.* requires Microsoft account)
+Microsoft recommends postmasters to join [Smart Network Data Service](https://postmaster.live.com/snds/) for monitoring the new IP's reputation score, and the associated Junk Mail Reporting Program (*n.b.* requires Microsoft account)
 
 ## What's next
 
