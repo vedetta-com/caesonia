@@ -445,6 +445,26 @@ and reload the `pf` table:
 pfctl -t permanentban -T replace -f /etc/pf.permanentban
 ```
 
+### Microsoft Network
+
+When sending emails to the Microsoft network from a new IP, the following error may occur:
+```console
+Mar 22 17:56:37 mercury smtpd[45037]: 8f4864084ecc48f4 mta event=delivery evpid=7077717e797a776e from=<puffy@example.com> to=<bill@hotmail.com> rcpt=<-> source="203.0.113.1" relay="104.47.38.33 (104.47.38.33)" delay=1s result="PermFail" stat="550 5.7.1 Unfortunately, messages from [203.0.113.1] weren't sent. Please contact your Internet service provider since part of their network is on our block list (AS3150). You can also refer your provider to http://mail.live.com/mail/troubleshooting.aspx#errors. [BL2NAM02FT031.eop-nam02.prod.protection.outlook.com]"
+```
+
+To add a new IPv4 to Microsoft's reputation based greylist, manual intervention from postmasters is required:
+1. Delist IP from other blocking lists http://multirbl.valli.org/
+2. Add IP to Microsoft's greylist
+--* If sending to hotmail.com live.com msn.com outlook.com or any domain hosted on those services, use the following form: http://go.microsoft.com/fwlink/?LinkID=614866
+--* If sending to office.com or any domain hosted on this service, use the following form: https://sender.office.com/
+3. Check Inbox/ for an auto-reply email, followed by a response
+--* "conditionally mitigated" meaning the IP has been added to the greylist
+--* or that the IP is not eligible for delisting
+----* Politely reply, asking the reason why the IP is not eligible for delisting
+----* A human will delist the IP in a few hours
+
+Microsoft recommends postmasters to join [Smart Network Data Service](https://postmaster.live.com/snds/) to monitor the new IP's reputation score, and the associated Junk Mail Reporting Program (*n.b.* requires Microsoft account)
+
 ## What's next
 
 Add your own [Sieve](https://tools.ietf.org/html/rfc6785) scripts in `/var/vmail/example.com/puffy/sieve`, then:
