@@ -447,7 +447,7 @@ pfctl -t permanentban -T replace -f /etc/pf.permanentban
 
 ### Microsoft Network
 
-When sending emails to the Microsoft network from a new IP, the following error may occur:
+When sending emails to Microsoft network from a new IP, the following error 550 may occur:
 ```console
 Mar 22 17:56:37 mercury smtpd[45037]: 8f4864084ecc48f4 mta event=delivery evpid=7077717e797a776e from=<puffy@example.com> to=<bill@hotmail.com> rcpt=<-> source="203.0.113.1" relay="104.47.38.33 (104.47.38.33)" delay=1s result="PermFail" stat="550 5.7.1 Unfortunately, messages from [203.0.113.1] weren't sent. Please contact your Internet service provider since part of their network is on our block list (AS3150). You can also refer your provider to http://mail.live.com/mail/troubleshooting.aspx#errors. [BL2NAM02FT031.eop-nam02.prod.protection.outlook.com]"
 ```
