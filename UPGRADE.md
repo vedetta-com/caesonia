@@ -1,79 +1,68 @@
 # caesonia (beta)
 *Open*BSD Email Service - Upgrade an existing installation
 
-[`6.2.4-beta`](https://github.com/vedetta-com/caesonia/tree/v6.2.4-beta) to [`6.2.5-beta`](https://github.com/vedetta-com/caesonia/tree/v6.2.5-beta)
+[`6.2.5-beta`](https://github.com/vedetta-com/caesonia/tree/v6.2.5-beta) to [`6.2.6-beta`](https://github.com/vedetta-com/caesonia/tree/v6.2.6-beta)
 
 > Upgrades are only supported from one release to the release immediately following it. Read through and understand this process before attempting it. For critical or physically remote machines, test it on an identical, local system first. - [OpenBSD Upgrade Guide](http://www.openbsd.org/faq/index.html)
 
 ## Upgrade Guide
 
-Fix rspamd log rotation:
-```sh
-sed '/rspamd.log/s|HUP|USR1|' /etc/newsyslog.conf
+Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration)
+```sh 
+vi src/var/www/htdocs/autoconfig.example.com/index.html
+install -o root -g daemon -m 0755 -d src/var/www/htdocs/autoconfig.example.com /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")
+install -o root -g daemon -m 0644 -b src/var/www/htdocs/autoconfig.example.com/index.html /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/
+
+vi src/var/www/htdocs/autoconfig.example.com/mail/config-v1.1.xml
+install -o root -g daemon -m 0755 -d src/var/www/htdocs/autoconfig.example.com/mail /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/mail
+install -o root -g daemon -m 0644 -b src/var/www/htdocs/autoconfig.example.com/mail/config-v1.1.xml /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/mail/
 ```
 
-Disable block log in pf, with small /var/log:
-```sh
-cp src/etc/pf.conf.anchor.block /etc/
+Each autoconfig subdomain has record types A, and AAAA with the VPS IPv4, and IPv6:
+```console   
+autoconfig.example.com.	86400	IN	A	203.0.113.1
+autoconfig.example.com.	86400	IN	AAAA	2001:0db8::1
+```  
+
+Each *virtual* autoconfig subdomain has record type CNAME pointing to *autoconfig.example.com*:
+```console
+autoconfig.example.net.	86400	IN	CNAME	autoconfig.example.com.
 ```
 
-DNS Transport over TCP ([rfc7766](https://tools.ietf.org/html/rfc7766)):
-```sh
-awk '/port domain/{sub(/udp/, "{ tcp udp }", last)} NR>1{print last} {last=$0} END {print last}' /etc/pf.conf > /tmp/pf.conf && cp /tmp/pf.conf /etc/pf.conf && rm /tmp/pf.conf
+Each domain and *virtual* domain has record types SRV for simple MUA [auto-configuration]((https://tools.ietf.org/html/rfc6186)):
+```console
+_submission._tcp.example.com.	86400	IN	SRV	0 1 587 mercury.example.com.
+_imaps._tcp.example.com.	86400	IN	SRV	0 1 993 mercury.example.com.
 ```
 
-Include quota usage in daily stats, with formatting for small screens:
-```sh
-crontab -e
-> 30 7 * * * smtpctl show stats; printf '\n'; /usr/local/bin/rspamc -h /var/run/rspamd/rspamd.sock stat; /usr/local/bin/doveadm -f pager replicator status '*'; printf '\n'; /usr/local/bin/doveadm -f pager quota get -A
+Each domain and subdomain needs a TXT record with SPF data:
+```console
+autoconfig.example.com.	86400	IN	TXT	"v=spf1 -all"
 ```
 
-Mailbox [auto-creation](https://wiki2.dovecot.org/MailLocation):
-```sh
-sed -i 's|^#mail_location =|mail_location = maildir:/var/vmail/%d/%n/Maildir:LAYOUT=fs|' \
-	/etc/dovecot/conf.d/10-mail.conf
+Edit and add the following configuration directive to [`/etc/httpd.conf`](src/etc/httpd.conf):
+```console
+# Mozilla Autoconfiguration
+server "autoconfig.*" {
+	listen on $IPv4 port http
+	listen on $IPv6 port http
+
+	tcp nodelay
+	connection { max requests 500, timeout 3600 }
+
+	log syslog
+
+	block
+
+	location "/*" {
+		root "/htdocs/autoconfig.example.com"
+		pass
+	}
+}
 ```
 
-Optional [Listescape plugin](https://wiki2.dovecot.org/Plugins/Listescape):
+Reload:
 ```sh
-sed -i '/^mail_plugins/s|$mail_plugins|& listescape|' \
-	/etc/dovecot/conf.d/10-mail.conf
-```
-
-Unbound DNS validating resolver from root nameservers, with fallback:
-```sh
-rcctl enable unbound
-install -o root -g wheel -m 0644 -b src/var/unbound/etc/unbound.conf /var/unbound/etc/
-unbound-anchor -a "/var/unbound/db/root.key"
-ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache
-rcctl restart unbound
-
-cp src/etc/dhclient.conf /etc/
-sh /etc/netstart vio0
-cp src/etc/resolv.conf /etc/
-
-crontab -e
-> 20	2	1,14	*	*	unbound-anchor -a "/var/unbound/db/root.key" && rcctl restart unbound
-> 20	4	1	May,Nov	*	ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache && rcctl restart unbound
-```
-
-*n.b.*: Unbound configured to use ~10MB RAM
-```sh
-ps -U _unbound -o rss | awk '{sum += $1} END {print "RSS for _unbound", sum/1024 "MB"}'
-> RSS for _unbound 6.66406MB
-```
-
-crontab whitelist:
-```sh
-echo root > /var/cron/cron.allow
-chgrp crontab /var/cron/cron.allow
-chmod 640 /var/cron/cron.allow
-```
-
-Apply changes:
-```sh
-pfctl -f /etc/pf.conf
-rcctl reload dovecot
-rcctl stop rspamd && rm /tmp/*.shm && rcctl start rspamd
+rcctl reload httpd
 ```
 
