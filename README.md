@@ -114,7 +114,7 @@ Disklabel: [var/www/htdocs/mercury.example.com/disklabel.min](src/var/www/htdocs
 Ansible: [ansible-role-mailserver](https://github.com/gonzalo-/ansible-role-mailserver/)
 
 ## Prerequisites
-A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows editing the following record types: [A](#forward-confirmed-reverse-dns-fcrdns), [AAAA](#forward-confirmed-reverse-dns-fcrdns), [SRV](#), [MX](#mail-exchanger-mx), [CAA](#certification-authority-authorization-caa), [SSHFP](#secure-shell-fingerprint-sshfp), [TXT](#sender-policy-framework-spf)
+A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows editing the following record types: [A](#forward-confirmed-reverse-dns-fcrdns), [AAAA](#forward-confirmed-reverse-dns-fcrdns), [SRV](#srv-records-for-locating-email-services), [MX](#mail-exchanger-mx), [CAA](#certification-authority-authorization-caa), [SSHFP](#secure-shell-fingerprint-sshfp), [TXT](#sender-policy-framework-spf)
 
 #### Forward-confirmed reverse DNS ([FCrDNS](https://tools.ietf.org/html/draft-ietf-dnsop-reverse-mapping-considerations-06))
 Each MX subdomain has record types A, and AAAA with the VPS IPv4, and IPv6:
@@ -159,24 +159,24 @@ _imaps._tcp.example.com.	86400	IN	SRV	0 1 993 mercury.example.com.
 ```
 
 #### Mail eXchanger ([MX](https://tools.ietf.org/html/rfc5321))
-Each domain has first priority MX record "mercury.example.com"
+Each domain has first priority MX record *mercury.example.com*
 
-Each domain has second priority MX record "hermes.example.com"
+Each domain has second priority MX record *hermes.example.com*
 ```console
 example.com.	86400	IN	MX	10 mercury.example.com.
 example.com.	86400	IN	MX	20 hermes.example.com.
 ```
 
-Each *virtual* domain has first priority MX record "mercury.example.com"
+Each *virtual* domain has first priority MX record *mercury.example.com*
 
-Each *virtual* domain has second priority MX record "hermes.example.com"
+Each *virtual* domain has second priority MX record *hermes.example.com*
 ```console
 example.net.	86400	IN	MX	10 mercury.example.com.
 example.net.	86400	IN	MX	20 hermes.example.com.
 ```
 
 #### Certification Authority Authorization ([CAA](https://tools.ietf.org/html/rfc6844))
-Primary domain name's CAA record sets "[letsencrypt.org](https://letsencrypt.org/)" as the only CA allowed to issue certificates:
+Primary domain name's CAA record sets *[letsencrypt.org](https://letsencrypt.org/)* as the only CA allowed to issue certificates:
 ```console
 example.com.	86400	IN	CAA	128 issue "letsencrypt.org"
 example.com.	86400	IN	CAA	128 issuewild ";"
@@ -236,12 +236,12 @@ obsd._domainkey.example.net.	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
 ```
 
 #### Domain-based Message Authentication, Reporting & Conformance ([DMARC](https://dmarc.org/))
-Each domain name needs a TXT record for subdomain "_dmarc" with DMARC data:
+Each domain name needs a TXT record for subdomain *_dmarc* with DMARC data:
 ```console
 _dmarc.example.com.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.com
 ```
 
-Each *virtual* domain name needs a TXT record for subdomain "_dmarc" with DMARC data:
+Each *virtual* domain name needs a TXT record for subdomain *_dmarc* with DMARC data:
 ```console
 _dmarc.example.net.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.net
 ```
