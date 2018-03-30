@@ -265,6 +265,12 @@ install -o root -g wheel -m 0644 -b src/var/unbound/etc/unbound.conf /var/unboun
 install -o root -g daemon -m 0755 -d src/var/www/htdocs/mercury.example.com /var/www/htdocs/$(hostname)
 install -o root -g daemon -m 0644 -b src/var/www/htdocs/mercury.example.com/index.html /var/www/htdocs/$(hostname)/
 
+install -o root -g daemon -m 0755 -d src/var/www/htdocs/autoconfig.example.com /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")
+install -o root -g daemon -m 0644 -b src/var/www/htdocs/autoconfig.example.com/index.html /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/
+
+install -o root -g daemon -m 0755 -d src/var/www/htdocs/autoconfig.example.com/mail /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/mail
+install -o root -g daemon -m 0644 -b src/var/www/htdocs/autoconfig.example.com/mail/config-v1.1.xml /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/mail/
+
 install -o root -g wheel -m 0644 -b src/root/.ssh/config /root/.ssh/
 
 mkdir -m 700 /var/crash/rspamd
@@ -346,6 +352,8 @@ rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 ```
 
 ## Client Configuration
+
+*n.b.*: MUA auto-configuration via [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration) and SRV Records for [Locating Email Services](https://tools.ietf.org/html/rfc6186)
 
 - IMAP server: mercury.example.com (or hermes.example.com)
   - Security: TLS
