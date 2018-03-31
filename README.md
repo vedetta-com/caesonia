@@ -117,7 +117,7 @@ Ansible: [ansible-role-mailserver](https://github.com/gonzalo-/ansible-role-mail
 A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows editing the following record types: [A](#forward-confirmed-reverse-dns-fcrdns), [AAAA](#forward-confirmed-reverse-dns-fcrdns), [SRV](#srv-records-for-locating-email-services), [MX](#mail-exchanger-mx), [CAA](#certification-authority-authorization-caa), [SSHFP](#secure-shell-fingerprint-sshfp), [TXT](#sender-policy-framework-spf)
 
 #### Forward-confirmed reverse DNS ([FCrDNS](https://tools.ietf.org/html/draft-ietf-dnsop-reverse-mapping-considerations-06))
-Each MX subdomain has record types A, and AAAA with the VPS IPv4, and IPv6:
+Each MX subdomain has record types A, and AAAA with the VPS' IPv4, and IPv6:
 ```console
 mercury.example.com.	86400	IN	A	203.0.113.1
 mercury.example.com.	86400	IN	AAAA	2001:0db8::1

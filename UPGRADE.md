@@ -18,7 +18,7 @@ install -o root -g daemon -m 0755 -d src/var/www/htdocs/autoconfig.example.com/m
 install -o root -g daemon -m 0644 -b src/var/www/htdocs/autoconfig.example.com/mail/config-v1.1.xml /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/mail/
 ```
 
-Each autoconfig subdomain has record types A, and AAAA with the VPS IPv4, and IPv6:
+Each autoconfig subdomain has record types A, and AAAA with the VPS' IPv4, and IPv6:
 ```console   
 autoconfig.example.com.	86400	IN	A	203.0.113.1
 autoconfig.example.com.	86400	IN	AAAA	2001:0db8::1
@@ -35,7 +35,7 @@ _submission._tcp.example.com.	86400	IN	SRV	0 1 587 mercury.example.com.
 _imaps._tcp.example.com.	86400	IN	SRV	0 1 993 mercury.example.com.
 ```
 
-Each domain and subdomain needs a TXT record with SPF data:
+Each autoconfig subdomain needs a TXT record with SPF data:
 ```console
 autoconfig.example.com.	86400	IN	TXT	"v=spf1 -all"
 ```
