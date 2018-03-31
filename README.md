@@ -58,7 +58,7 @@ useradd -m -u 2001 -g =uid -c "Dsync Replication" -d /home/dsync -s /bin/sh dsyn
 ```
 ## Cheatsheet
 #### A quick way around
-Let's assume we want to change the (default) virtual domain name from `example.net` to `example.org`
+Let's assume we want to change the (default) *virtual* domain name from `example.net` to `example.org`
 ```sh
 cd src/
 grep -r example.net .
@@ -140,7 +140,7 @@ dig +short -x 2001:0db8::1
 ```
 
 #### Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration)
-Each autoconfig subdomain has record types A, and AAAA with the VPS IPv4, and IPv6:
+Each autoconfig subdomain has record types A, and AAAA with the VPS' IPv4, and IPv6:
 ```console
 autoconfig.example.com.	86400   IN      A       203.0.113.1
 autoconfig.example.com.	86400	IN	AAAA	2001:0db8::1
@@ -247,7 +247,7 @@ _dmarc.example.net.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcre
 ```
 
 ## Support
-Via [issues](https://github.com/vedetta-com/caesonia/issues) and #openbsd:[matrix.org](https://matrix.org/)
+Via [issues](https://github.com/vedetta-com/caesonia/issues) and [#caesonia:matrix.org](https://riot.im/app/#/room/#caesonia:matrix.org)
 
 ## Contribute
 [:pray:](https://github.com/vedetta-com/caesonia#fork-destination-box)
