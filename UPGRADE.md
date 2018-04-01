@@ -66,3 +66,12 @@ Reload:
 rcctl reload httpd
 ```
 
+When relaying as backup MX, enforce STARTTLS and certificate verification:
+```sh
+sed -i 's|relay backup|& tls verify|g' /etc/mail/smtpd.conf
+```
+
+Restart backup MX:
+```sh
+rcctl restart smtpd
+```
