@@ -35,6 +35,14 @@ When assigned a static IPv6 with SLAAC, disable persistent [Semantically Opaque 
 echo "inet6 -soii" >> /etc/hostname.vio0
 ```
 
+Enable syncookie adaptive mode:
+```sh
+sed -i '/block-policy/a\
+	set syncookies adaptive (start 25%, end 12%)
+	' /etc/pf.conf
+pfctl -f /etc/pf.conf
+```
+
 Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration)
 ```sh 
 vi src/var/www/htdocs/autoconfig.example.com/index.html
