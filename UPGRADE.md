@@ -1,11 +1,34 @@
 # caesonia (beta)
 *Open*BSD Email Service - Upgrade an existing installation
 
-[`6.2.5-beta`](https://github.com/vedetta-com/caesonia/tree/v6.2.5-beta) to [`6.2.6-beta`](https://github.com/vedetta-com/caesonia/tree/v6.2.6-beta)
+[`6.2.5-beta`](https://github.com/vedetta-com/caesonia/tree/v6.2.5-beta) to [`6.3.0-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.0-beta)
 
 > Upgrades are only supported from one release to the release immediately following it. Read through and understand this process before attempting it. For critical or physically remote machines, test it on an identical, local system first. - [OpenBSD Upgrade Guide](http://www.openbsd.org/faq/index.html)
 
 ## Upgrade Guide
+
+Before upgrading to OpenBSD 6.3, backup `/var/rspamd` and:
+```sh
+cd /tmp
+ftp https://fastly.cdn.openbsd.org/pub/OpenBSD/6.3/amd64/bsd.rd
+ftp https://fastly.cdn.openbsd.org/pub/OpenBSD/6.3/amd64/SHA256.sig
+signify -C -p /etc/signify/openbsd-63-base.pub -x SHA256.sig bsd.rd && \
+	cp /bsd.rd /bsd.rd-6.2 && cp /tmp/bsd.rd /
+rm -r /usr/share/man
+rm -r /usr/share/compile
+reboot
+boot: bsd.rd
+> (I)nstall, (U)pgrade, (A)utoinstall or (S)hell? U
+Set name(s) = -comp* -game* -x*
+reboot
+sysmerge
+pkg_add -u
+sievec /var/dovecot/imapsieve/before/report-ham.sieve
+sievec /var/dovecot/imapsieve/before/report-spam.sieve
+sievec /var/dovecot/sieve/before/spamtest.sieve
+rcctl restart smtpd dovecot rspamd dkimproxy_out
+rm /bsd.rd-6.2
+```
 
 Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration)
 ```sh 
