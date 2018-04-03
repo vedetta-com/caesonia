@@ -16,6 +16,10 @@ signify -C -p /etc/signify/openbsd-63-base.pub -x SHA256.sig bsd.rd && \
 	cp -p /bsd.rd /bsd.rd-6.2 && cp /tmp/bsd.rd /
 rm -r /usr/share/man
 rm -r /usr/share/compile
+cd /usr/X11R6/lib
+rm libpthread-stubs.a \
+	libpthread-stubs.so.2.0 \
+	pkgconfig/pthread-stubs.pc
 reboot
 boot: bsd.rd
 > (I)nstall, (U)pgrade, (A)utoinstall or (S)hell? U
@@ -30,7 +34,7 @@ rcctl restart smtpd dovecot rspamd dkimproxy_out
 rm /bsd.rd-6.2
 ```
 
-When assigned a static IPv6 with SLAAC, disable persistent [Semantically Opaque Interface Identifiers](https://tools.ietf.org/html/rfc7217):
+[RFC 7217](https://tools.ietf.org/html/rfc7217) style IPv6 addresses enabled by default. If you need the old style:
 ```sh
 echo "inet6 -soii" >> /etc/hostname.vio0
 ```
