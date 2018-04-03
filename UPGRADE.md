@@ -13,7 +13,7 @@ cd /tmp
 ftp https://fastly.cdn.openbsd.org/pub/OpenBSD/6.3/amd64/bsd.rd
 ftp https://fastly.cdn.openbsd.org/pub/OpenBSD/6.3/amd64/SHA256.sig
 signify -C -p /etc/signify/openbsd-63-base.pub -x SHA256.sig bsd.rd && \
-	cp /bsd.rd /bsd.rd-6.2 && cp /tmp/bsd.rd /
+	cp -p /bsd.rd /bsd.rd-6.2 && cp /tmp/bsd.rd /
 rm -r /usr/share/man
 rm -r /usr/share/compile
 reboot
