@@ -30,6 +30,11 @@ rcctl restart smtpd dovecot rspamd dkimproxy_out
 rm /bsd.rd-6.2
 ```
 
+When assigned a static IPv6 with SLAAC, disable persistent [Semantically Opaque Interface Identifiers](https://tools.ietf.org/html/rfc7217):
+```sh
+echo "inet6 -soii" >> /etc/hostname.vio0
+```
+
 Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration)
 ```sh 
 vi src/var/www/htdocs/autoconfig.example.com/index.html
