@@ -1,11 +1,51 @@
 # caesonia (beta)
 *Open*BSD Email Service - Upgrade an existing installation
 
-[`6.2.5-beta`](https://github.com/vedetta-com/caesonia/tree/v6.2.5-beta) to [`6.2.6-beta`](https://github.com/vedetta-com/caesonia/tree/v6.2.6-beta)
+[`6.2.5-beta`](https://github.com/vedetta-com/caesonia/tree/v6.2.5-beta) to [`6.3.0-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.0-beta)
 
 > Upgrades are only supported from one release to the release immediately following it. Read through and understand this process before attempting it. For critical or physically remote machines, test it on an identical, local system first. - [OpenBSD Upgrade Guide](http://www.openbsd.org/faq/index.html)
 
 ## Upgrade Guide
+
+Before upgrading to OpenBSD 6.3, backup `/var/rspamd` and:
+```sh
+cd /tmp
+ftp https://fastly.cdn.openbsd.org/pub/OpenBSD/6.3/amd64/bsd.rd
+ftp https://fastly.cdn.openbsd.org/pub/OpenBSD/6.3/amd64/SHA256.sig
+signify -C -p /etc/signify/openbsd-63-base.pub -x SHA256.sig bsd.rd && \
+	cp -p /bsd.rd /bsd.rd-6.2 && cp /tmp/bsd.rd /
+rm -r /usr/share/man
+rm -r /usr/share/compile
+cd /usr/X11R6/lib
+rm libpthread-stubs.a \
+	libpthread-stubs.so.2.0 \
+	pkgconfig/pthread-stubs.pc
+reboot
+boot: bsd.rd
+> (I)nstall, (U)pgrade, (A)utoinstall or (S)hell? U
+Set name(s) = -comp* -game* -x*
+reboot
+sysmerge
+pkg_add -u
+sievec /var/dovecot/imapsieve/before/report-ham.sieve
+sievec /var/dovecot/imapsieve/before/report-spam.sieve
+sievec /var/dovecot/sieve/before/spamtest.sieve
+rcctl restart smtpd dovecot rspamd dkimproxy_out
+rm /bsd.rd-6.2
+```
+
+[RFC 7217](https://tools.ietf.org/html/rfc7217) style IPv6 addresses enabled by default. If you need the old style:
+```sh
+echo "inet6 -soii" >> /etc/hostname.vio0
+```
+
+Enable syncookie adaptive mode:
+```sh
+sed -i '/block-policy/a\
+	set syncookies adaptive (start 25%, end 12%)
+	' /etc/pf.conf
+pfctl -f /etc/pf.conf
+```
 
 Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration)
 ```sh 

@@ -3,6 +3,7 @@
 -inet6 # reset interface to its default state
 dhcp # static IP
 inet6 -autoconfprivacy # static IP
+inet6 -soii # disable persistent Semantically Opaque Interface Identifiers
 inet6 autoconf # slaac
 #inet6 2001:0db8::1 64 # no slaac
 #inet6 alias 2001:0db8::2 64 # prefixlen 56 for gateways on different network
