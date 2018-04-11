@@ -5,4 +5,4 @@ swap		1G
 /usr		1G
 /usr/local	512M
 /home		8M
-/var		*
+/var		10G-*
