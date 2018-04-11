@@ -111,8 +111,6 @@ full sync: replication_full_sync_interval\ =\ 1h
 
 Disklabel: [var/www/htdocs/mercury.example.com/disklabel.min](src/var/www/htdocs/mercury.example.com/disklabel.min)
 
-Ansible (sister project): [ansible-role-mailserver](https://github.com/gonzalo-/ansible-role-mailserver/)
-
 ## Prerequisites
 A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows editing the following record types: [A](#forward-confirmed-reverse-dns-fcrdns), [AAAA](#forward-confirmed-reverse-dns-fcrdns), [CNAME](#mozilla-autoconfiguration), [SRV](#srv-records-for-locating-email-services), [MX](#mail-exchanger-mx), [CAA](#certification-authority-authorization-caa), [SSHFP](#secure-shell-fingerprint-sshfp), [TXT](#sender-policy-framework-spf)
 
