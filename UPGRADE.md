@@ -126,7 +126,7 @@ get-ocsp.sh mercury.example.com
 
 Restart:
 ```sh
-rcctl restart sshd dovecot
+rcctl restart smtpd dovecot
 ```
 
 When relaying as backup MX, enforce STARTTLS and certificate verification:
