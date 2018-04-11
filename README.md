@@ -145,7 +145,7 @@ autoconfig.example.com.	86400	IN	CNAME	mercury.example.com.
 
 Each *virtual* autoconfig subdomain has record type CNAME pointing to Autoconfiguration server:
 ```console
-autoconfig.example.net.	86400	IN	CNAME	autoconfig.example.com.
+autoconfig.example.net.	86400	IN	CNAME	mercury.example.com.
 ```
 
 #### SRV Records for [Locating Email Services](https://tools.ietf.org/html/rfc6186)
