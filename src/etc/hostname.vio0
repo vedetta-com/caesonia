@@ -1,9 +1,10 @@
 # https://man.openbsd.org/hostname.if
 -inet # reset interface to its default state
 -inet6 # reset interface to its default state
-dhcp # static IP
-inet6 -autoconfprivacy # static IP
-inet6 -soii # disable persistent Semantically Opaque Interface Identifiers
-inet6 autoconf # slaac
-#inet6 2001:0db8::1 64 # no slaac
-#inet6 alias 2001:0db8::2 64 # prefixlen 56 for gateways on different network
+dhcp
+inet6 -autoconfprivacy
+inet6 -soii
+inet6 autoconf
+# prefixlen 56 for gateways on different network
+#inet6 2001:0db8::1 64
+#inet6 alias 2001:0db8::2 64

@@ -108,7 +108,7 @@ dsync [SSH](src/etc/ssh/sshd_config) limited to one "[command](src/home/dsync/.s
 su - dsync
 ssh-keygen
 echo "command=\"doas -u vmail \${SSH_ORIGINAL_COMMAND#*}\" $(cat ~/.ssh/id_rsa.pub)" | \
-	ssh puffy@hermes.example.com "cat >> ~/.ssh/authorized_keys"
+	ssh puffy@hermes.example.com "cat >> /home/dsync/.ssh/authorized_keys"
 exit
 ```
 
@@ -116,7 +116,7 @@ Update [/home/dsync](src/home/dsync), on primary and backup MX:
 ```sh
 chown -R root:dsync /home/dsync
 chmod 750 /home/dsync/.ssh
-chmod 640 /home/dsync/.ssh/{authorized_keys,id_rsa.pub,config}
+chmod 640 /home/dsync/.ssh/{authorized_keys,id_rsa.pub}
 chmod 400 /home/dsync/.ssh/id_rsa
 chown dsync /home/dsync/.ssh/id_rsa
 ```
@@ -182,7 +182,7 @@ grep -r hermes .
 find . -type f -exec sed -i "s|hermes|$(dig +short $(hostname | sed "s/$(hostname -s).//") mx | awk -vhostname="$(hostname)" '{if ($2 != hostname".") print $2;}')|g" {} +
 ```
 
-Update the allowed mail relays [source table](https://man.openbsd.org/table.5#Source_tables) [`etc/mail/relays`](src/etc/mail/relays).
+Update the allowed mail relays [source table](https://man.openbsd.org/table.5#Source_tables) [`src/etc/mail/relays`](src/etc/mail/relays).
 
 Update wheel user name "puffy":
 ```sh
@@ -210,7 +210,6 @@ install -o root -g wheel -m 0640 -b src/etc/acme-client.conf /etc/
 install -o root -g wheel -m 0640 -b src/etc/dhclient.conf /etc/
 install -o root -g wheel -m 0640 -b src/etc/dkimproxy_out.conf /etc/
 install -o root -g wheel -m 0640 -b src/etc/doas.conf /etc/
-install -o root -g wheel -m 0644 -b src/etc/hosts /etc/
 install -o root -g wheel -m 0640 -b src/etc/httpd.conf* /etc/
 install -o root -g wheel -m 0644 -b src/etc/login.conf /etc/
 install -o root -g wheel -m 0644 -b src/etc/newsyslog.conf /etc/
@@ -265,11 +264,8 @@ install -o root -g wheel -m 0644 -b src/var/unbound/etc/unbound.conf /var/unboun
 install -o root -g daemon -m 0755 -d src/var/www/htdocs/mercury.example.com /var/www/htdocs/$(hostname)
 install -o root -g daemon -m 0644 -b src/var/www/htdocs/mercury.example.com/index.html /var/www/htdocs/$(hostname)/
 
-install -o root -g daemon -m 0755 -d src/var/www/htdocs/autoconfig.example.com /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")
-install -o root -g daemon -m 0644 -b src/var/www/htdocs/autoconfig.example.com/index.html /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/
-
-install -o root -g daemon -m 0755 -d src/var/www/htdocs/autoconfig.example.com/mail /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/mail
-install -o root -g daemon -m 0644 -b src/var/www/htdocs/autoconfig.example.com/mail/config-v1.1.xml /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/mail/
+install -o root -g daemon -m 0755 -d src/var/www/htdocs/mercury.example.com/mail /var/www/htdocs/$(hostname)/mail
+install -o root -g daemon -m 0644 -b src/var/www/htdocs/mercury.example.com/mail/config-v1.1.xml /var/www/htdocs/$(hostname)/mail/
 
 install -o root -g wheel -m 0644 -b src/root/.ssh/config /root/.ssh/
 
@@ -282,6 +278,7 @@ Unbound DNS validating resolver from root nameservers, with fallback:
 ```sh
 unbound-anchor -a "/var/unbound/db/root.key"
 ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache
+rcctl enable unbound
 rcctl restart unbound
 cp src/etc/resolv.conf /etc/
 ```
@@ -299,7 +296,9 @@ sievec /var/dovecot/sieve/before/spamtest.sieve
 
 Turn off `httpd` tls:
 ```sh
-sed -i "s|^$(echo -e "\t")tls|$(echo -e "\t")#tls|" /etc/httpd.conf
+sed -i -e "s|^$(echo -e "\t")tls|$(echo -e "\t")#tls|" \
+	-e "/tls port https/s|^$(echo -e "\t")|$(echo -e "\t")#|" \
+	/etc/httpd.conf
 ```
 
 Start `httpd`:
@@ -309,7 +308,16 @@ rcctl start httpd
 
 Initialize a new account and domain key:
 ```sh
+mkdir -p /etc/ssl/acme/private
+chmod 700 /etc/ssl/acme/private
 acme-client -vAD $(hostname)
+```
+
+Turn on `httpd` tls:
+```sh
+sed -i -e "s|^$(echo -e "\t")#tls|$(echo -e "\t")tls|" \
+	-e "/tls port https/s|^$(echo -e "\t")#|$(echo -e "\t")|" \
+	/etc/httpd.conf
 ```
 
 OCSP response:
@@ -317,25 +325,19 @@ OCSP response:
 /usr/local/bin/get-ocsp.sh $(hostname)
 ```
 
-Turn on `httpd` tls:
-```sh
-sed -i "s|^$(echo -e "\t")#tls|$(echo -e "\t")tls|" /etc/httpd.conf
-```
-
-Restart `httpd`:
-```sh
-rcctl restart httpd
-```
-
 Edit [`crontab`](src/var/cron/tabs/root):
 ```sh
 crontab -e
 ```
 
+*n.b.*: assuming [DKIM](https://github.com/vedetta-com/caesonia/blob/master/README.md#domain-keys-identified-mail-dkim) keys are set.
+
 ### Restart
 
 Restart the email service:
 ```sh
+touch /etc/pf.permanentban
+chmod 600 /etc/pf.permanentban
 pfctl -f /etc/pf.conf
 rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 ```
