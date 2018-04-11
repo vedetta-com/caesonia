@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <clientConfig version="1.1">
   <emailProvider id="example.com">
     <domain>example.com</domain>
@@ -19,7 +18,7 @@
       <authentication>password-cleartext</authentication>
       <username>%EMAILADDRESS%</username>
     </outgoingServer>
-    <documentation url="http://autoconfig.example.com/">
+    <documentation url="https://autoconfig.example.com/">
       <descr lang="en">Client configuration</descr>
     </documentation>
   </emailProvider>

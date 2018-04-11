@@ -23,7 +23,9 @@ rm libpthread-stubs.a \
 reboot
 boot: bsd.rd
 > (I)nstall, (U)pgrade, (A)utoinstall or (S)hell? U
+...
 Set name(s) = -comp* -game* -x*
+...
 reboot
 sysmerge
 pkg_add -u
@@ -49,22 +51,17 @@ pfctl -f /etc/pf.conf
 
 Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration)
 ```sh 
-vi src/var/www/htdocs/autoconfig.example.com/index.html
-install -o root -g daemon -m 0755 -d src/var/www/htdocs/autoconfig.example.com /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")
-install -o root -g daemon -m 0644 -b src/var/www/htdocs/autoconfig.example.com/index.html /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/
-
-vi src/var/www/htdocs/autoconfig.example.com/mail/config-v1.1.xml
-install -o root -g daemon -m 0755 -d src/var/www/htdocs/autoconfig.example.com/mail /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/mail
-install -o root -g daemon -m 0644 -b src/var/www/htdocs/autoconfig.example.com/mail/config-v1.1.xml /var/www/htdocs/autoconfig.$(hostname | sed "s/$(hostname -s).//")/mail/
+vi src/var/www/htdocs/mercury.example.com/mail/config-v1.1.xml
+install -o root -g daemon -m 0755 -d src/var/www/htdocs/mercury.example.com/mail /var/www/htdocs/$(hostname)/mail
+install -o root -g daemon -m 0644 -b src/var/www/htdocs/mercury.example.com/mail/config-v1.1.xml /var/www/htdocs/$(hostname)/mail/
 ```
 
-Each autoconfig subdomain has record types A, and AAAA with the VPS' IPv4, and IPv6:
-```console   
-autoconfig.example.com.	86400	IN	A	203.0.113.1
-autoconfig.example.com.	86400	IN	AAAA	2001:0db8::1
+Each autoconfig subdomain has record type CNAME pointing to Autoconfiguration server:
+```console
+autoconfig.example.com.	86400	IN	CNAME	mercury.example.com
 ```  
 
-Each *virtual* autoconfig subdomain has record type CNAME pointing to *autoconfig.example.com*:
+Each *virtual* autoconfig subdomain has record type CNAME pointing to Autoconfiguration server:
 ```console
 autoconfig.example.net.	86400	IN	CNAME	autoconfig.example.com.
 ```
@@ -80,8 +77,17 @@ Each autoconfig subdomain needs a TXT record with SPF data:
 autoconfig.example.com.	86400	IN	TXT	"v=spf1 -all"
 ```
 
-Edit and add the following configuration directive to [`/etc/httpd.conf`](src/etc/httpd.conf):
+Edit *autoconfig.example.com*, and add the following configuration directive to [`/etc/httpd.conf`](src/etc/httpd.conf):
 ```console
+...
+# Host
+server "mercury.example.com" {
+	alias "autoconfig.example.com"
+
+	listen on $IPv4 port http
+...
+}
+
 # Mozilla Autoconfiguration
 server "autoconfig.*" {
 	listen on $IPv4 port http
@@ -95,15 +101,32 @@ server "autoconfig.*" {
 	block
 
 	location "/*" {
-		root "/htdocs/autoconfig.example.com"
-		pass
+		block return 302 "https://autoconfig.example.com$REQUEST_URI"
 	}
 }
+...
 ```
 
-Reload:
+Revoke `mercury.example.com` certificate:
 ```sh
-rcctl reload httpd
+acme-client -vr mercury.example.com
+```
+
+Update [`/etc/acme-client.conf`](src/etc/acme-client.conf):
+```sh
+sed -i -e '/alternative names/s|secure.example.com|autoconfig.example.com|' \
+	-e '/alternative names/s/^#//' /etc/acme-client.conf
+```
+
+Get a new certificate for *mercury.example.com*:
+```sh
+acme-client -v mercury.example.com
+get-ocsp.sh mercury.example.com
+```
+
+Restart:
+```sh
+rcctl restart sshd dovecot
 ```
 
 When relaying as backup MX, enforce STARTTLS and certificate verification:
@@ -115,3 +138,18 @@ Restart backup MX:
 ```sh
 rcctl restart smtpd
 ```
+
+Add `per_user` and `per_language` bayes classification of messages:
+```sh
+rcctl stop rspamd
+rm /tmp/*.shm
+cp src/etc/rspamd/local.d/classifier-bayes.conf /etc/rspamd/local.d/
+cp src/usr/local/bin/learn_*.sh /usr/local/bin/
+```
+
+Start with a fresh database:
+```
+rm /var/rspamd/*
+rcctl start rspamd
+```
+
