@@ -58,12 +58,12 @@ install -o root -g daemon -m 0644 -b src/var/www/htdocs/mercury.example.com/mail
 
 Each autoconfig subdomain has record type CNAME pointing to Autoconfiguration server:
 ```console
-autoconfig.example.com.	86400	IN	CNAME	mercury.example.com
+autoconfig.example.com.	86400	IN	CNAME	mercury.example.com.
 ```  
 
 Each *virtual* autoconfig subdomain has record type CNAME pointing to Autoconfiguration server:
 ```console
-autoconfig.example.net.	86400	IN	CNAME	autoconfig.example.com.
+autoconfig.example.net.	86400	IN	CNAME	mercury.example.com.
 ```
 
 Each domain and *virtual* domain has record types SRV for simple MUA [auto-configuration]((https://tools.ietf.org/html/rfc6186)):
