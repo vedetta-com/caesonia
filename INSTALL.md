@@ -214,6 +214,7 @@ install -o root -g wheel -m 0640 -b src/etc/httpd.conf* /etc/
 install -o root -g wheel -m 0644 -b src/etc/login.conf /etc/
 install -o root -g wheel -m 0644 -b src/etc/newsyslog.conf /etc/
 install -o root -g wheel -m 0600 -b src/etc/pf.conf* /etc/
+install -o root -g wheel -m 0600 -b src/etc/pf.permanentban /etc/
 install -o root -g wheel -m 0644 -b src/etc/resolv.conf.tail /etc/
 install -o root -g wheel -m 0644 -b src/etc/sysctl.conf /etc/
 
@@ -239,6 +240,9 @@ install -o root -g wheel -m 0644 -b src/etc/rspamd/override.d/* /etc/mail/rspamd
 
 install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_config /etc/ssh/
 install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_banner /etc/ssh/
+
+install -o root -g wheel -m 0755 -d src/etc/ssl/acme /etc/ssl/acme
+install -o root -g wheel -m 0700 -d src/etc/ssl/acme/private /etc/ssl/acme/private
 
 install -o root -g wheel -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/dovecot-lda.sh /usr/local/bin/
@@ -308,8 +312,6 @@ rcctl start httpd
 
 Initialize a new account and domain key:
 ```sh
-mkdir -p /etc/ssl/acme/private
-chmod 700 /etc/ssl/acme/private
 acme-client -vAD $(hostname)
 ```
 
@@ -336,8 +338,6 @@ crontab -e
 
 Restart the email service:
 ```sh
-touch /etc/pf.permanentban
-chmod 600 /etc/pf.permanentban
 pfctl -f /etc/pf.conf
 rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 ```
@@ -447,7 +447,7 @@ dig +short example.meh mx
 
 for each bad subdomain, add its IP (A and AAAA record) to `pf`:
 ```sh
-echo IP >> /etc/pf.permanentban
+echo $IP >> /etc/pf.permanentban
 ```
 
 and reload the `pf` table:

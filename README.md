@@ -106,7 +106,7 @@ full sync: replication_full_sync_interval\ =\ 1h
 | f          | /usr        |   1024M |
 | g          | /usr/local  |    512M |
 | h          | /home       |      8M |
-| i          | /var        |       * |
+| i          | /var        |   15G-* |
 | *Total*    |             | **20G+**|
 
 Disklabel: [var/www/htdocs/mercury.example.com/disklabel.min](src/var/www/htdocs/mercury.example.com/disklabel.min)
