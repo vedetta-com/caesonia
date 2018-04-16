@@ -18,6 +18,6 @@ ftp -o "${DIR}"/letsencryptauthorityx3.pem https://letsencrypt.org/certs/letsenc
 ocspcheck -N \
           -C "${DIR}"/letsencryptauthorityx3.pem \
           -o "${DIR}"/"${SITE}".ocsp.resp.der \
-          "${DIR}"/"${SITE}".fullchain.pem && \
- rcctl restart httpd || \
-logger "ocspcheck fail for ${SITE}.fullchain.pem"
+          "${DIR}"/"${SITE}".fullchain.pem \
+&& rcctl restart httpd \
+|| logger "ocspcheck fail for ${SITE}.fullchain.pem"
