@@ -219,7 +219,7 @@ install -o root -g wheel -m 0644 -b src/etc/resolv.conf.tail /etc/
 install -o root -g wheel -m 0644 -b src/etc/sysctl.conf /etc/
 
 install -o root -g wheel -m 0755 -d src/etc/dovecot/conf.d /etc/dovecot/conf.d
-install -o root -g wheel -m 0644 -b src/etc/dovecot/local.conf /etc/local.conf
+install -o root -g wheel -m 0644 -b src/etc/dovecot/local.conf /etc/dovecot/
 install -o root -g wheel -m 0644 -b src/etc/dovecot/dovecot-trash.conf.ext /etc/dovecot/
 install -o root -g wheel -m 0644 -b src/etc/dovecot/conf.d/* /etc/dovecot/conf.d/
 
