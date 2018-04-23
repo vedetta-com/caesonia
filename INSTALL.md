@@ -233,10 +233,10 @@ install -o root -g _smtpd -m 0640 -b src/etc/mail/vdomains /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/virtual /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/whitelist /etc/mail/
 
-install -o root -g wheel -m 0755 -d src/etc/rspamd/local.d /etc/mail/rspamd/local.d
-install -o root -g wheel -m 0755 -d src/etc/rspamd/override.d /etc/mail/rspamd/override.d
-install -o root -g wheel -m 0644 -b src/etc/rspamd/local.d/* /etc/mail/rspamd/local.d/
-install -o root -g wheel -m 0644 -b src/etc/rspamd/override.d/* /etc/mail/rspamd/override.d/
+install -o root -g wheel -m 0755 -d src/etc/rspamd/local.d /etc/rspamd/local.d
+install -o root -g wheel -m 0755 -d src/etc/rspamd/override.d /etc/rspamd/override.d
+install -o root -g wheel -m 0644 -b src/etc/rspamd/local.d/* /etc/rspamd/local.d/
+install -o root -g wheel -m 0644 -b src/etc/rspamd/override.d/* /etc/rspamd/override.d/
 
 install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_config /etc/ssh/
 install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_banner /etc/ssh/
