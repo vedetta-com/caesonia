@@ -80,7 +80,11 @@ sed -i 's/HIGH:!aNULL/HIGH:!AES128:!kRSA:!aNULL/' /etc/dovecot/conf.d/10-ssl.con
 
 LetsEncrypt certificate updates, now with service *virtual* subdomains:
 ```sh
+acme-client -vr mercury.example.com 
 sed -i 's/autoconfig.example.com/& autoconfig.example.net/' /etc/acme-client.conf
+acme-client -v mercury.example.com
+get-ocsp.sh mercury.example.com
+rcctl restart smtpd dovecot
 ```
 
 Update crontab to restart smtpd and dovecot on certificate update:
@@ -94,10 +98,15 @@ crontab -e
 Increase waiting for reply timeout to 120s, giving rspamd ample time to tell the truth:
 ```sh
 sed -i 's|/bin/rspamc|& -t 120|' /etc/mail/smtpd.conf
+rcctl restart smtpd
 ```
 
-New rspamd statistics update script, to relearn Spam/ from all users':
+New rspamd statistics update script, to relearn Spam/ from all users:
 ```sh
 install -o root -g wheel -m 0550 -b src/usr/local/bin/learn_all_spam.sh /usr/local/bin/
+learn_all_spam.sh
 ```
 
+Restart:
+```sh
+rcctl restart smtpd dovecot
