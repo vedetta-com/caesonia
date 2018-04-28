@@ -107,6 +107,3 @@ install -o root -g wheel -m 0550 -b src/usr/local/bin/learn_all_spam.sh /usr/loc
 learn_all_spam.sh
 ```
 
-Restart:
-```sh
-rcctl restart smtpd dovecot
