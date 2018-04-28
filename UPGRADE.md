@@ -3,7 +3,7 @@
 
 [`6.3.0-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.0-beta) to [`6.3.1-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.1-beta)
 
-> Upgrades are only supported from one release to the release immediately following it. Read through and understand this process before attempting it. For critical or physically remote machines, test it on an identical, local system first. - [OpenBSD Upgrade Guide](http://www.openbsd.org/faq/index.html)
+> Upgrades are only supported from one release to the release immediately following it. Read through and understand this process before attempting it. For critical or physically remote machines, test it on an identical, local system first. -- [OpenBSD Upgrade Guide](https://www.openbsd.org/faq/index.html)
 
 ## Upgrade Guide
 
