@@ -30,7 +30,7 @@ Root your Inbox :mailbox_with_mail:
 - Your sieve scripts and managesieve configuration, let's get started
 
 ## Considerations
-By design, email message headers need to be public, for exchanges to happen. The body of the message can be encrypted by the user, if desired. Moreover, there is no way to prevent the host from having access to the virtual machine. Therefore, full disk encryption (at rest) may not be necessary.
+By design, email message headers need to be public, for exchanges to happen. The body of the message can be encrypted by the user, if desired. Moreover, there is no way to prevent the host from having access to the virtual machine. Therefore, [full disk encryption](https://www.openbsd.org/faq/faq14.html#softraidFDE) (at rest) may not be necessary.
 
 Given our low memory requirements, and the single-purpose concept of email service, Roundcube or other web-based IMAP email clients should be on a different VPS.
 
