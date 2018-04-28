@@ -7,7 +7,7 @@
 
 ## Upgrade Guide
 
-Split TLS and non-TLS configuration, update TLS cipher strength and key exchange (score A+ with 100% on every [ssllabs.com](https://www.ssllabs.com/ssltest/) test and support all devices), and improve Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration) with the following `httpd.conf` changes:
+Split TLS and non-TLS configuration, update TLS cipher strength and key exchange (score A+ with 100% on every [ssllabs.com](https://www.ssllabs.com/ssltest/) test while supporting all devices), and improve Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration) with the following `httpd.conf` changes:
 ```console
 # Host:443
 server "mercury.example.com" {
