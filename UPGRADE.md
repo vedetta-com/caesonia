@@ -69,8 +69,7 @@ Add WKD LetsEncrypt certificate:
 acme-client -vr mercury.example.com
 ```
 
-Edit [`/etc/acme-client.conf`](src/etc/acme-client.conf) to add every service (virtual) WKD subdomains as alternat
-ive names:
+Edit [`/etc/acme-client.conf`](src/etc/acme-client.conf) to add every service (virtual) WKD subdomains as alternative names:
 ```console
 ...
 	alternative names { \
