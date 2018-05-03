@@ -16,3 +16,6 @@ puffy@example.net		puffy@example.com
 # Virtual users are mapped to system user "vmail"
 #
 puffy@example.com		vmail
+
+# OpenPGP Web Key Service (WKS) Submission Address
+key-submission@example.com	vmail

@@ -1,17 +1,26 @@
 # caesonia (beta)
 *Open*BSD Email Service - Upgrade an existing installation
 
-[`6.3.0-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.0-beta) to [`6.3.1-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.1-beta)
+[`6.3.1-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.1-beta) to [`6.3.2-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.2-beta)
 
 > Upgrades are only supported from one release to the release immediately following it. Read through and understand this process before attempting it. For critical or physically remote machines, test it on an identical, local system first. -- [OpenBSD Upgrade Guide](https://www.openbsd.org/faq/index.html)
 
 ## Upgrade Guide
 
-Split TLS and non-TLS configuration, update TLS cipher strength and key exchange (score A+ with 100% on every [ssllabs.com](https://www.ssllabs.com/ssltest/) test while supporting all devices), and improve Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration) with the following `httpd.conf` changes:
+### Introducing OpenPGP Web Key Service (WKS) to OpenBSD
+
+To start implementing Web Key Service, please make sure the new DNS [prerequisites](README.md#openpgp-web-key-directory-wkd) are met.
+
+```sh
+pkg_add gnupg-2.2.4
+```
+
+Edit [`/etc/httpd.conf`](src/etc/httpd.conf) to add a WKD alias and location:
 ```console
 # Host:443
 server "mercury.example.com" {
 	alias "autoconfig.*"
+	alias "wkd.*"
 
 	listen on $IPv4 tls port https
 	listen on $IPv6 tls port https
@@ -35,6 +44,13 @@ server "mercury.example.com" {
 
 	block
 
+	# OpenPGP Web Key Directory
+	location "/.well-known/openpgpkey/*" {
+		root "/openpgpkey"
+		root strip 2
+		pass
+	}
+
 	location "/*" {
 		root "/htdocs/mercury.example.com"
 		pass
@@ -44,66 +60,82 @@ server "mercury.example.com" {
 # Host:80
 server "mercury.example.com" {
 	alias "autoconfig.*"
-
-	listen on $IPv4 port http
-	listen on $IPv6 port http
-
-	tcp nodelay
-	connection { max requests 500, timeout 3600 }
-
-	log { access "access.log", error "error.log" }
-
-	block
-
-	location "/.well-known/acme-challenge/*" {
-		root "/acme"
-		root strip 2
-		pass
-	}
-
-	# Mozilla Autoconfiguration
-	location "/mail/*" {
-		block return 302 "https://autoconfig.example.com$REQUEST_URI"
-	}
-
-	location "/*" {
-		root "/htdocs/mercury.example.com"
-		pass
-	}
-}
+	alias "wkd.*"
+...
 ```
 
-Update TLS (cipher strength) for dovecot:
+Add WKD LetsEncrypt certificate:
 ```sh
-sed -i 's/HIGH:!aNULL/HIGH:!AES128:!kRSA:!aNULL/' /etc/dovecot/conf.d/10-ssl.conf
+acme-client -vr mercury.example.com
 ```
 
-LetsEncrypt certificate updates, now with service *virtual* subdomains:
+Edit [`/etc/acme-client.conf`](src/etc/acme-client.conf) to add every service (virtual) WKD subdomains as alternat
+ive names:
+```console
+...
+	alternative names { \
+		autoconfig.example.com \
+		autoconfig.example.net \
+		wkd.example.com \
+		wkd.example.net }
+...
+```
+
 ```sh
-acme-client -vr mercury.example.com 
-sed -i 's/autoconfig.example.com/& autoconfig.example.net/' /etc/acme-client.conf
 acme-client -v mercury.example.com
 get-ocsp.sh mercury.example.com
-rcctl restart smtpd dovecot
 ```
 
-Update crontab to restart smtpd and dovecot on certificate update:
-```sh
-crontab -e
-```
+Edit [`/etc/doas.conf`](src/etc/doas.conf) to add WKS permissions:
 ```console
-20	6	*	*	*	acme-client mercury.example.com && /usr/local/bin/get-ocsp.sh mercury.example.com && rcctl restart smtpd dovecot
+# WKS: expire non confirmed publication requests
+permit nopass root as vmail cmd env args \
+    -i HOME=/var/vmail /usr/local/bin/gpg-wks-server --cron
 ```
 
-Increase waiting for reply timeout to 120s, giving rspamd ample time to tell the truth:
-```sh
-sed -i 's|/bin/rspamc|& -t 120|' /etc/mail/smtpd.conf
-rcctl restart smtpd
+Edit [`/var/cron/tabs/root`](src/var/cron/tabs/root) to add WKS expiration:
+```console
+30	11	*	*	*	doas -u vmail env -i HOME=/var/vmail /usr/local/bin/gpg-wks-server --cron
 ```
 
-New rspamd statistics update script, to relearn Spam/ from all users:
+Edit [`/etc/mail/smtpd.conf`](src/etc/mail/smtpd.conf) to add WKS table:
+```console
+table wks-recipients		{ "key-submission@example.com" } # OpenPGP WKS Submission Address
+```
+
+OpenPGP Web Key Service (WKS) Trust Management for primary and backup MX:
 ```sh
-install -o root -g wheel -m 0550 -b src/usr/local/bin/learn_all_spam.sh /usr/local/bin/
-learn_all_spam.sh
+sed -i 's/accept tagged MTA from any/& recipient ! <wks-recipients>/g' /etc/mail/smtpd.conf
+```
+
+Add OpenPGP Web Key Service (WKS) Submission Address
+```sh
+echo "key-submission@example.com \tvmail" >> /etc/mail/virtual
+```
+
+Install OpenPGP Web Key Service (WKS) Server Tool:
+```sh
+install -o root -g vmail -m 0640 -b src/var/dovecot/sieve/before/00-wks.sieve /var/dovecot/sieve/before/
+sievec /var/dovecot/sieve/before/00-wks.sieve
+```
+
+Install OpenPGP Web Key Directory:
+```sh
+install -o root -g daemon -m 0755 -d src/var/www/openpgpkey /var/www/openpgpkey
+install -o root -g daemon -m 0644 -b src/var/www/openpgpkey/policy /var/www/openpgpkey/
+install -o root -g daemon -m 0644 -b src/var/www/openpgpkey/submission-address /var/www/openpgpkey/
+
+install -o vmail -g daemon -m 0755 -d src/var/www/openpgpkey/hu /var/www/openpgpkey/hu
+
+install -o root -g wheel -m 0755 -d src/var/lib /var/lib   
+install -o root -g wheel -m 0755 -d src/var/lib/gnupg /var/lib/gnupg
+install -o root -g wheel -m 2750 -d src/var/lib/gnupg/wks /var/lib/gnupg/wks
+```
+
+Follow the [Web Key Service Configuration Guide](INSTALL.md#openpgp-web-key-service-wks) to finish the upgrade.
+
+Restart:
+```sh
+rcctl restart smtpd dovecot httpd
 ```
 

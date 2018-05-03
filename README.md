@@ -25,12 +25,13 @@ Root your Inbox :mailbox_with_mail:
 - Flexible: switching roles is easy, making the process of changing VPS hosts a breeze (no downtime)
 - DMARC (with DKIM and SPF) email-validation system, to detect and prevent email spoofing
 - Uncensored DNS validating resolver from root nameservers
+- OpenPGP Web Key Service with Web Key Directory, the most trusted and secure key exchange protocol
 - MUA Autoconfiguration, for modern clients
 - Daily (spartan) stats, to keep track of things
 - Your sieve scripts and managesieve configuration, let's get started
 
 ## Considerations
-By design, email message headers need to be public, for exchanges to happen. The body of the message can be encrypted by the user, if desired. Moreover, there is no way to prevent the host from having access to the virtual machine. Therefore, [full disk encryption](https://www.openbsd.org/faq/faq14.html#softraidFDE) (at rest) may not be necessary.
+By design, email message headers need to be public, for exchanges to happen. The body of the message can be [encrypted](INSTALL.md#openpgp-web-key-service-wks) by the user, if desired. Moreover, there is no way to prevent the host from having access to the virtual machine. Therefore, [full disk encryption](https://www.openbsd.org/faq/faq14.html#softraidFDE) (at rest) may not be necessary.
 
 Given our low memory requirements, and the single-purpose concept of email service, Roundcube or other web-based IMAP email clients should be on a different VPS.
 
@@ -49,7 +50,7 @@ See the [**Installation Guide**](INSTALL.md) for details.
 
 Install packages:
 ```sh
-pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras
+pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras gnupg-2.2.4
 ```
 Add users:
 ```sh
@@ -144,6 +145,28 @@ autoconfig.example.com.	86400	IN	CNAME	mercury.example.com.
 Each *virtual* autoconfig subdomain has record type CNAME pointing to Autoconfiguration server:
 ```console
 autoconfig.example.net.	86400	IN	CNAME	mercury.example.com.
+```
+
+#### OpenPGP Web Key Directory ([WKD](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-05))
+Each WKD subdomain has record type CNAME pointing to Web Key Server:
+```console
+wkd.example.com.	86400	IN	CNAME	mercury.example.com.
+```
+
+Each *virtual* WKD subdomain has record type CNAME pointing to Web Key Server:
+```console
+wkd.example.net.	86400	IN	CNAME	mercury.example.com.
+```
+
+#### SRV Records for OpenPGP Web Key Directory
+Each domain has record type SRV for WKD subdomain
+```console
+_openpgpkey._tcp.example.com	86400	IN	SRV	0 0 443 wkd.example.com
+```
+
+Each *virtual* domain has record type SRV for *virtual* WKD subdomain
+```console
+_openpgpkey._tcp.example.net	86400	IN	SRV	0 0 443 wkd.example.net
 ```
 
 #### SRV Records for [Locating Email Services](https://tools.ietf.org/html/rfc6186)
