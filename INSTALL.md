@@ -411,7 +411,7 @@ doas -u vmail \
 List the z-Base-32 encoded SHA-1 hash of the mail address' local-part (i.e. key-submission):
 doas -u vmail \
 	env -i HOME=/var/vmail \
-	gpg2 --with-wkd-hash -K key-submission@caesonia.com
+	gpg2 --with-wkd-hash -K key-submission@example.com
 > 54f6ry7x1qqtpor16txw5gdmdbbh6a73@example.com
 ```
 
