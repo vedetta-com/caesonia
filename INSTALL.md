@@ -74,7 +74,7 @@ sh /etc/netstart $(ifconfig egress | awk 'NR == 1{print $1;}' | sed 's/://')
 
 Install packages:
 ```sh
-pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras
+pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras gnupg-2.2.4
 ```
 
 *n.b.*: dovecot package comes with instructions for self-signed certificates, which are not used in this guide:
@@ -261,6 +261,7 @@ install -o root -g vmail -m 0640 -b src/var/dovecot/imapsieve/before/report-spam
 install -o root -g vmail -m 0750 -d src/var/dovecot/sieve/after /var/dovecot/sieve/after
 install -o root -g vmail -m 0750 -d src/var/dovecot/sieve/before /var/dovecot/sieve/before
 install -o root -g vmail -m 0640 -b src/var/dovecot/sieve/before/spamtest.sieve /var/dovecot/sieve/before/
+install -o root -g vmail -m 0640 -b src/var/dovecot/sieve/before/00-wks.sieve /var/dovecot/sieve/before/
 
 install -o root -g wheel -m 0644 -b src/var/unbound/etc/unbound.conf /var/unbound/etc/
 
@@ -269,6 +270,16 @@ install -o root -g daemon -m 0644 -b src/var/www/htdocs/mercury.example.com/inde
 
 install -o root -g daemon -m 0755 -d src/var/www/htdocs/mercury.example.com/mail /var/www/htdocs/$(hostname)/mail
 install -o root -g daemon -m 0644 -b src/var/www/htdocs/mercury.example.com/mail/config-v1.1.xml /var/www/htdocs/$(hostname)/mail/
+
+install -o root -g daemon -m 0755 -d src/var/www/openpgpkey /var/www/openpgpkey
+install -o root -g daemon -m 0644 -b src/var/www/openpgpkey/policy /var/www/openpgpkey/
+install -o root -g daemon -m 0644 -b src/var/www/openpgpkey/submission-address /var/www/openpgpkey/
+
+install -o vmail -g daemon -m 0755 -d src/var/www/openpgpkey/hu /var/www/openpgpkey/hu
+
+install -o root -g wheel -m 0755 -d src/var/lib /var/lib
+install -o root -g wheel -m 0755 -d src/var/lib/gnupg /var/lib/gnupg
+install -o root -g wheel -m 2750 -d src/var/lib/gnupg/wks /var/lib/gnupg/wks
 
 install -o root -g wheel -m 0644 -b src/root/.ssh/config /root/.ssh/
 
@@ -292,6 +303,7 @@ Compile sieve scripts:
 ```sh
 sievec /var/dovecot/imapsieve/before/report-ham.sieve
 sievec /var/dovecot/imapsieve/before/report-spam.sieve
+sievec /var/dovecot/sieve/before/00-wks.sieve
 sievec /var/dovecot/sieve/before/spamtest.sieve
 ```
 
@@ -340,6 +352,112 @@ Restart the email service:
 pfctl -f /etc/pf.conf
 rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 ```
+
+### OpenPGP Web Key Service ([WKS](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-05))
+
+An important aspect of using OpenPGP is trusting the (public) key. Off-channel key exchange is not always practical, OpenPGP DANE protocol lacks confidentially, HKPS' a mess, and keybase is wicked. OpenPGP proposed a new protocol to automate and build trust in the process of exchanging public keys.
+
+Web Key Service has two main functions for our Email Service:
+1. Allow all users to locate and retreive public keys by email address using HTTPS
+2. Allow local user's email client to automatically publish and revoke public keys
+
+Self-hosting has the advantage of full authority on the user mail addresses for their domain name. By design, only one WKS can exist for a domain name. Furthermore, only local users can make requests to WKS Submission Address, and replies to local users only. Moreover, the service automatically verifies the sender is in possesion of the secret key, before publishing their public key. Self-hosting the public key server finally makes OpenPGP oportunistic encryption user friendly.
+
+To get started, a GnuPG 2.1 safe configuration is provided: [`gpg.conf`](src/home/puffy/.gnupg/gpg.conf)
+
+Web Key Service maintains a Web Key Directory (WKD) which needs the following configuration for each *virtual* domain:
+```sh
+mkdir -m 755 /var/lib/gnupg/wks/example.com
+chown vmail:vmail /var/lib/gnupg/wks/example.com
+
+cd /var/lib/gnupg/wks/example.com
+
+ln -sf /var/www/openpgpkey/hu .
+chown -h vmail:vmail hu
+
+ln -s /var/www/openpgpkey/submission-address .
+chown -h vmail:vmail submission-address
+
+doas -u vmail \
+	env -i HOME=/var/vmail \
+	gpg-wks-server --list-domains
+```
+
+Web Key Service uses a Submission Address, which needs the following configuration:
+
+Add *virtual* password for the Submission Address:
+```sh
+smtpctl encrypt
+> secret
+> $2b$...encrypted...passphrase...
+vi /etc/mail/passwd
+> key-submission@example.com:$2b$...encrypted...passphrase...::::::
+```
+
+Create the submission key:
+```sh
+doas -u vmail \
+	env -i HOME=/var/vmail \
+	gpg2 --batch --passphrase '' --quick-gen-key key-submission@example.com
+```
+
+Verify:
+```sh
+doas -u vmail \
+	env -i HOME=/var/vmail \
+	gpg2 -K --with-fingerprint
+```
+
+List the z-Base-32 encoded SHA-1 hash of the mail address' local-part (i.e. key-submission):
+doas -u vmail \
+	env -i HOME=/var/vmail \
+	gpg2 --with-wkd-hash -K key-submission@example.com
+> 54f6ry7x1qqtpor16txw5gdmdbbh6a73@example.com
+```
+
+Publish the key, using the hash of the string "key-submission" (i.e. 54f6ry7x1qqtpor16txw5gdmdbbh6a73):
+```sh
+doas -u vmail \
+	env -i HOME=/var/vmail \
+	gpg2 -o /var/lib/gnupg/wks/example.com/hu/54f6ry7x1qqtpor16txw5gdmdbbh6a73 \
+		--export-options export-minimal --export key-submission@example.com
+```
+
+*n.b.*: To delete this key:
+```sh
+gpg2 --delete-secret-key "key-submission@example.com"
+gpg2 --delete-key "key-submission@example.com"
+```
+
+Expire non confirmed publication requests:
+```sh
+crontab -e
+```
+```console
+30	11	*	*	*	doas -u vmail env -i HOME=/var/vmail /usr/local/bin/gpg-wks-server --cron
+```
+
+*n.b.*: [Enigmail](https://www.enigmail.net)/Thunderbird, [Kmail](https://userbase.kde.org/KMail) and [Mutt](http://www.mutt.org/) (perhaps other MUA) support the Web Key Service. Once published, a communication partner's MUA automatically downloads the public key (if their GnuPG 2.1 --enable-wks-tools) with the following `gpg.conf` directive:
+```console
+auto-key-locate		wkd
+```
+
+The key can be manually retreived too:
+```sh
+gpg2 --auto-key-locate clear,wkd --locate-keys puffy@example.com
+```
+
+To simply check a key:
+```sh
+$(gpgconf --list-dirs libexecdir)/gpg-wks-client --check puffy@example.com
+```
+
+Or a hex listing:
+```sh
+gpg-connect-agent --dirmngr --hex 'wkd_get puffy@example.com' /bye
+```
+
+*n.b*: If the same local-part of an email address exists for multiple domains (e.g. **puffy**@example.com and **puffy**@example.net), the hash of the string will be the same and each key publication overwrites the same file. The *workaround* is using **+tags** to create a secondary UID (e.g. puffy**+enc**@example.com) for the key, and go through the process of key submission and confirmation using the MUA interface with the tagged email address (e.g. puffy**+enc**@example.com).
 
 ### Logs
 

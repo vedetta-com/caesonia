@@ -20,6 +20,7 @@ HOME=/var/log
 #0	*	*	*	*	sleep $((RANDOM \% 2048)) && /usr/libexec/spamd-setup
 30	7	*	*	*	smtpctl show stats; printf '\n'; /usr/local/bin/rspamc -h /var/run/rspamd/rspamd.sock stat; /usr/local/bin/doveadm -f pager replicator status '*'; printf '\n'; /usr/local/bin/doveadm -f pager quota get -A
 30	9	*	*	*	syspatch -c
+30	11	*	*	*	doas -u vmail env -i HOME=/var/vmail /usr/local/bin/gpg-wks-server --cron
 20	2	1,14	*	*	unbound-anchor -a "/var/unbound/db/root.key" && rcctl restart unbound
 20	4	1	May,Nov	*	ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache && rcctl restart unbound
 20	6	*	*	*	acme-client mercury.example.com && /usr/local/bin/get-ocsp.sh mercury.example.com && rcctl restart smtpd dovecot
