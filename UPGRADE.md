@@ -114,6 +114,7 @@ echo "key-submission@example.com \tvmail" >> /etc/mail/virtual
 
 Install OpenPGP Web Key Service (WKS) Server Tool:
 ```sh
+install -o root -g wheel -m 0644 -b src/etc/dovecot/conf.d/90-sieve-extprograms.conf /etc/dovecot/conf.d/
 install -o root -g vmail -m 0640 -b src/var/dovecot/sieve/before/00-wks.sieve /var/dovecot/sieve/before/
 sievec /var/dovecot/sieve/before/00-wks.sieve
 ```
