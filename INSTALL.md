@@ -248,6 +248,7 @@ install -o root -g wheel -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin
 install -o root -g vmail -m 0550 -b src/usr/local/bin/dovecot-lda.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/learn_*.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/quota-warning.sh /usr/local/bin/
+install -o root -g vmail -m 0550 -b src/usr/local/bin/wks-server.sh /usr/local/bin/
 
 install -o root -g crontab -m 0640 -b src/var/cron/cron.allow /var/cron/
 
