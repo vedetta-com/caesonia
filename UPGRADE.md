@@ -15,7 +15,7 @@ To start implementing Web Key Service, please make sure the new DNS [prerequisit
 pkg_add gnupg-2.2.4
 ```
 
-Edit [`/etc/httpd.conf`](src/etc/httpd.conf) to add a WKD alias and location:
+Edit [`/etc/httpd.conf`](src/etc/httpd.conf) to add WKD alias and location:
 ```console
 # Host:443
 server "mercury.example.com" {
