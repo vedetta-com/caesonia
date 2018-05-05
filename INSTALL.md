@@ -459,7 +459,7 @@ Or a hex listing:
 gpg-connect-agent --dirmngr --hex 'wkd_get puffy@example.com' /bye
 ```
 
-*n.b*: If the same local-part of an email address exists for multiple domains (e.g. **puffy**@example.com and **puffy**@example.net), the hash of the string will be the same and each key publication overwrites the same file. The *workaround* is using **+tags** to create a secondary UID (e.g. puffy+enc@example.com) for the key, and go through the process of key submission and confirmation using the MUA interface with the tagged email address (e.g. puffy+enc@example.com).
+*n.b*: If the same local-part of an email address exists for multiple domains (e.g. **puffy**@example.com and **puffy**@example.net), the hash of the string will be the same and each key publication overwrites the same file. The *workaround* is using **+tags** to create the UID (e.g. puffy+enc@example.com) for the key, and go through the process of key submission and confirmation using the MUA interface with the tagged email address (e.g. puffy+enc@example.com).
 
 ### Logs
 
