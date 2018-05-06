@@ -462,11 +462,12 @@ gpg-connect-agent --dirmngr --hex 'wkd_get puffy@example.com' /bye
 
 *n.b*: If the same local-part of an email address exists for multiple domains (e.g. **puffy**@example.com and **puffy**@example.net), the hash of the string will be the same and each key publication overwrites the same file. The *workaround* is using **+tags** to create the UID (e.g. puffy+enc@example.com) for the key, and go through the process of key submission and confirmation using the MUA interface with the tagged email address (e.g. puffy+enc@example.com).
 
-Following [Bernhard's recommendation](https://wiki.gnupg.org/EasyGpg2016/PubkeyDistributionConcept#Ask_the_mail_service_provider_.28MSP.29) to support WKD implementations without [SRV](README.md#srv-records-for-openpgp-web-key-directory) lookup (e.g. [Mailvelope](https://www.mailvelope.com), [Enigmail](https://www.enigmail.net)), the apex domain (i.e. **example.com**) must have A and AAAA records, and the http server must return codes 301 or 302 to send a `Location:` header for redirection to **https://wkd.example.com**:
+Following [Bernhard's recommendation](https://wiki.gnupg.org/EasyGpg2016/PubkeyDistributionConcept#Ask_the_mail_service_provider_.28MSP.29) to support WKD implementations without [SRV](README.md#srv-records-for-openpgp-web-key-directory) lookup (e.g. [Mailvelope](https://www.mailvelope.com), [Enigmail](https://www.enigmail.net)), the apex domain (i.e. **example.com**) must have A and AAAA records, and the http server must return codes `301` or `302` to send a `Location:` header for redirection to `https://wkd.example.com`:
 
 ```console
 server "example.com" {
 	listen on "*" tls port https
+	listen on "::" tls port https
 ...
 	# OpenPGP Web Key Directory
 	location "/.well-known/openpgpkey/*" {
