@@ -356,7 +356,7 @@ rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 
 ### OpenPGP Web Key Service ([WKS](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-05))
 
-An important aspect of using OpenPGP is trusting the (public) key. Off-channel key exchange is not always practical, OpenPGP DANE protocol lacks confidentially, HKPS' a mess. OpenPGP proposed a new protocol to automate and build trust in the process of exchanging public keys.
+An important aspect of using OpenPGP is trusting the (public) key. Off-channel key exchange is not always practical, OpenPGP DANE protocol lacks confidentially, and HKPS' a mess. OpenPGP proposed a new protocol to automate and build trust in the process of exchanging public keys.
 
 Web Key Service has two main functions for our Email Service:
 1. Allow all users to locate and retreive public keys by email address using HTTPS
