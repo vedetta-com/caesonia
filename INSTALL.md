@@ -356,7 +356,7 @@ rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 
 ### OpenPGP Web Key Service ([WKS](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-05))
 
-An important aspect of using OpenPGP is trusting the (public) key. Off-channel key exchange is not always practical, OpenPGP DANE protocol lacks confidentially, HKPS' a mess, and keybase is wicked. OpenPGP proposed a new protocol to automate and build trust in the process of exchanging public keys.
+An important aspect of using OpenPGP is trusting the (public) key. Off-channel key exchange is not always practical, OpenPGP DANE protocol lacks confidentially, HKPS' a mess. OpenPGP proposed a new protocol to automate and build trust in the process of exchanging public keys.
 
 Web Key Service has two main functions for our Email Service:
 1. Allow all users to locate and retreive public keys by email address using HTTPS
@@ -366,7 +366,7 @@ Self-hosting has the advantage of full authority on the user mail addresses for 
 
 To get started, a GnuPG 2.1 safe configuration is provided: [`gpg.conf`](src/home/puffy/.gnupg/gpg.conf)
 
-Web Key Service maintains a Web Key Directory (WKD) which needs the following configuration for each *virtual* domain:
+Web Key Service maintains a Web Key Directory ([WKD](https://wiki.gnupg.org/WKD)) which needs the following configuration for each *virtual* domain:
 ```sh
 mkdir -m 755 /var/lib/gnupg/wks/example.com
 chown vmail:vmail /var/lib/gnupg/wks/example.com
@@ -439,9 +439,10 @@ crontab -e
 30	11	*	*	*	doas -u vmail env -i HOME=/var/vmail /usr/local/bin/gpg-wks-server --cron
 ```
 
-*n.b.*: [Enigmail](https://www.enigmail.net)/Thunderbird, [Kmail](https://userbase.kde.org/KMail) and [Mutt](http://www.mutt.org/) (perhaps other MUA) support the Web Key Service. Once published, a communication partner's MUA automatically downloads the public key (if their GnuPG 2.1 --enable-wks-tools) with the following `gpg.conf` directive:
+*n.b.*: [Enigmail](https://www.enigmail.net)/Thunderbird, [Kmail](https://userbase.kde.org/KMail) and [Mutt](http://www.mutt.org/) (perhaps other MUA) support the Web Key Service. Once published, a communication partner's MUA automatically downloads the public key with the following `gpg.conf` directive:
 ```console
-auto-key-locate		wkd
+auto-key-retrieve
+auto-key-locate		local,wkd
 ```
 
 The key can be manually retreived too:
@@ -451,7 +452,7 @@ gpg2 --auto-key-locate clear,wkd --locate-keys puffy@example.com
 
 To simply check a key:
 ```sh
-$(gpgconf --list-dirs libexecdir)/gpg-wks-client --check puffy@example.com
+$(gpgconf --list-dirs libexecdir)/gpg-wks-client -v --check puffy@example.com
 ```
 
 Or a hex listing:
@@ -460,6 +461,20 @@ gpg-connect-agent --dirmngr --hex 'wkd_get puffy@example.com' /bye
 ```
 
 *n.b*: If the same local-part of an email address exists for multiple domains (e.g. **puffy**@example.com and **puffy**@example.net), the hash of the string will be the same and each key publication overwrites the same file. The *workaround* is using **+tags** to create the UID (e.g. puffy+enc@example.com) for the key, and go through the process of key submission and confirmation using the MUA interface with the tagged email address (e.g. puffy+enc@example.com).
+
+Following [Bernhard's recommendation](https://wiki.gnupg.org/EasyGpg2016/PubkeyDistributionConcept#Ask_the_mail_service_provider_.28MSP.29) to support WKD implementations without [SRV](README.md#srv-records-for-openpgp-web-key-directory) lookup (e.g. [Mailvelope](https://www.mailvelope.com), [Enigmail](https://www.enigmail.net)), the apex domain (i.e. **example.com**) must have A and AAAA records, and the http server must return codes 301 or 302 to send a `Location:` header for redirection to **https://wkd.example.com**:
+
+```console
+server "example.com" {
+	listen on "*" tls port https
+...
+	# OpenPGP Web Key Directory
+	location "/.well-known/openpgpkey/*" {
+		block return 302 "https://wkd.example.com$REQUEST_URI"
+	}
+...
+}
+```
 
 ### Logs
 
