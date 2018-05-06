@@ -158,7 +158,7 @@ Each *virtual* WKD subdomain has record type CNAME pointing to Web Key Server:
 wkd.example.net.	86400	IN	CNAME	mercury.example.com.
 ```
 
-#### SRV Records for OpenPGP Web Key Directory
+#### SRV Records for OpenPGP [Web Key Directory](https://wiki.gnupg.org/WKD)
 Each domain has record type SRV for WKD subdomain
 ```console
 _openpgpkey._tcp.example.com	86400	IN	SRV	0 0 443 wkd.example.com
