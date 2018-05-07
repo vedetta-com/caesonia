@@ -25,7 +25,7 @@ Root your Inbox :mailbox_with_mail:
 - Flexible: switching roles is easy, making the process of changing VPS hosts a breeze (no downtime)
 - DMARC (with DKIM and SPF) email-validation system, to detect and prevent email spoofing
 - Uncensored DNS validating resolver from root nameservers
-- OpenPGP Web Key Service with Web Key Directory, the most trusted and secure key exchange protocol
+- OpenPGP Web Key Service with Web Key Directory, automatic key exchange protocol
 - MUA Autoconfiguration, for modern clients
 - Daily (spartan) stats, to keep track of things
 - Your sieve scripts and managesieve configuration, let's get started
