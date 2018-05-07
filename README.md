@@ -39,7 +39,7 @@ Antivirus software users (usually) have the service running on their devices. Cl
 
 Every email message is important, if properly delivered, for Bayes classification. At least 200 ham and 200 spam messages are required to learn what one considers junk. By default (change to use case), a rspamd score above 50% will send the message to Spam/. Moving messages in and out of Spam/ changes this score. After 95%, the message is flagged as "seen" and can be safely ignored.
 
-Spamd is effective at greylisting and stopping high volume spam, if it becomes a problem. It will be an option when IPv6 is supported, along with [bgp-spamd](https://bgp-spamd.net/). To build IP lists for greylisting, please use [spfwalk](https://github.com/akpoff/spfwalk) with [spf_fetch](https://github.com/akpoff/spf_fetch).
+[spamd](https://man.openbsd.org/spamd) is effective at greylisting and stopping high volume spam, if it becomes a problem. It will be an option when IPv6 is supported, along with [bgp-spamd](https://bgp-spamd.net/). To build IP lists for greylisting, please use [spfwalk](https://github.com/akpoff/spfwalk) with [spf_fetch](https://github.com/akpoff/spf_fetch).
 
 System mail is delivered to an alias mapped to a virtual user served by the service. This way, messages are guaranteed to be delivered via encrypted connection. It is not possible for real users to alias, nor `mail` an external mail address with the default configuration.
 e.g. puffy@mercury.example.com is wheel, with an alias mapped to (virtual) puffy@example.com, and user (puffy) can be different for each.
