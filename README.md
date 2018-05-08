@@ -268,4 +268,5 @@ _dmarc.example.net.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcre
 Via [issues](https://github.com/vedetta-com/caesonia/issues) and [#caesonia:matrix.org](https://riot.im/app/#/room/#caesonia:matrix.org)
 
 ## Contribute
-[:pray:](https://github.com/vedetta-com/caesonia#fork-destination-box)
+[:pray:](https://github.com/vedetta-com/caesonia/fork)
+
