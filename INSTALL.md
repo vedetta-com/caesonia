@@ -326,7 +326,7 @@ sievec /var/dovecot/sieve/before/00-wks.sieve
 sievec /var/dovecot/sieve/before/spamtest.sieve
 ```
 
-### LetsEncrypt
+### Let's Encrypt
 
 Turn off `httpd` tls:
 ```sh
@@ -436,6 +436,9 @@ gpg2 --delete-key "key-submission@example.com"
 
 *n.b.*: [Enigmail](https://www.enigmail.net)/Thunderbird, [Kmail](https://userbase.kde.org/KMail) and [Mutt](http://www.mutt.org/) (perhaps other MUA) support the Web Key Service. Once published, a communication partner's MUA automatically downloads the public key with the following `gpg.conf` directive:
 ```console
+#expert
+#no-emit-version
+#interactive
 auto-key-retrieve
 auto-key-locate		local,wkd
 ```
