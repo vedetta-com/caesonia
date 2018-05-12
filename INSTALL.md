@@ -182,7 +182,15 @@ grep -r hermes .
 find . -type f -exec sed -i "s|hermes|$(dig +short $(hostname | sed "s/$(hostname -s).//") mx | awk -vhostname="$(hostname)" '{if ($2 != hostname".") print $2;}')|g" {} +
 ```
 
-Update the allowed mail relays [source table](https://man.openbsd.org/table.5#Source_tables) [`src/etc/mail/relays`](src/etc/mail/relays).
+Update the allowed mail relays [source table](https://man.openbsd.org/table.5#Source_tables) [`src/etc/mail/relays`](src/etc/mail/relays) to add the primary and backup MX IPs:
+```sh
+echo "# primary's IP" > src/etc/mail/relays
+dig +short mercury.example.com a >> src/etc/mail/relays
+dig +short mercury.example.com aaaa >> src/etc/mail/relays
+echo "# backup's IP" >> src/etc/mail/relays
+dig +short hermes.example.com a >> src/etc/mail/relays
+dig +short hermes.example.com aaaa >> src/etc/mail/relay
+```
 
 Update wheel user name "puffy":
 ```sh
