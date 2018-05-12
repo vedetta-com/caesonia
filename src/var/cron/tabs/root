@@ -23,4 +23,4 @@ HOME=/var/log
 30	11	*	*	*	doas -u vmail env -i HOME=/var/vmail /usr/local/bin/gpg-wks-server --cron
 20	2	1,14	*	*	unbound-anchor -a "/var/unbound/db/root.key" && rcctl restart unbound
 20	4	1	May,Nov	*	ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache && rcctl restart unbound
-20	6	*	*	*	acme-client mercury.example.com && /usr/local/bin/get-ocsp.sh mercury.example.com && rcctl restart smtpd dovecot
+20	6	*	*	*	acme-client $(hostname) && /usr/local/bin/get-ocsp.sh $(hostname) && rcctl restart smtpd dovecot
