@@ -326,7 +326,7 @@ sievec /var/dovecot/sieve/before/00-wks.sieve
 sievec /var/dovecot/sieve/before/spamtest.sieve
 ```
 
-### LetsEncrypt
+### Let's Encrypt
 
 Turn off `httpd` tls:
 ```sh
