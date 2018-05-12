@@ -64,7 +64,7 @@ Let's assume we want to change the (default) *virtual* domain name from `example
 cd src/
 grep -r example.net .
 ```
-After close inspection
+After close inspection, apply the substitution:
 ```sh
 find . -type f -exec sed -i 's|example.net|example.org|g' {} +
 ```
