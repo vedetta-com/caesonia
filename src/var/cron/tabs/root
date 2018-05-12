@@ -18,9 +18,14 @@ HOME=/var/log
 30	3	*	*	6	/bin/sh /etc/weekly
 30	5	1	*	*	/bin/sh /etc/monthly
 #0	*	*	*	*	sleep $((RANDOM \% 2048)) && /usr/libexec/spamd-setup
+# gather statistics
 30	7	*	*	*	smtpctl show stats; printf '\n'; /usr/local/bin/rspamc -h /var/run/rspamd/rspamd.sock stat; /usr/local/bin/doveadm -f pager replicator status '*'; printf '\n'; /usr/local/bin/doveadm -f pager quota get -A
+# list available patches
 30	9	*	*	*	syspatch -c
+# expire non confirmed publication requests
 30	11	*	*	*	doas -u vmail env -i HOME=/var/vmail /usr/local/bin/gpg-wks-server --cron
-20	2	1,14	*	*	unbound-anchor -a "/var/unbound/db/root.key" && rcctl restart unbound
+# update the root trust anchor for DNSSEC validation
+20	2	1,14	*	*	unbound-anchor && rcctl restart unbound
+# get list of authoritative nameservers
 20	4	1	May,Nov	*	ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache && rcctl restart unbound
 20	6	*	*	*	acme-client $(hostname) && /usr/local/bin/get-ocsp.sh $(hostname) && rcctl restart smtpd dovecot
