@@ -28,4 +28,5 @@ HOME=/var/log
 20	2	1,14	*	*	unbound-anchor && rcctl restart unbound
 # get list of authoritative nameservers
 20	4	1	May,Nov	*	ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache && rcctl restart unbound
+# update Let's Encrypt certificate
 20	6	*	*	*	acme-client $(hostname) && /usr/local/bin/get-ocsp.sh $(hostname) && rcctl restart smtpd dovecot

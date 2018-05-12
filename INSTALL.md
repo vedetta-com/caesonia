@@ -198,17 +198,26 @@ cd ../
 sed -i "s|puffy|$USER|g" \
 	src/etc/pf.conf \
 	src/etc/mail/aliases \
+	src/etc/mail/passwd \
+	src/etc/mail/virtual \
 	src/etc/ssh/sshd_config
 ```
 
-Update virtual users [credentials table](https://man.openbsd.org/table.5#Credentials_tables) [`src/etc/mail/passwd`](src/etc/mail/passwd) using [`smtpctl encrypt`](https://man.openbsd.org/smtpctl#encrypt).
+Update virtual users [credentials table](https://man.openbsd.org/table.5#Credentials_tables) [`src/etc/mail/passwd`](src/etc/mail/passwd) using [`smtpctl encrypt`](https://man.openbsd.org/smtpctl#encrypt):
+```sh
+smtpctl encrypt
+> secret
+> $2b$...encrypted...passphrase...
+vi src/etc/mail/passwd
+> puffy@example.com:$2b$...encrypted...passphrase...::::::
+```
 
 *n.b.*: user [quota](src/etc/dovecot/conf.d/90-quota.conf) limit can be [overriden](src/etc/dovecot/conf.d/auth-passwdfile.conf.ext) from [src/etc/mail/passwd](src/etc/mail/passwd):
 ```console
-user@example.com:$2b$...encrypted...passphrase...::::::userdb_quota_rule=*:storage=7G
+puffy@example.com:$2b$...encrypted...passphrase...::::::userdb_quota_rule=*:storage=7G
 ```
 
-Update [virtual domains](https://man.openbsd.org/makemap#VIRTUAL_DOMAINS) [aliasing table](https://man.openbsd.org/table.5#Aliasing_tables)  [`src/etc/mail/virtual`](src/etc/mail/virtual).
+Review [virtual domains](https://man.openbsd.org/makemap#VIRTUAL_DOMAINS) [aliasing table](https://man.openbsd.org/table.5#Aliasing_tables) [`src/etc/mail/virtual`](src/etc/mail/virtual).
 
 ## Email Service Installation
 
