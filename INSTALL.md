@@ -259,6 +259,7 @@ install -o root -g vmail -m 0550 -b src/usr/local/bin/quota-warning.sh /usr/loca
 install -o root -g vmail -m 0550 -b src/usr/local/bin/wks-server.sh /usr/local/bin/
 
 install -o root -g crontab -m 0640 -b src/var/cron/cron.allow /var/cron/
+crontab -u root src/var/cron/tabs/root
 
 install -o root -g wheel -m 0755 -d src/var/dovecot/sieve-pipe /var/dovecot/sieve-pipe
 
@@ -347,21 +348,6 @@ OCSP response:
 /usr/local/bin/get-ocsp.sh $(hostname)
 ```
 
-Edit [`crontab`](src/var/cron/tabs/root):
-```sh
-crontab -e
-```
-
-*n.b.*: assuming [DKIM](https://github.com/vedetta-com/caesonia/blob/master/README.md#domain-keys-identified-mail-dkim) keys are set.
-
-### Restart
-
-Restart the email service:
-```sh
-pfctl -f /etc/pf.conf
-rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
-```
-
 ### OpenPGP Web Key Service ([WKS](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-05))
 
 An important aspect of using OpenPGP is trusting the (public) key. Off-channel key exchange is not always practical, OpenPGP DANE protocol lacks confidentially, and HKPS' a mess. OpenPGP proposed a new protocol to automate and build trust in the process of exchanging public keys.
@@ -439,14 +425,6 @@ gpg2 --delete-secret-key "key-submission@example.com"
 gpg2 --delete-key "key-submission@example.com"
 ```
 
-Expire non confirmed publication requests:
-```sh
-crontab -e
-```
-```console
-30	11	*	*	*	doas -u vmail env -i HOME=/var/vmail /usr/local/bin/gpg-wks-server --cron
-```
-
 *n.b.*: [Enigmail](https://www.enigmail.net)/Thunderbird, [Kmail](https://userbase.kde.org/KMail) and [Mutt](http://www.mutt.org/) (perhaps other MUA) support the Web Key Service. Once published, a communication partner's MUA automatically downloads the public key with the following `gpg.conf` directive:
 ```console
 auto-key-retrieve
@@ -483,6 +461,16 @@ server "example.com" {
 	}
 ...
 }
+```
+
+*n.b.*: assuming [DKIM](https://github.com/vedetta-com/caesonia/blob/master/README.md#domain-keys-identified-mail-dkim) keys are set.
+
+### Restart
+
+Restart the email service:
+```sh
+pfctl -f /etc/pf.conf
+rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 ```
 
 ### Logs
