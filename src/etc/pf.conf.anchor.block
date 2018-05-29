@@ -1,35 +1,37 @@
+# (!) disable "log" with small /var/log
+logblock = "" # "log" or ""
+
 anchor "all" {
- # (!) disable "log" with small /var/log
- block all
+ block $logblock all
 }
 
 anchor "in-quick-scan" in proto tcp {
  # Confound network scanners
- block quick proto tcp all flags SF/SFRA
+ block $logblock quick proto tcp all flags SF/SFRA
  ##block quick proto tcp all flags SFUP/SFRAU
- block quick proto tcp all flags FPU/SFRAUP
- block quick proto tcp all flags /SFRA
- block quick proto tcp all flags F/SFRA
- block quick proto tcp all flags U/SFRAU
+ block $logblock quick proto tcp all flags FPU/SFRAUP
+ block $logblock quick proto tcp all flags /SFRA
+ block $logblock quick proto tcp all flags F/SFRA
+ block $logblock quick proto tcp all flags U/SFRAU
  ##block quick proto tcp all flags P
- block quick proto tcp all flags FUP/FUP
+ block $logblock quick proto tcp all flags FUP/FUP
 }
 
 anchor "in-quick-bad" in on egress {
  # Block incoming bad packets
- block quick inet  proto icmp  all icmp-type  redir
- block quick inet6 proto icmp6 all icmp6-type redir
+ block $logblock quick inet  proto icmp  all icmp-type  redir
+ block $logblock quick inet6 proto icmp6 all icmp6-type redir
 
  # Block incoming traffic from the undesirable
- block log quick \
+ block $logblock quick \
   from { <martians> no-route urpf-failed <permanentban> }
 }
 
 anchor "out-quick-bad" out on egress {
  # Block outgoing traffic to the undesirable, and tell us it's blocked
- block return log quick \
+ block return $logblock quick \
   to { <martians> no-route }
 
  # Block outgoing traffic that hasn't been translated
- block log quick inet from ! (egress:0)
+ block $logblock quick inet from ! (egress:0)
 }
