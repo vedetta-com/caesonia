@@ -270,8 +270,6 @@ install -o root -g vmail -m 0550 -b src/usr/local/bin/wks-server.sh /usr/local/b
 install -o root -g crontab -m 0640 -b src/var/cron/cron.allow /var/cron/
 crontab -u root src/var/cron/tabs/root
 
-install -o root -g wheel -m 0755 -d src/var/dovecot/sieve-pipe /var/dovecot/sieve-pipe
-
 install -o root -g vmail -m 0750 -d src/var/dovecot/imapsieve/after /var/dovecot/imapsieve/after
 install -o root -g vmail -m 0750 -d src/var/dovecot/imapsieve/before /var/dovecot/imapsieve/before
 install -o root -g vmail -m 0640 -b src/var/dovecot/imapsieve/before/report-ham.sieve /var/dovecot/imapsieve/before/
@@ -281,6 +279,8 @@ install -o root -g vmail -m 0750 -d src/var/dovecot/sieve/after /var/dovecot/sie
 install -o root -g vmail -m 0750 -d src/var/dovecot/sieve/before /var/dovecot/sieve/before
 install -o root -g vmail -m 0640 -b src/var/dovecot/sieve/before/spamtest.sieve /var/dovecot/sieve/before/
 install -o root -g vmail -m 0640 -b src/var/dovecot/sieve/before/00-wks.sieve /var/dovecot/sieve/before/
+
+mkdir -m 755 /var/dovecot/sieve-pipe
 
 install -o root -g wheel -m 0644 -b src/var/unbound/etc/unbound.conf /var/unbound/etc/
 
