@@ -1,0 +1,524 @@
+# special.local
+#
+#	   user: puffy
+#	machine: mercury.example.com
+#	   tree: /
+#	   date: Tue Jul 24 15:36:42 2018
+
+# .
+/set type=file uname=root gname=wheel mode=0644
+.		type=dir mode=0755
+
+
+# ./etc
+etc		type=dir mode=0755
+    changelist.local \
+		optional
+    clamd.conf	optional
+    dkimproxy_out.conf
+    freshclam.conf \
+		optional
+    pf.conf.anchor.block \
+		mode=0600
+    pf.conf.anchor.icmp \
+                mode=0600
+    pf.permanentban \
+                mode=0600
+    resolv.conf.slaac \
+		optional
+
+
+# ./etc/acme
+acme		type=dir mode=0700
+    letsencrypt-privkey.pem \
+		mode=0400
+# ./etc/acme
+..
+
+
+# ./etc/dovecot
+dovecot		type=dir mode=0755
+    dovecot-trash.conf.ext
+    local.conf
+
+
+# ./etc/dovecot/conf.d
+conf.d		type=dir mode=0755
+    10-auth.conf
+    10-mail.conf
+    10-master.conf
+    10-ssl.conf
+    15-lda.conf
+    15-mailboxes.conf
+    20-imap.conf
+    20-lmtp.conf
+    20-managesieve.conf
+    90-plugin.conf
+    90-quota.conf
+    90-replication.conf
+    90-sieve-extprograms.conf
+    90-sieve.conf
+    auth-passwdfile.conf.ext
+# ./etc/dovecot/conf.d
+..
+
+# ./etc/dovecot
+..
+
+
+# ./etc/mail
+/set type=file gname=_smtpd mode=0640
+mail		type=dir gname=wheel mode=0755
+    blacklist
+    mailname
+    passwd	uname=_smtpd gname=_dovecot mode=0440
+    relays
+    vdomains
+    virtual
+    whitelist
+# ./etc/mail
+..
+
+
+# ./etc/mtree
+/set type=file gname=wheel mode=0644
+mtree		type=dir mode=0755
+    special.local \
+		mode=0600 optional
+# ./etc/mtree
+..
+
+
+# ./etc/rspamd
+rspamd		type=dir mode=0755
+
+# ./etc/rspamd/local.d
+local.d		type=dir mode=0755
+    antivirus.conf
+    classifier-bayes.conf
+    mime_types.conf
+    options.inc
+    rbl.conf.optional \
+		optional
+    rbl.conf	optional
+    replies.conf
+    surbl.conf
+    worker-controller.inc
+    worker-normal.inc
+    worker-proxy.inc
+# ./etc/rspamd/local.d
+..
+
+
+# ./etc/rspamd/override.d
+override.d      type=dir mode=0755
+    bad_emails.list
+    emails.conf.optional \
+		optional
+    emails.conf	optional
+# ./etc/rspamd/override.d
+..
+
+# ./etc/rspamd
+..
+
+
+# ./etc/ssh
+ssh		type=dir mode=0755
+    sshd_banner	optional
+# ./etc/ssh
+..
+
+
+# ./etc/ssl
+ssl		type=dir mode=0755
+
+# ./etc/ssl/acme
+acme		type=dir mode=0755
+    *.crt	mode=0444
+    *.fullchain.pem \
+                mode=0444
+    *.ocsp.resp.der
+    letsencryptauthorityx3.pem
+
+# ./etc/ssl/acme/private
+private		type=dir mode=0700
+    *.key	mode=0400
+# ./etc/ssl/acme/private
+..
+
+# ./etc/ssl/acme
+..
+
+
+# ./etc/ssl/dkim
+dkim		type=dir mode=0755
+    public.key
+
+# ./etc/ssl/dkim/private
+private		type=dir uname=_rspamd gname=_dkimproxy mode=0750
+    private.key	uname=_rspamd gname=_dkimproxy mode=0440
+# ./etc/ssl/dkim/private
+..
+
+# ./etc/ssl/dkim
+..
+
+# ./etc/ssl
+..
+
+# ./etc
+..
+
+
+# ./home
+home		type=dir mode=0755
+
+
+# ./home/dsync
+dsync		type=dir gname=dsync mode=0755
+
+
+# ./home/dsync/.ssh
+.ssh		type=dir gname=dsync mode=0750
+    authorized_keys \
+		gname=dsync
+    id_rsa	uname=dsync gname=dsync mode=0400
+    id_rsa.pub	gname=dsync
+    known_hosts	gname=dsync
+# ./home/dsync/.ssh
+..
+
+# ./home/dsync
+..
+
+# ./home
+..
+
+
+# ./root
+root		type=dir mode=0700
+
+
+# ./root/.ssh
+.ssh		type=dir mode=0700
+    config	mode=0640
+    known_hosts	mode=0644
+# ./root/.ssh
+..
+
+# ./root
+..
+
+
+# ./usr
+usr		type=dir mode=0755
+
+
+# ./usr/local
+local		type=dir mode=0755
+
+
+# ./usr/local/bin
+bin		type=dir mode=0755
+    backup.sh	mode=0500 optional
+    dovecot-lda.sh \
+		gname=vmail mode=0550
+    get-ocsp.sh	mode=0500
+    hier.sh	mode=0500 optional
+    learn_all_spam.sh \
+		mode=0500 optional
+    learn_ham.sh \
+		gname=vmail mode=0550
+    learn_spam.sh \
+		gname=vmail mode=0550
+    quota-warning.sh \
+		gname=vmail mode=0550
+    rmchangelist.sh \
+		mode=0500 optional
+    wks-server.sh \
+		gname=vmail mode=0550
+# ./usr/local/bin
+..
+
+# ./usr/local
+..
+
+# ./usr
+..
+
+
+# ./var
+var		type=dir mode=0755
+
+
+# ./var/crash
+crash		type=dir mode=0770
+
+
+# ./var/crash/rspamd
+rspamd		type=dir mode=0700
+# ./var/crash/rspamd
+..
+
+# ./var/crash
+..
+
+
+# ./var/dovecot
+dovecot		type=dir mode=0755
+
+
+# ./var/dovecot/imapsieve
+/set type=file gname=vmail mode=0640
+imapsieve	type=dir mode=0750
+
+
+# ./var/dovecot/imapsieve/after
+after		type=dir mode=0750
+# ./var/dovecot/imapsieve/after
+..
+
+
+# ./var/dovecot/imapsieve/before
+before		type=dir mode=0750
+    report-ham.sieve
+    report-ham.svbin
+    report-spam.sieve
+    report-spam.svbin
+    *.sieve
+    *.svbin
+# ./var/dovecot/imapsieve/before
+..
+
+# ./var/dovecot/imapsieve
+..
+
+
+# ./var/dovecot/sieve
+sieve		type=dir mode=0750
+
+# ./var/dovecot/sieve/after
+after		type=dir mode=0750
+# ./var/dovecot/sieve/after
+..
+
+
+# ./var/dovecot/sieve/before
+before		type=dir mode=0750
+    spamtest.sieve
+    spamtest.svbin
+    *.sieve
+    *.svbin
+# ./var/dovecot/sieve/before
+..
+
+# ./var/dovecot/sieve
+..
+
+
+# ./var/dovecot/sieve-pipe
+/set type=file uname=vmail mode=0600
+sieve-pipe	type=dir uname=root mode=0750
+    dovecot-lda	type=socket
+    learn_ham	type=socket
+    learn_spam	type=socket
+# ./var/dovecot/sieve-pipe
+..
+
+# ./var/dovecot
+..
+
+
+# ./var/lib
+/set type=file uname=root gname=wheel mode=0755
+lib		type=dir
+
+
+# ./var/lib/gnupg
+gnupg		type=dir
+
+
+# ./var/lib/gnupg/wks
+/set type=file uname=vmail gname=vmail
+wks		type=dir mode=02750
+
+
+# ./var/lib/gnupg/wks/*
+*		type=dir
+    hu		type=link uname=root
+    submission-address \
+		type=link uname=root
+
+
+# ./var/lib/gnupg/wks/*/pending
+pending		type=dir mode=0700
+# ./var/lib/gnupg/wks/*/pending
+..
+
+# ./var/lib/gnupg/wks/*
+..
+
+# ./var/lib/gnupg/wks
+..
+
+# ./var/lib/gnupg
+..
+
+# ./var/lib
+..
+
+
+# ./var/log
+/set type=file uname=root gname=wheel mode=0640
+log		type=dir mode=0755
+
+
+# ./var/log/rspamd
+rspamd		type=dir mode=0755
+    rspamd.log	uname=_rspamd gname=_rspamd
+    rspamd.log.0.gz \
+		uname=_rspamd gname=_rspamd optional
+# ./var/log/rspamd
+..
+
+# ./var/log
+..
+
+
+# ./var/nsd
+nsd		type=dir mode=0755
+
+
+# ./var/nsd/db
+db		type=dir gname=_nsd mode=0775
+# ./var/nsd/db
+..
+
+
+# ./var/nsd/etc
+etc		type=dir gname=_nsd mode=0750
+    nsd.conf	gname=_nsd
+# ./var/nsd/etc
+..
+
+
+# ./var/nsd/zones
+zones		type=dir mode=0755
+
+
+# ./var/nsd/zones/master
+master		type=dir mode=0755
+# ./var/nsd/zones/master
+..
+
+
+# ./var/nsd/zones/slave
+slave		type=dir gname=_nsd mode=0775
+# ./var/nsd/zones/slave
+..
+
+# ./var/nsd/zones
+..
+
+# ./var/nsd
+..
+
+
+# ./var/rspamd
+rspamd		type=dir uname=_rspamd gname=_rspamd mode=0755
+# ./var/rspamd
+..
+
+
+# ./var/unbound
+unbound		type=dir mode=0755
+
+
+# ./var/unbound/db
+/set type=file mode=0644
+db		type=dir uname=root gname=_unbound mode=0775
+    root.key	uname=_unbound gname=_unbound
+# ./var/unbound/db
+..
+
+
+# ./var/unbound/etc
+etc		type=dir mode=0755
+    root.hints
+# ./var/unbound/etc
+..
+
+# ./var/unbound
+..
+
+
+# ./var/vmail
+vmail		type=dir uname=vmail gname=vmail mode=0750
+# ./var/vmail
+..
+
+
+# ./var/www
+/set type=file gname=daemon mode=0644
+www		type=dir mode=0755
+
+
+# ./var/www/htdocs
+htdocs		type=dir mode=0755
+
+
+# ./var/www/htdocs/*
+*.*.*		type=dir mode=0755
+    disklabel.min \
+		optional
+    index.html	optional
+    install.conf \
+		optional
+
+
+# ./var/www/htdocs/*/mail
+mail		type=dir mode=0755
+    config-v1.1.xml
+# ./var/www/htdocs/*/mail
+..
+
+# ./var/www/htdocs/*
+..
+
+# ./var/www/htdocs
+..
+
+
+# ./var/www/logs
+logs		type=dir mode=0755
+    access.log	optional
+    error.log	optional
+# ./var/www/logs
+..
+
+
+# ./var/www/openpgpkey
+openpgpkey	type=dir mode=0755
+    policy
+    submission-address
+
+
+# ./var/www/openpgpkey/hu
+hu		type=dir uname=vmail mode=0755
+    54f6ry7x1qqtpor16txw5gdmdbbh6a73 \
+		uname=vmail
+# ./var/www/openpgpkey/hu
+..
+
+# ./var/www/openpgpkey
+..
+
+# ./var/www
+..
+
+# ./var
+..
+
+..
+
