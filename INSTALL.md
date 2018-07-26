@@ -4,7 +4,6 @@
 * [OpenBSD Installation](#openbsd-installation)
 * [Email Service Configuration](#email-service-configuration)
 * [Email Service Installation](#email-service-installation)
-* [Post-installation](#post-installation)
 * [Client Configuration](#client-configuration)
 * [Administration](#administration)
 
