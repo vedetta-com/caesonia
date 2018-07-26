@@ -5,7 +5,7 @@
 set -o errexit
 set -o nounset
 
-PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin                                                          
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 
 SITE="$1"
 DIR="/etc/ssl/acme"
@@ -16,11 +16,11 @@ CA="letsencryptauthorityx3.pem"
 if [ "$(stat -f "%Sm" -t "%a %b %e %Y" "${DIR}"/"${CA}")" !=\
      "$(date -j '+%a %b %e %Y')" ]
   then
-    ftp -Mo "${DIR}"/"${CA}" https://letsencrypt.org/certs/"${CA}".txt 
+    ftp -Mo "${DIR}"/"${CA}" https://letsencrypt.org/certs/"${CA}".txt
 fi
 
 # (!) No nounce (-N) is a security risk
-# It should not be used unless the OCSP server does not support the use of OCSP nonces                                     
+# It should not be used unless the OCSP server does not support the use of OCSP nonces
 ocspcheck -Nv \
           -C "${DIR}"/"${CA}" \
           -o "${DIR}"/"${SITE}".ocsp.resp.der \
