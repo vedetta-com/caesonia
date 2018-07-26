@@ -1,5 +1,7 @@
-/etc/acme
+/etc/acme/letsencrypt-privkey.pem
 /etc/acme-client.conf
+/etc/changelist
+/etc/changelist.local
 /etc/dhclient.conf
 /etc/dkimproxy_out.conf
 /etc/doas.conf
@@ -35,21 +37,23 @@
 /etc/mail/passwd
 /etc/mail/relays
 /etc/mail/smtpd.conf
-/etc/mail/smtpd.conf.default
-/etc/mail/spamd.alloweddomains
-/etc/mail/spamd.conf
 /etc/mail/vdomains
 /etc/mail/virtual
 /etc/mail/whitelist
+
+/etc/mtree/special
+/etc/mtree/special.local
 
 /etc/mygate
 /etc/myname
 /etc/newsyslog.conf
 /etc/ntpd.conf
 /etc/pf.conf
-/etc/pf.nospamd
+/etc/pf.conf.anchor.block
+/etc/pf.conf.anchor.icmp
 /etc/pf.permanentban
 /etc/rc.conf.local
+/etc/resolv.conf
 /etc/resolv.conf.tail
 
 /etc/rspamd/local.d
@@ -64,26 +68,35 @@
 /etc/sysctl.conf
 
 /var/cron/tabs/root
+/var/cron/cron.allow
 
 /var/dovecot/imapsieve
 /var/dovecot/sieve
 /var/dovecot/sieve-pipe
 
-/var/vmail/sieve
+/var/lib/gnupg/wks
 
-/var/www/htdocs/mercury.example.com
+/var/unbound
+
+/var/www/htdocs
+/var/www/openpgpkey
 
 /usr/local/bin/backup.sh
 /usr/local/bin/dovecot-lda.sh
 /usr/local/bin/get-ocsp.sh
 /usr/local/bin/hier.sh
+/usr/local/bin/learn_all_spam.sh
 /usr/local/bin/learn_ham.sh
 /usr/local/bin/learn_spam.sh
 /usr/local/bin/quota-warning.sh
+/usr/local/bin/rmchangelist.sh
+/usr/local/bin/wks-server.sh
 
 /root/.ssh/config
 /root/.ssh/known_hosts
+
 /home/dsync/.ssh/authorized_keys
 /home/dsync/.ssh/id_rsa
 /home/dsync/.ssh/id_rsa.pub
+/home/puffy/.gnupg/gpg.conf
 /home/puffy/backup/include

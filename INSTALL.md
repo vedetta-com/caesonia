@@ -224,6 +224,8 @@ Review [virtual domains](https://man.openbsd.org/makemap#VIRTUAL_DOMAINS) [alias
 After review:
 ```sh
 install -o root -g wheel -m 0640 -b src/etc/acme-client.conf /etc/
+install -o root -g wheel -m 0644 -b src/etc/daily.local /etc/
+install -o root -g wheel -m 0644 -b src/etc/changelist.local /etc/
 install -o root -g wheel -m 0640 -b src/etc/dhclient.conf /etc/
 install -o root -g wheel -m 0640 -b src/etc/dkimproxy_out.conf /etc/
 install -o root -g wheel -m 0640 -b src/etc/doas.conf /etc/
@@ -250,6 +252,8 @@ install -o root -g _smtpd -m 0640 -b src/etc/mail/vdomains /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/virtual /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/whitelist /etc/mail/
 
+install -o root -g wheel -m 0600 -b src/etc/mtree/special.local /etc/mtree/
+
 install -o root -g wheel -m 0755 -d src/etc/rspamd/local.d /etc/rspamd/local.d
 install -o root -g wheel -m 0755 -d src/etc/rspamd/override.d /etc/rspamd/override.d
 install -o root -g wheel -m 0644 -b src/etc/rspamd/local.d/* /etc/rspamd/local.d/
@@ -264,13 +268,15 @@ install -o root -g wheel -m 0700 -d src/etc/ssl/acme/private /etc/ssl/acme/priva
 install -o root -g wheel -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/dovecot-lda.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/learn_*.sh /usr/local/bin/
+install -o root -g wheel -m 0500 -b src/usr/local/bin/rmchangelist.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/quota-warning.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/wks-server.sh /usr/local/bin/
 
 install -o root -g crontab -m 0640 -b src/var/cron/cron.allow /var/cron/
 crontab -u root src/var/cron/tabs/root
 
-install -o root -g wheel -m 0755 -d src/var/dovecot/sieve-pipe /var/dovecot/sieve-pipe
+mkdir -p -m 750 /var/dovecot/{imapsieve,sieve,sieve-pipe}
+chgrp vmail /var/dovecot/{imapsieve,sieve,sieve-pipe}
 
 install -o root -g vmail -m 0750 -d src/var/dovecot/imapsieve/after /var/dovecot/imapsieve/after
 install -o root -g vmail -m 0750 -d src/var/dovecot/imapsieve/before /var/dovecot/imapsieve/before
