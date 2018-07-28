@@ -306,6 +306,8 @@ after		type=dir mode=0750
 
 # ./var/dovecot/sieve/before
 before		type=dir mode=0750
+    00-wks.sieve
+    00-wks.svbin
     spamtest.sieve
     spamtest.svbin
     *.sieve
