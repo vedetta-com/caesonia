@@ -17,6 +17,6 @@ next_part "Email service statistics:"
 smtpctl show stats
 printf '\n'
 /usr/local/bin/rspamc -h /var/run/rspamd/rspamd.sock stat
-/usr/local/bin/doveadm -f pager replicator status '*'
+/usr/local/bin/doveadm -f pager replicator status '*' | tr -d '\f'
 printf '\n'
-/usr/local/bin/doveadm -f pager quota get -A
+/usr/local/bin/doveadm -f pager quota get -A | tr -d '\f'

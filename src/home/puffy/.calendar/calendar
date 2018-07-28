@@ -1,0 +1,33 @@
+/*
+ * Domain names and hosting
+ *
+ */
+
+LANG=C
+
+/* Domain names */
+Jul 13	Domain Name(s):	example.com
+	Expiration:	Aug 13
+	Registrar:	https://
+	Reminder:	Expires next month
+Aug 6	Domain Name(s):	example.com
+	Expiration:	Aug 13
+	Registrar:	https://
+	Reminder:	Expires in 7 days
+Aug 13	Domain Name(s):	example.com
+	Expiration:	Aug 13
+	Registrar:	https://
+	Reminder:	Expires today!
+
+/* Hosting */
+1 *	Host:	https://
+	CPU:	1
+	RAM:	512MB
+	SSD:	20GB
+	/mo:	$2.50
+
+22 *	Host:	https://
+	CPU:	1
+	RAM:	1GB
+	SSD:	20GB
+	/mo:	$3.50
