@@ -131,8 +131,8 @@ ssh -6 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
 
 Download a recent [release](https://github.com/vedetta-com/caesonia/releases):
 ```sh
-cd ~ && ftp https://github.com/vedetta-com/caesonia/archive/vX.X.X.tar.gz
-tar -C ~ -xzf ~/vX.X.X.tar.gz
+cd ~ && ftp https://github.com/vedetta-com/caesonia/archive/v6.3.2p1-beta.tar.gz
+tar -C ~ -xzf ~/v6.3.2p1-beta.tar.gz
 ```
 
 *n.b.*: to use [Git or SVN](https://help.github.com/articles/which-remote-url-should-i-use/):
