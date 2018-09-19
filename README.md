@@ -161,19 +161,22 @@ wkd.example.net.	86400	IN	CNAME	mercury.example.com.
 #### SRV Records for OpenPGP [Web Key Directory](https://wiki.gnupg.org/WKD)
 Each domain has record type SRV for WKD subdomain
 ```console
-_openpgpkey._tcp.example.com	86400	IN	SRV	0 0 443 wkd.example.com
+_openpgpkey._tcp.example.com	86400	IN	SRV	0 0 443	wkd.example.com
 ```
 
 Each *virtual* domain has record type SRV for *virtual* WKD subdomain
 ```console
-_openpgpkey._tcp.example.net	86400	IN	SRV	0 0 443 wkd.example.net
+_openpgpkey._tcp.example.net	86400	IN	SRV	0 0 443	wkd.example.net
 ```
 
 #### SRV Records for [Locating Email Services](https://tools.ietf.org/html/rfc6186)
 Each domain and *virtual* domain has record types SRV for simple MUA auto-configuration:
 ```console
-_submission._tcp.example.com.	86400	IN	SRV	0 1 587 mercury.example.com.
-_imaps._tcp.example.com.	86400	IN	SRV	0 1 993 mercury.example.com.
+_submission._tcp.example.com.	86400	IN	SRV	0 1 587	mercury.example.com.
+_imap._tcp.example.com.		86400	IN	SRV	0 0 0	.
+_imaps._tcp.example.com.	86400	IN	SRV	0 1 993	mercury.example.com.
+_pop3._tcp.example.com.		86400	IN	SRV	0 0 0	.
+_pop3s._tcp.example.com.	86400	IN	SRV	0 0 0	.
 ```
 
 #### Mail eXchanger ([MX](https://tools.ietf.org/html/rfc5321))
