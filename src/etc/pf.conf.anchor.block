@@ -24,7 +24,7 @@ anchor "in-quick-bad" in on egress {
 
  # Block incoming traffic from the undesirable
  block $logblock quick \
-  from { <martians> no-route urpf-failed <permanentban> }
+  from { <martians> no-route urpf-failed <ban> }
 }
 
 anchor "out-quick-bad" out on egress {

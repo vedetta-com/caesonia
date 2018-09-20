@@ -1,0 +1,1 @@
+# /sbin/pfctl -t ban -T replace -f /etc/pf.conf.table.ban
