@@ -233,7 +233,7 @@ install -o root -g wheel -m 0640 -b src/etc/httpd.conf* /etc/
 install -o root -g wheel -m 0644 -b src/etc/login.conf /etc/
 install -o root -g wheel -m 0644 -b src/etc/newsyslog.conf /etc/
 install -o root -g wheel -m 0600 -b src/etc/pf.conf* /etc/
-install -o root -g wheel -m 0600 -b src/etc/pf.permanentban /etc/
+install -o root -g wheel -m 0600 -b src/etc/pf.conf.table.ban /etc/
 install -o root -g wheel -m 0644 -b src/etc/resolv.conf.tail /etc/
 install -o root -g wheel -m 0644 -b src/etc/sysctl.conf /etc/
 
@@ -596,12 +596,12 @@ dig +short example.meh mx
 
 for each bad subdomain, add its IP (A and AAAA record) to `pf`:
 ```sh
-echo $IP >> /etc/pf.permanentban
+echo $IP >> /etc/pf.conf.table.ban
 ```
 
 and reload the `pf` table:
 ```sh
-pfctl -t permanentban -T replace -f /etc/pf.permanentban
+pfctl -t ban -T replace -f /etc/pf.conf.table.ban
 ```
 
 ### Microsoft Network
