@@ -32,7 +32,7 @@
 /etc/mail/whitelist
 /etc/pf.conf.anchor.block
 /etc/pf.conf.anchor.icmp
-/etc/pf.permanentban
+/etc/pf.conf.table.ban
 /etc/rspamd/local.d/antivirus.conf
 /etc/rspamd/local.d/classifier-bayes.conf
 /etc/rspamd/local.d/mime_types.conf
