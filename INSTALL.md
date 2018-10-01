@@ -375,6 +375,11 @@ Self-hosting has the advantage of full authority on the user mail addresses for 
 
 To get started, a GnuPG 2.1 safe configuration is provided: [`gpg.conf`](src/home/puffy/.gnupg/gpg.conf)
 
+*n.b.*: temp WKS installation patch for doas.conf
+```sh
+echo "permit nopass root as vmail cmd env" >> /etc/doas.conf
+```
+
 Web Key Service maintains a Web Key Directory ([WKD](https://wiki.gnupg.org/WKD)) which needs the following configuration for each *virtual* domain:
 ```sh
 mkdir -m 755 /var/lib/gnupg/wks/example.com
@@ -438,6 +443,11 @@ doas -u vmail \
 ```sh
 gpg2 --delete-secret-key "key-submission@example.com"
 gpg2 --delete-key "key-submission@example.com"
+```
+
+*n.b.*: (!) revert temp WKS installation patch for doas.conf
+```sh
+sed -i '/permit nopass root as vmail cmd env$/ d' /etc/doas.conf
 ```
 
 *n.b.*: [Enigmail](https://www.enigmail.net)/Thunderbird, [Kmail](https://userbase.kde.org/KMail) and [Mutt](http://www.mutt.org/) (perhaps other MUA) support the Web Key Service. Once published, a communication partner's MUA automatically downloads the public key with the following `gpg.conf` directive:
