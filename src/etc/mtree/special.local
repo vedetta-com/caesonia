@@ -22,7 +22,7 @@ etc		type=dir mode=0755
 		mode=0600
     pf.conf.anchor.icmp \
                 mode=0600
-    pf.permanentban \
+    pf.conf.table.ban \
                 mode=0600
     resolv.conf.slaac \
 		optional
