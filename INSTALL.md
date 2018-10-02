@@ -233,7 +233,6 @@ install -o root -g wheel -m 0640 -b src/etc/httpd.conf* /etc/
 install -o root -g wheel -m 0644 -b src/etc/login.conf /etc/
 install -o root -g wheel -m 0644 -b src/etc/newsyslog.conf /etc/
 install -o root -g wheel -m 0600 -b src/etc/pf.conf* /etc/
-install -o root -g wheel -m 0600 -b src/etc/pf.conf.table.ban /etc/
 install -o root -g wheel -m 0644 -b src/etc/resolv.conf.tail /etc/
 install -o root -g wheel -m 0644 -b src/etc/sysctl.conf /etc/
 
