@@ -189,7 +189,7 @@ dig +short mercury.example.com a >> src/etc/mail/relays
 dig +short mercury.example.com aaaa >> src/etc/mail/relays
 echo "# backup's IP" >> src/etc/mail/relays
 dig +short hermes.example.com a >> src/etc/mail/relays
-dig +short hermes.example.com aaaa >> src/etc/mail/relay
+dig +short hermes.example.com aaaa >> src/etc/mail/relays
 ```
 
 Update wheel user name "puffy":
