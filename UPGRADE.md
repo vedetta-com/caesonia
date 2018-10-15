@@ -1,7 +1,7 @@
 # caesonia (beta)
 *Open*BSD Email Service - Upgrade an existing installation
 
-[`6.3.2p1-beta`](https://github.com/vedetta-com/caesonia/tree/6.3.2p1-beta) to [`6.3.3-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.3-beta)
+[`6.3.2p1-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.2p1-beta) to [`6.3.3-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.3-beta)
 
 > Upgrades are only supported from one release to the release immediately following it. Read through and understand this process before attempting it. For critical or physically remote machines, test it on an identical, local system first. -- [OpenBSD Upgrade Guide](https://www.openbsd.org/faq/index.html)
 
