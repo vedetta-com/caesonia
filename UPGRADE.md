@@ -1,142 +1,103 @@
 # caesonia (beta)
 *Open*BSD Email Service - Upgrade an existing installation
 
-[`6.3.1-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.1-beta) to [`6.3.2p1-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.2p1-beta)
+[`6.3.2p1-beta`](https://github.com/vedetta-com/caesonia/tree/6.3.2p1-beta) to [`6.3.3-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.3-beta)
 
 > Upgrades are only supported from one release to the release immediately following it. Read through and understand this process before attempting it. For critical or physically remote machines, test it on an identical, local system first. -- [OpenBSD Upgrade Guide](https://www.openbsd.org/faq/index.html)
 
 ## Upgrade Guide
 
-### Introducing OpenPGP Web Key Service (WKS) to OpenBSD
+### Packet filter configuration
 
-To start implementing Web Key Service, please make sure the new DNS [prerequisites](README.md#openpgp-web-key-directory-wkd) are met.
+Rename "[pf.permanentban](https://github.com/vedetta-com/caesonia/blob/v6.3.2p1-beta/src/etc/pf.permanentban)" to "[pf.conf.table.ban](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/etc/pf.conf.table.ban)"
 
-```sh
-pkg_add gnupg-2.2.4
-```
-
-Edit [`/etc/httpd.conf`](src/etc/httpd.conf) to add WKD alias and location:
 ```console
-# Host:443
-server "mercury.example.com" {
-	alias "autoconfig.*"
-	alias "wkd.*"
-
-	listen on $IPv4 tls port https
-	listen on $IPv6 tls port https
-
-	hsts subdomains
-
-	tls certificate "/etc/ssl/acme/mercury.example.com.fullchain.pem"
-	tls key "/etc/ssl/acme/private/mercury.example.com.key"
-	# (!) see usr/local/bin/get-ocsp.sh
-	tls ocsp "/etc/ssl/acme/mercury.example.com.ocsp.resp.der"
-
-	# Cipher Strength <https://man.openbsd.org/SSL_CTX_set_cipher_list>
-	tls ciphers "HIGH:!AES128:!kRSA:!aNULL" # default: "HIGH:!aNULL"
-	# Key Exchange <https://man.openbsd.org/tls_config_set_ecdhecurves>
-	tls ecdhe "P-384,P-256,X25519" # default: "X25519,P-256,P-384"
-
-	tcp nodelay
-	connection { max requests 500, timeout 3600 }
-
-	log { access "access.log", error "error.log" }
-
-	block
-
-	# OpenPGP Web Key Directory
-	location "/.well-known/openpgpkey/*" {
-		root "/openpgpkey"
-		root strip 2
-		pass
-	}
-
-	location "/*" {
-		root "/htdocs/mercury.example.com"
-		pass
-	}
-}
-
-# Host:80
-server "mercury.example.com" {
-	alias "autoconfig.*"
-	alias "wkd.*"
-...
+install -o root -g wheel -m 0600 -b src/etc/pf.conf /etc/
+cp -p /etc/permanentban /etc/pf.conf.table.ban
 ```
 
-Add WKD LetsEncrypt certificate:
-```sh
-acme-client -vr mercury.example.com
-```
+Update [pf.conf.anchor.block](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/etc/pf.conf.anchor.block)
+- new macro "logblock"
+- rename table "permanentban" to "ban"
 
-Edit [`/etc/acme-client.conf`](src/etc/acme-client.conf) to add every service (virtual) WKD subdomains as alternative names:
 ```console
-...
-	alternative names { \
-		autoconfig.example.com \
-		autoconfig.example.net \
-		wkd.example.com \
-		wkd.example.net }
-...
+install -o root -g wheel -m 0600 -b src/etc/pf.conf.anchor.block /etc/
 ```
 
-```sh
-acme-client -v mercury.example.com
-get-ocsp.sh mercury.example.com
-```
+Update [pf.conf.anchor.icmp](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/etc/pf.conf.anchor.icmp)
+- new macro "logicmp"
+- switched to max-pkt-rate
 
-Edit [`/etc/doas.conf`](src/etc/doas.conf) to add WKS permissions:
 ```console
-# WKS: expire non confirmed publication requests
-permit nopass root as vmail cmd env args \
-    -i HOME=/var/vmail /usr/local/bin/gpg-wks-server --cron
+install -o root -g wheel -m 0600 -b src/etc/pf.conf.anchor.icmp /etc/
 ```
 
-Edit [`/var/cron/tabs/root`](src/var/cron/tabs/root) to add WKS expiration:
+Restart `pf`
+
 ```console
-30	11	*	*	*	doas -u vmail env -i HOME=/var/vmail /usr/local/bin/gpg-wks-server --cron
+pfctl -nf /etc/pf.conf && pfctl -f /etc/pf.conf
+rm /etc/permanentban
 ```
 
-Edit [`/etc/mail/smtpd.conf`](src/etc/mail/smtpd.conf) to add WKS table:
+### OCSP
+
+Patch "get-ocsp.sh" to run daily
 ```console
-table wks-recipients		{ "key-submission@example.com" } # OpenPGP WKS Submission Address
+install -o root -g wheel -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin/
 ```
 
-OpenPGP Web Key Service (WKS) Trust Management for primary and backup MX:
-```sh
-sed -i 's/accept tagged MTA from any/& recipient ! <wks-recipients>/g' /etc/mail/smtpd.conf
+### User crontab
+
+Moved from user [crontab](https://github.com/vedetta-com/caesonia/blob/v6.3.2p1-beta/src/var/cron/tabs/root) to "daily.local":
+- Let's Encrypt update
+- email service statistics reports
+
+Install the [new crontab](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/var/cron/tabs/root)
+```console
+crontab -u root src/var/cron/tabs/root
 ```
 
-Add OpenPGP Web Key Service (WKS) Submission Address
-```sh
-echo "key-submission@example.com \tvmail" >> /etc/mail/virtual
+Install "[daily.local](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/etc/daily.local)"
+```console
+install -o root -g wheel -m 0644 -b src/etc/daily.local /etc/
 ```
 
-Install OpenPGP Web Key Service (WKS) Server Tool:
-```sh
-install -o root -g wheel -m 0644 -b src/etc/dovecot/conf.d/90-sieve-extprograms.conf /etc/dovecot/conf.d/
-install -o root -g vmail -m 0550 -b src/usr/local/bin/wks-server.sh /usr/local/bin/
-install -o root -g vmail -m 0640 -b src/var/dovecot/sieve/before/00-wks.sieve /var/dovecot/sieve/before/
-sievec /var/dovecot/sieve/before/00-wks.sieve
+### Security complement
+
+"[special.local](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/etc/mtree/special.local)" complements [security(8)](https://man.openbsd.org/security.8) for local special files
+```console
+install -o root -g wheel -m 0600 -b src/etc/mtree/special.local /etc/mtree/
 ```
 
-Install OpenPGP Web Key Directory:
-```sh
-install -o root -g daemon -m 0755 -d src/var/www/openpgpkey /var/www/openpgpkey
-install -o root -g daemon -m 0644 -b src/var/www/openpgpkey/policy /var/www/openpgpkey/
-install -o root -g daemon -m 0644 -b src/var/www/openpgpkey/submission-address /var/www/openpgpkey/
+### Backup local files
 
-install -o vmail -g daemon -m 0755 -d src/var/www/openpgpkey/hu /var/www/openpgpkey/hu
-
-install -o root -g wheel -m 0755 -d src/var/lib /var/lib   
-install -o root -g wheel -m 0755 -d src/var/lib/gnupg /var/lib/gnupg
-install -o root -g wheel -m 2750 -d src/var/lib/gnupg/wks /var/lib/gnupg/wks
+"[changelist.local](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/etc/changelist.local)" extends [changelist(5)](https://man.openbsd.org/changelist.5) to [backup local files](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/INSTALL.md#backup-local-files)
+```console
+install -o root -g wheel -m 0644 -b src/etc/changelist.local /etc/
 ```
 
-Follow the [Web Key Service Configuration Guide](INSTALL.md#openpgp-web-key-service-wks) to finish the upgrade.
+"rmchangelist.sh" removes local changelist backups
+```console
+install -o root -g wheel -m 0500 -b src/usr/local/bin/rmchangelist.sh /usr/local/bin/
+```
 
-Restart:
-```sh
-rcctl restart smtpd dovecot httpd
+*n.b.*: see [INSTALL.md](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/INSTALL.md#backup-local-files) for usage
+
+### Calendar
+
+Optional "[calendar](https://github.com/vedetta-com/caesonia/tree/v6.3.3-beta/src/home/puffy/.calendar)" reminder service for domain names and hosting anniversaries
+
+```console
+install -o puffy -g puffy -m 0755 -d src/home/puffy/.calendar /home/puffy/.calendar
+install -o puffy -g puffy -m 0644 -b src/home/puffy/.calendar/* /home/puffy/.calendar/
+```
+
+### DNS
+
+New DNS [SRV records](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/README.md#srv-records-for-locating-email-services) to indicate IMAP, POP3, and POP3S are not supported, rfc6186
+```console
+_imap._tcp.example.com	86400	IN	SRV	0 0 0 .
+_pop3._tcp.example.com	86400	IN	SRV	0 0 0 .
+_pop3s._tcp.example.com	86400	IN	SRV	0 0 0 .
 ```
 
