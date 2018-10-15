@@ -116,12 +116,12 @@ A DNS name server (from a registrar, a free service, VPS host, or self-hosted) i
 #### Forward-confirmed reverse DNS ([FCrDNS](https://tools.ietf.org/html/draft-ietf-dnsop-reverse-mapping-considerations-06))
 Each MX subdomain has record types A, and AAAA with the VPS' IPv4, and IPv6:
 ```console
-mercury.example.com.	86400	IN	A	203.0.113.1
-mercury.example.com.	86400	IN	AAAA	2001:0db8::1
+mercury.example.com	86400	IN	A	203.0.113.1
+mercury.example.com	86400	IN	AAAA	2001:0db8::1
 ```
 Each IPv4 and IPv6 has record type PTR with the MX subdomain (reverse DNS configured on VPS host):
 ```console
-...6				IN	PTR 	mercury.example.com.
+...6				IN	PTR 	mercury.example.com
 ```
 Verify:
 ```sh
@@ -139,23 +139,23 @@ dig +short -x 2001:0db8::1
 #### Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration)
 Each autoconfig subdomain has record type CNAME pointing to Autoconfiguration server:
 ```console
-autoconfig.example.com.	86400	IN	CNAME	mercury.example.com.
+autoconfig.example.com	86400	IN	CNAME	mercury.example.com
 ```
 
 Each *virtual* autoconfig subdomain has record type CNAME pointing to Autoconfiguration server:
 ```console
-autoconfig.example.net.	86400	IN	CNAME	mercury.example.com.
+autoconfig.example.net	86400	IN	CNAME	mercury.example.com
 ```
 
 #### OpenPGP Web Key Directory ([WKD](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-06))
 Each WKD subdomain has record type CNAME pointing to Web Key Server:
 ```console
-wkd.example.com.	86400	IN	CNAME	mercury.example.com.
+wkd.example.com		86400	IN	CNAME	mercury.example.com
 ```
 
 Each *virtual* WKD subdomain has record type CNAME pointing to Web Key Server:
 ```console
-wkd.example.net.	86400	IN	CNAME	mercury.example.com.
+wkd.example.net		86400	IN	CNAME	mercury.example.com
 ```
 
 #### SRV Records for OpenPGP [Web Key Directory](https://wiki.gnupg.org/WKD)
@@ -172,11 +172,11 @@ _openpgpkey._tcp.example.net	86400	IN	SRV	0 0 443	wkd.example.net
 #### SRV Records for [Locating Email Services](https://tools.ietf.org/html/rfc6186)
 Each domain and *virtual* domain has record types SRV for simple MUA auto-configuration:
 ```console
-_submission._tcp.example.com.	86400	IN	SRV	0 1 587	mercury.example.com.
-_imap._tcp.example.com.		86400	IN	SRV	0 0 0	.
-_imaps._tcp.example.com.	86400	IN	SRV	0 1 993	mercury.example.com.
-_pop3._tcp.example.com.		86400	IN	SRV	0 0 0	.
-_pop3s._tcp.example.com.	86400	IN	SRV	0 0 0	.
+_submission._tcp.example.com	86400	IN	SRV	0 1 587	mercury.example.com
+_imap._tcp.example.com		86400	IN	SRV	0 0 0	.
+_imaps._tcp.example.com		86400	IN	SRV	0 1 993	mercury.example.com
+_pop3._tcp.example.com		86400	IN	SRV	0 0 0	.
+_pop3s._tcp.example.com		86400	IN	SRV	0 0 0	.
 ```
 
 #### Mail eXchanger ([MX](https://tools.ietf.org/html/rfc5321))
@@ -184,23 +184,23 @@ Each domain has first priority MX record *mercury.example.com*
 
 Each domain has second priority MX record *hermes.example.com*
 ```console
-example.com.	86400	IN	MX	10 mercury.example.com.
-example.com.	86400	IN	MX	20 hermes.example.com.
+example.com	86400	IN	MX	10 mercury.example.com
+example.com	86400	IN	MX	20 hermes.example.com
 ```
 
 Each *virtual* domain has first priority MX record *mercury.example.com*
 
 Each *virtual* domain has second priority MX record *hermes.example.com*
 ```console
-example.net.	86400	IN	MX	10 mercury.example.com.
-example.net.	86400	IN	MX	20 hermes.example.com.
+example.net	86400	IN	MX	10 mercury.example.com
+example.net	86400	IN	MX	20 hermes.example.com
 ```
 
 #### Certification Authority Authorization ([CAA](https://tools.ietf.org/html/rfc6844))
 Primary domain name's CAA record sets *[letsencrypt.org](https://letsencrypt.org/)* as the only CA allowed to issue certificates:
 ```console
-example.com.	86400	IN	CAA	128 issue "letsencrypt.org"
-example.com.	86400	IN	CAA	128 issuewild ";"
+example.com	86400	IN	CAA	128 issue "letsencrypt.org"
+example.com	86400	IN	CAA	128 issuewild ";"
 ```
 
 #### Secure Shell Fingerprint ([SSHFP](https://man.openbsd.org/ssh#VERIFYING_HOST_KEYS))
@@ -209,28 +209,28 @@ Each MX subdomain needs their hosts's SSHFP records:
 ssh-keygen -r mercury.example.com
 ```
 ```console
-mercury.example.com.	86400	IN	SSHFP	1 1 2...
-mercury.example.com.	86400	IN	SSHFP	1 2 5...
-mercury.example.com.	86400	IN	SSHFP	2 1 a...
-mercury.example.com.	86400	IN	SSHFP	2 2 c...
-mercury.example.com.	86400	IN	SSHFP	3 1 6...
-mercury.example.com.	86400	IN	SSHFP	3 2 8...
-mercury.example.com.	86400	IN	SSHFP	4 1 7...
-mercury.example.com.	86400	IN	SSHFP	4 2 a...
+mercury.example.com	86400	IN	SSHFP	1 1 2...
+mercury.example.com	86400	IN	SSHFP	1 2 5...
+mercury.example.com	86400	IN	SSHFP	2 1 a...
+mercury.example.com	86400	IN	SSHFP	2 2 c...
+mercury.example.com	86400	IN	SSHFP	3 1 6...
+mercury.example.com	86400	IN	SSHFP	3 2 8...
+mercury.example.com	86400	IN	SSHFP	4 1 7...
+mercury.example.com	86400	IN	SSHFP	4 2 a...
 ```
 
 #### Sender Policy Framework ([SPF](http://www.openspf.org/))
 Each domain and subdomain needs a TXT record with SPF data:
 ```console
-example.com.		86400	IN	TXT	"v=spf1 mx mx:example.com -all"
-mercury.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.1 ip6:2001:0db8::1 -all"
-hermes.example.com.	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.2 ip6:2001:0db8::2 -all"
-autoconfig.example.com.	86400	IN	TXT	"v=spf1 -all"
+example.com		86400	IN	TXT	"v=spf1 mx mx:example.com -all"
+mercury.example.com	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.1 ip6:2001:0db8::1 -all"
+hermes.example.com	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.2 ip6:2001:0db8::2 -all"
+autoconfig.example.com	86400	IN	TXT	"v=spf1 -all"
 ```
 
 Each *virtual* domain and *virtual* subdomain needs a TXT record with SPF data:
 ```console
-example.net.		86400	IN	TXT	"v=spf1 include:example.com ~all"
+example.net		86400	IN	TXT	"v=spf1 include:example.com ~all"
 ```
 
 #### Domain Keys Identified Mail ([DKIM](http://www.dkim.org))
@@ -248,23 +248,23 @@ chmod 440 /etc/ssl/dkim/private/private.key
 ```
 Add public key in TXT record:
 ```console
-obsd._domainkey.example.com.	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
+obsd._domainkey.example.com	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
 ```
 
 Each *virtual* domain name needs a TXT record with the (same) public key:
 ```console
-obsd._domainkey.example.net.	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
+obsd._domainkey.example.net	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
 ```
 
 #### Domain-based Message Authentication, Reporting & Conformance ([DMARC](https://dmarc.org/))
 Each domain name needs a TXT record for subdomain *_dmarc* with DMARC data:
 ```console
-_dmarc.example.com.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.com
+_dmarc.example.com	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.com
 ```
 
 Each *virtual* domain name needs a TXT record for subdomain *_dmarc* with DMARC data:
 ```console
-_dmarc.example.net.	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.net
+_dmarc.example.net	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.net
 ```
 
 ## Support
