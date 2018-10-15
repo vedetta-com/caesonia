@@ -32,32 +32,32 @@ A response file is used to provide [answers](src/var/www/htdocs/mercury.example.
 At the (I)nstall, (U)pgrade, (**S**)hell prompt, pick "shell"
 
 Next, aquire an IP address:
-```sh
+```console
 dhclient vio0
 ```
 
 Download and edit the response file:
-```sh
+```console
 cd /tmp && ftp https://raw.githubusercontent.com/vedetta-com/caesonia/master/src/var/www/htdocs/mercury.example.com/install.conf
 ```
 
 Install OpenBSD:
-```sh
+```console
 install -af /tmp/install.conf
 ```
 
 After `reboot`, `syspatch`, and `mail`, configure [doas.conf](src/etc/doas.conf):
-```sh
+```console
 doas tmux
 ```
 
 *n.b.*: if `syspatch` installed a kernel patch:
-```sh
+```console
 shutdown -r now
 ```
 
 Verify if egress IP **matches** DNS record:
-```sh
+```console
 ping -vc1 \
 	$(dig +short $(hostname | sed "s/$(hostname -s).//") mx | \
 	awk -vhostname="$(hostname)" '{if ($2 == hostname".") print $2;}')
@@ -68,43 +68,43 @@ ping6 -vc1 \
 ```
 
 Update [hostname.if](src/etc/hostname.vio0) and reset:
-```sh
+```console
 sh /etc/netstart $(ifconfig egress | awk 'NR == 1{print $1;}' | sed 's/://')
 ```
 
 Install packages:
-```sh
+```console
 pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras gnupg-2.2.4
 ```
 
 *n.b.*: dovecot package comes with instructions for self-signed certificates, which are not used in this guide:
-```sh
+```console
 pkg_info -M dovecot
 ```
 
 *n.b.*: python 2.7 is used by devel/glib2. If desired, the package contains instructions to set as default system python:
-```sh
+```console
 pkg_info -M python
 ```
 
 Services:
-```sh
+```console
 rcctl enable httpd dkimproxy_out rspamd dovecot
 rcctl disable check_quotas sndiod
 ```
 
 Dovecot [Virtual Users](https://wiki.dovecot.org/VirtualUsers) are mapped to system user "vmail":
-```sh
+```console
 useradd -m -u 2000 -g =uid -c "Virtual Mail" -d /var/vmail -s /sbin/nologin vmail
 ```
 
 With backup MX, Dovecot [Replication](https://wiki.dovecot.org/Replication) needs a user to `dsync`:
-```sh
+```console
 useradd -m -u 2001 -g =uid -c "Dsync Replication" -d /home/dsync -s /bin/sh dsync
 ```
 
 dsync [SSH](src/etc/ssh/sshd_config) limited to one "[command](src/home/dsync/.ssh/authorized_keys)" restricted in [`doas.conf`](src/etc/doas.conf) to match "[dsync_remote_cmd](src/etc/dovecot/conf.d/90-replication.conf)":
-```sh
+```console
 su - dsync
 ssh-keygen
 echo "command=\"doas -u vmail \${SSH_ORIGINAL_COMMAND#*}\" $(cat ~/.ssh/id_rsa.pub)" | \
@@ -113,7 +113,7 @@ exit
 ```
 
 Update [/home/dsync](src/home/dsync), on primary and backup MX:
-```sh
+```console
 chown -R root:dsync /home/dsync
 chmod 750 /home/dsync/.ssh
 chmod 640 /home/dsync/.ssh/{authorized_keys,id_rsa.pub}
@@ -122,7 +122,7 @@ chown dsync /home/dsync/.ssh/id_rsa
 ```
 
 Update [`/root/.ssh/known_hosts`](src/root/.ssh/known_hosts):
-```sh
+```console
 ssh -4 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
 ssh -6 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
 ```
@@ -130,60 +130,60 @@ ssh -6 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
 ## Email Service Configuration
 
 Download a recent [release](https://github.com/vedetta-com/caesonia/releases):
-```sh
+```console
 cd ~ && ftp https://github.com/vedetta-com/caesonia/archive/v6.3.2p1-beta.tar.gz
 tar -C ~ -xzf ~/v6.3.2p1-beta.tar.gz
 ```
 
 *n.b.*: to use [Git or SVN](https://help.github.com/articles/which-remote-url-should-i-use/):
-```sh
+```console
 pkg_add git
 ```
 
 *n.b.*: Backup MX instructions may be skipped, if not necessary, and disable replication:
-```sh
+```console
 mv src/etc/dovecot/conf.d/90-replication.conf src/etc/dovecot/conf.d/90-replication.conf.optional
 ```
 
 Update [default values](README.md#a-quick-way-around) in the local copy:
-```sh
+```console
 cd src/
 ```
 
 Backup MX role may be enabled in [`etc/mail/smtpd.conf`](src/etc/mail/smtpd.conf) and depends on DNS record.
 
 Update interface name:
-```sh
+```console
 grep -r vio0 .
 find . -type f -exec sed -i "s|vio0|$(ifconfig egress | awk 'NR == 1{print $1;}' | sed 's/://')|g" {} +
 ```
 
 Primary domain name (from `example.com` to `domainname`):
-```sh
+```console
 grep -r example.com .
 find . -type f -exec sed -i "s|example.com|$(hostname | sed "s/$(hostname -s).//")|g" {} +
 ```
 
 Virtual domain name (from `example.net` to `example.org`):
-```sh
+```console
 grep -r example.net .
 find . -type f -exec sed -i 's|example.net|example.org|g' {} +
 ```
 
 Primary's hostname (from `mercury` to `hostname -s`):
-```sh
+```console
 grep -r mercury .
 find . -type f -exec sed -i "s|mercury|$(hostname -s)|g" {} +
 ```
 
 Backup's hostname (from `hermes` to DNS record):
-```sh
+```console
 grep -r hermes .
 find . -type f -exec sed -i "s|hermes|$(dig +short $(hostname | sed "s/$(hostname -s).//") mx | awk -vhostname="$(hostname)" '{if ($2 != hostname".") print $2;}')|g" {} +
 ```
 
 Update the allowed mail relays [source table](https://man.openbsd.org/table.5#Source_tables) [`src/etc/mail/relays`](src/etc/mail/relays) to add the primary and backup MX IPs:
-```sh
+```console
 echo "# primary's IP" > src/etc/mail/relays
 dig +short mercury.example.com a >> src/etc/mail/relays
 dig +short mercury.example.com aaaa >> src/etc/mail/relays
@@ -193,7 +193,7 @@ dig +short hermes.example.com aaaa >> src/etc/mail/relays
 ```
 
 Update wheel user name "puffy":
-```sh
+```console
 cd ../
 sed -i "s|puffy|$USER|g" \
 	src/etc/pf.conf \
@@ -204,7 +204,7 @@ sed -i "s|puffy|$USER|g" \
 ```
 
 Update virtual users [credentials table](https://man.openbsd.org/table.5#Credentials_tables) [`src/etc/mail/passwd`](src/etc/mail/passwd) using [`smtpctl encrypt`](https://man.openbsd.org/smtpctl#encrypt):
-```sh
+```console
 smtpctl encrypt
 > secret
 > $2b$...encrypted...passphrase...
@@ -222,7 +222,7 @@ Review [virtual domains](https://man.openbsd.org/makemap#VIRTUAL_DOMAINS) [alias
 ## Email Service Installation
 
 After review:
-```sh
+```console
 install -o root -g wheel -m 0640 -b src/etc/acme-client.conf /etc/
 install -o root -g wheel -m 0644 -b src/etc/daily.local /etc/
 install -o root -g wheel -m 0644 -b src/etc/changelist.local /etc/
@@ -313,7 +313,7 @@ mkdir -m 700 /var/crash/rspamd
 ### DNS resolver
 
 Unbound DNS validating resolver from root nameservers, with fallback:
-```sh
+```console
 unbound-anchor -a "/var/unbound/db/root.key"
 ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache
 rcctl enable unbound
@@ -324,41 +324,66 @@ cp src/etc/resolv.conf /etc/
 ### Sieve
 
 Compile sieve scripts:
-```sh
+```console
 sievec /var/dovecot/imapsieve/before/report-ham.sieve
 sievec /var/dovecot/imapsieve/before/report-spam.sieve
 sievec /var/dovecot/sieve/before/00-wks.sieve
 sievec /var/dovecot/sieve/before/spamtest.sieve
 ```
 
+### Backup MX
+
+Replication:
+```console
+mv /etc/dovecot/conf.d/90-replication.conf.optional /etc/dovecot/conf.d/90-replication.conf
+```
+
+### Backup local files
+
+Install "changelist.local":
+```console
+cp -p /etc/changelist /etc/changelist-6.4
+cat /etc/changelist.local >> /etc/changelist
+```
+
+Uninstall "changelist.local":
+```console
+sed -i '/changelist.local/,$d' /etc/changelist
+```
+
+Remove from "/var/backups":
+```console
+/usr/local/bin/rmchangelist.sh
+```
+
 ### Let's Encrypt
 
 Turn off `httpd` tls:
-```sh
+```console
 sed -i -e "s|^$(echo -e "\t")tls|$(echo -e "\t")#tls|" \
 	-e "/tls port https/s|^$(echo -e "\t")|$(echo -e "\t")#|" \
 	/etc/httpd.conf
 ```
 
 Start `httpd`:
-```sh
+```console
 rcctl start httpd
 ```
 
 Initialize a new account and domain key:
-```sh
+```console
 acme-client -vAD $(hostname)
 ```
 
 Turn on `httpd` tls:
-```sh
+```console
 sed -i -e "s|^$(echo -e "\t")#tls|$(echo -e "\t")tls|" \
 	-e "/tls port https/s|^$(echo -e "\t")#|$(echo -e "\t")|" \
 	/etc/httpd.conf
 ```
 
 OCSP response:
-```sh
+```console
 /usr/local/bin/get-ocsp.sh $(hostname)
 ```
 
@@ -375,12 +400,12 @@ Self-hosting has the advantage of full authority on the user mail addresses for 
 To get started, a GnuPG 2.1 safe configuration is provided: [`gpg.conf`](src/home/puffy/.gnupg/gpg.conf)
 
 *n.b.*: temp WKS installation patch for doas.conf
-```sh
+```console
 echo "permit nopass root as vmail cmd env" >> /etc/doas.conf
 ```
 
 Web Key Service maintains a Web Key Directory ([WKD](https://wiki.gnupg.org/WKD)) which needs the following configuration for each *virtual* domain:
-```sh
+```console
 mkdir -m 755 /var/lib/gnupg/wks/example.com
 chown vmail:vmail /var/lib/gnupg/wks/example.com
 
@@ -400,7 +425,7 @@ doas -u vmail \
 Web Key Service uses a Submission Address, which needs the following configuration:
 
 Add *virtual* password for the Submission Address:
-```sh
+```console
 smtpctl encrypt
 > secret
 > $2b$...encrypted...passphrase...
@@ -409,21 +434,21 @@ vi /etc/mail/passwd
 ```
 
 Create the submission key:
-```sh
+```console
 doas -u vmail \
 	env -i HOME=/var/vmail \
 	gpg2 --batch --passphrase '' --quick-gen-key key-submission@example.com
 ```
 
 Verify:
-```sh
+```console
 doas -u vmail \
 	env -i HOME=/var/vmail \
 	gpg2 -K --with-fingerprint
 ```
 
 List the z-Base-32 encoded SHA-1 hash of the mail address' local-part (i.e. key-submission):
-```sh
+```console
 doas -u vmail \
 	env -i HOME=/var/vmail \
 	gpg2 --with-wkd-hash -K key-submission@example.com
@@ -431,7 +456,7 @@ doas -u vmail \
 ```
 
 Publish the key, using the hash of the string "key-submission" (i.e. 54f6ry7x1qqtpor16txw5gdmdbbh6a73):
-```sh
+```console
 doas -u vmail \
 	env -i HOME=/var/vmail \
 	gpg2 -o /var/lib/gnupg/wks/example.com/hu/54f6ry7x1qqtpor16txw5gdmdbbh6a73 \
@@ -439,13 +464,13 @@ doas -u vmail \
 ```
 
 *n.b.*: To delete this key:
-```sh
+```console
 gpg2 --delete-secret-key "key-submission@example.com"
 gpg2 --delete-key "key-submission@example.com"
 ```
 
 *n.b.*: (!) revert temp WKS installation patch for doas.conf
-```sh
+```console
 sed -i '/permit nopass root as vmail cmd env$/ d' /etc/doas.conf
 ```
 
@@ -459,17 +484,17 @@ auto-key-locate		local,wkd
 ```
 
 The key can be manually retreived too:
-```sh
+```console
 gpg2 --auto-key-locate clear,wkd --locate-keys puffy@example.com
 ```
 
 To simply check a key:
-```sh
+```console
 $(gpgconf --list-dirs libexecdir)/gpg-wks-client -v --check puffy@example.com
 ```
 
 Or a hex listing:
-```sh
+```console
 gpg-connect-agent --dirmngr --hex 'wkd_get puffy@example.com' /bye
 ```
 
@@ -495,7 +520,7 @@ server "example.com" {
 ### Restart
 
 Restart the email service:
-```sh
+```console
 pfctl -f /etc/pf.conf
 rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
 ```
@@ -539,32 +564,32 @@ Suppose the address "john@example.ca" needs to be hosted, with a "johndoe" alias
 *n.b.*: Assuming DNS [Prerequisites](README.md#prerequisites) for Virtual Domains are met
 
 Add virtual domain:
-```sh
+```console
 echo "example.ca" >> /etc/mail/vdomains
 ```
 
 Add DKIM signature:
-```sh
+```console
 sed -i '/^domain/s/$/,example.ca/' /etc/dkimproxy_out.conf
 ```
 
 Whitelist local sender:
-```sh
+```console
 echo "@example.ca" >> /etc/mail/whitelist
 ```
 
 Add virtual alias:
-```sh
+```console
 echo "johndoe@example.ca \t\tjohn@example.ca" >> /etc/mail/virtual
 ```
 
 Add virtual user:
-```sh
+```console
 echo "john@example.ca \t\tvmail" >> /etc/mail/virtual
 ```
 
 Add virtual password:
-```sh
+```console
 smtpctl encrypt
 > secret
 > $2b$...encrypted...passphrase...
@@ -573,7 +598,7 @@ vi /etc/mail/passwd
 ```
 
 Reload:
-```sh
+```console
 rcctl restart dkimproxy_out
 rcctl reload dovecot
 smtpctl update table virtuals
@@ -585,13 +610,13 @@ smtpctl update table whitelist-senders
 Suppose the foreign address "jane@example.meh" behaves badly.
 
 Blacklist external sender:
-```sh
+```console
 echo "jane@example.meh" >> /etc/mail/blacklist
 smtpctl update table blacklist-senders
 ```
 
 or blacklist everybody "@example.meh" for bad behavior:
-```sh
+```console
 echo "@example.meh" >> /etc/mail/blacklist
 smtpctl update table blacklist-senders
 ```
@@ -599,17 +624,17 @@ smtpctl update table blacklist-senders
 Suppose "example.meh" is a lost cause:
 
 Gather relevant bad subdomains:
-```sh
+```console
 dig +short example.meh mx
 ```
 
 for each bad subdomain, add its IP (A and AAAA record) to `pf`:
-```sh
+```console
 echo $IP >> /etc/pf.conf.table.ban
 ```
 
 and reload the `pf` table:
-```sh
+```console
 pfctl -t ban -T replace -f /etc/pf.conf.table.ban
 ```
 
@@ -638,14 +663,14 @@ Microsoft recommends postmasters to join [Smart Network Data Service](https://po
 ## What's next
 
 Add your own [Sieve](https://tools.ietf.org/html/rfc6785) scripts in `/var/vmail/example.com/puffy/sieve`, then:
-```sh
+```console
 cd /var/vmail/example.com/puffy/
 ln -s sieve/script.sieve .dovecot.sieve
 sievec .dovecot.sieve
 ```
 
 To disable filtering based on 3rd party blocking lists:
-```sh
+```console
 mv /etc/rspamd/local.d/rbl.conf.optional \
    /etc/rspamd/local.d/rbl.conf
 
