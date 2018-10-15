@@ -76,7 +76,7 @@ install -o root -g wheel -m 0600 -b src/etc/mtree/special.local /etc/mtree/
 install -o root -g wheel -m 0644 -b src/etc/changelist.local /etc/
 ```
 
-"rmchangelist.sh" removes local changelist backups
+"[rmchangelist.sh](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/usr/local/bin/rmchangelist.sh)" removes local changelist backups
 ```console
 install -o root -g wheel -m 0500 -b src/usr/local/bin/rmchangelist.sh /usr/local/bin/
 ```
