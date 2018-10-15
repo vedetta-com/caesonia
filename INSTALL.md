@@ -522,7 +522,7 @@ server "example.com" {
 Restart the email service:
 ```console
 pfctl -f /etc/pf.conf
-rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
+rcctl restart sshd httpd dkimproxy_out rspamd dovecot smtpd
 ```
 
 ### Logs
