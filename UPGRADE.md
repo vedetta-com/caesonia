@@ -13,7 +13,7 @@ Rename "[pf.permanentban](https://github.com/vedetta-com/caesonia/blob/v6.3.2p1-
 
 ```console
 install -o root -g wheel -m 0600 -b src/etc/pf.conf /etc/
-cp -p /etc/permanentban /etc/pf.conf.table.ban
+cp -p /etc/pf.permanentban /etc/pf.conf.table.ban
 ```
 
 Update "[pf.conf.anchor.block](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/etc/pf.conf.anchor.block)"
@@ -36,7 +36,7 @@ Restart `pf`
 
 ```console
 pfctl -nf /etc/pf.conf && pfctl -f /etc/pf.conf
-rm /etc/permanentban
+rm /etc/pf.permanentban
 ```
 
 ### OCSP
@@ -48,7 +48,7 @@ install -o root -g wheel -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin
 
 ### User crontab
 
-Moved from user [crontab](https://github.com/vedetta-com/caesonia/blob/v6.3.2p1-beta/src/var/cron/tabs/root) to "daily.local":
+Move from user [crontab](https://github.com/vedetta-com/caesonia/blob/v6.3.2p1-beta/src/var/cron/tabs/root) to "daily.local":
 - Let's Encrypt update
 - email service statistics reports
 
@@ -103,5 +103,5 @@ _pop3s._tcp.example.com	86400	IN	SRV	0 0 0 .
 
 ### Installation guide
 
-Renamed "90-replication.conf" to "90-replication.conf.optional", see [INSTALL.md](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/INSTALL.md#backup-mx)
+Rename "90-replication.conf" to "90-replication.conf.optional", see [INSTALL.md](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/INSTALL.md#backup-mx)
 
