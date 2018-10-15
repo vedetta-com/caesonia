@@ -331,9 +331,9 @@ sievec /var/dovecot/sieve/before/00-wks.sieve
 sievec /var/dovecot/sieve/before/spamtest.sieve
 ```
 
-### Backup MX
+### Replication
 
-Replication, on primary and backup MX:
+Master/Master replication, on primary and backup MX:
 ```console
 mv /etc/dovecot/conf.d/90-replication.conf.optional /etc/dovecot/conf.d/90-replication.conf
 ```
