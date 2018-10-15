@@ -48,7 +48,7 @@ install -o root -g wheel -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin
 
 ### User crontab
 
-Moved from user [crontab](https://github.com/vedetta-com/caesonia/blob/v6.3.2p1-beta/src/var/cron/tabs/root) to "daily.local":
+Move from user [crontab](https://github.com/vedetta-com/caesonia/blob/v6.3.2p1-beta/src/var/cron/tabs/root) to "daily.local":
 - Let's Encrypt update
 - email service statistics reports
 
