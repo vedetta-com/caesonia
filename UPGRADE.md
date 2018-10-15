@@ -103,5 +103,5 @@ _pop3s._tcp.example.com	86400	IN	SRV	0 0 0 .
 
 ### Installation guide
 
-Rename "90-replication.conf" to "90-replication.conf.optional", see [INSTALL.md](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/INSTALL.md#backup-mx)
+Rename "90-replication.conf" to "90-replication.conf.optional", see [INSTALL.md](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/INSTALL.md#replication)
 
