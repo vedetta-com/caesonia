@@ -16,7 +16,7 @@ install -o root -g wheel -m 0600 -b src/etc/pf.conf /etc/
 cp -p /etc/permanentban /etc/pf.conf.table.ban
 ```
 
-Update [pf.conf.anchor.block](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/etc/pf.conf.anchor.block)
+Update "[pf.conf.anchor.block](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/etc/pf.conf.anchor.block)"
 - new macro "logblock"
 - rename table "permanentban" to "ban"
 
@@ -24,7 +24,7 @@ Update [pf.conf.anchor.block](https://github.com/vedetta-com/caesonia/blob/v6.3.
 install -o root -g wheel -m 0600 -b src/etc/pf.conf.anchor.block /etc/
 ```
 
-Update [pf.conf.anchor.icmp](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/etc/pf.conf.anchor.icmp)
+Update "[pf.conf.anchor.icmp](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/etc/pf.conf.anchor.icmp)"
 - new macro "logicmp"
 - switched to max-pkt-rate
 
@@ -41,7 +41,7 @@ rm /etc/permanentban
 
 ### OCSP
 
-Patch "get-ocsp.sh" to run daily
+Patch "[get-ocsp.sh](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/src/usr/local/bin/get-ocsp.sh)" to run daily
 ```console
 install -o root -g wheel -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin/
 ```
@@ -100,4 +100,8 @@ _imap._tcp.example.com	86400	IN	SRV	0 0 0 .
 _pop3._tcp.example.com	86400	IN	SRV	0 0 0 .
 _pop3s._tcp.example.com	86400	IN	SRV	0 0 0 .
 ```
+
+### Installation guide
+
+Renamed "90-replication.conf" to "90-replication.conf.optional", see [INSTALL.md](https://github.com/vedetta-com/caesonia/blob/v6.3.3-beta/INSTALL.md#backup-mx)
 
