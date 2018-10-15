@@ -53,14 +53,10 @@
 +/etc/ssl/acme/private/*.*.*.key
 /etc/ssl/dkim/public.key
 +/etc/ssl/dkim/private/private.key
-/var/dovecot/imapsieve/before/archive.sieve
-+/var/dovecot/imapsieve/before/archive.svbin
 /var/dovecot/imapsieve/before/report-ham.sieve
 +/var/dovecot/imapsieve/before/report-ham.svbin
 /var/dovecot/imapsieve/before/report-spam.sieve
 +/var/dovecot/imapsieve/before/report-spam.svbin
-/var/dovecot/sieve/before/archive.sieve
-+/var/dovecot/sieve/before/archive.svbin
 /var/dovecot/sieve/before/00-wks.sieve
 +/var/dovecot/sieve/before/00-wks.svbin
 /var/dovecot/sieve/before/spamtest.sieve
