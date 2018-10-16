@@ -196,7 +196,6 @@ Update wheel user name "puffy":
 ```console
 cd ../
 sed -i "s|puffy|$USER|g" \
-	src/etc/pf.conf \
 	src/etc/mail/aliases \
 	src/etc/mail/passwd \
 	src/etc/mail/virtual \
@@ -522,7 +521,7 @@ server "example.com" {
 Restart the email service:
 ```console
 pfctl -f /etc/pf.conf
-rcctl restart sshd dkimproxy_out rspamd dovecot smtpd
+rcctl restart sshd httpd dkimproxy_out rspamd dovecot smtpd
 ```
 
 ### Logs

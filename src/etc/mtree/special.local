@@ -21,9 +21,11 @@ etc		type=dir mode=0755
     pf.conf.anchor.block \
 		mode=0600
     pf.conf.anchor.icmp \
-                mode=0600
+		mode=0600
     pf.conf.table.ban \
-                mode=0600
+		mode=0600
+    pf.conf.table.martians \
+		mode=0600
     resolv.conf.slaac \
 		optional
 

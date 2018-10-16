@@ -51,7 +51,8 @@
 /etc/pf.conf
 /etc/pf.conf.anchor.block
 /etc/pf.conf.anchor.icmp
-/etc/pf.permanentban
+/etc/pf.conf.table.ban
+/etc/pf.conf.table.martians
 /etc/rc.conf.local
 /etc/resolv.conf
 /etc/resolv.conf.tail
