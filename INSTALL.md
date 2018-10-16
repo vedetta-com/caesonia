@@ -196,7 +196,6 @@ Update wheel user name "puffy":
 ```console
 cd ../
 sed -i "s|puffy|$USER|g" \
-	src/etc/pf.conf \
 	src/etc/mail/aliases \
 	src/etc/mail/passwd \
 	src/etc/mail/virtual \
