@@ -1,5 +1,5 @@
 # Accepted virtual domains
 # https://man.openbsd.org/table.5#Domain_tables
-# `smtpctl update table domains`
+# `smtpctl update table vdomains`
 example.com
 example.net
