@@ -26,3 +26,4 @@ HOME=/var/log
 20	2	1,14	*	*	unbound-anchor && rcctl restart unbound
 # get list of authoritative nameservers
 20	4	1	May,Nov	*	ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache && rcctl restart unbound
+@reboot					echo "Reboot $(date)"

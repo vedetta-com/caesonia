@@ -1,3 +1,5 @@
+# `smtpctl update table whitelist-relays`
+#
 # primary's IP
 203.0.113.1
 2001:0db8::1

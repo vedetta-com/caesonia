@@ -15,7 +15,7 @@ Root your Inbox :mailbox_with_mail:
 - Server side full text search (headers and body) can be enabled (to use the extra space)
 - Mobile data friendly: IMAPS connections are compressed
 - Subaddress (+tag) support, to filter and monitor email addresses
-- Virtual domains, aliases, and credentials in files, Berkeley DB, or SQLite3
+- Virtual domains, aliases, and credentials in files, Berkeley DB, or [SQLite3](https://github.com/OpenSMTPD/OpenSMTPD-extras/tree/master/extras/tables/table-sqlite)
 - Naive Bayes rspamd filtering with supervised learning: the lowest false positive spam detection rates
 - Carefree automated Spam/ and Trash/ cleaning service (default: older than 30 days)
 - Automated quota management, gently assists when over quota
@@ -50,7 +50,7 @@ See the [**Installation Guide**](INSTALL.md) for details.
 
 Install packages:
 ```sh
-pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras gnupg-2.2.4
+pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras gnupg-2.2.10
 ```
 Add users:
 ```sh
@@ -259,19 +259,20 @@ obsd._domainkey.example.net	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
 #### Domain-based Message Authentication, Reporting & Conformance ([DMARC](https://dmarc.org/))
 Each domain name needs a TXT record for subdomain *_dmarc* with DMARC data:
 ```console
-_dmarc.example.com	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.com
+_dmarc.example.com	86400	IN	TXT	"v=DMARC1; p=reject; pct=100; rua=mailto:dmarcreports@example.com"
 ```
 
 Each *virtual* domain name needs a TXT record for subdomain *_dmarc* with DMARC data:
 ```console
-_dmarc.example.net	86400	IN	TXT	v=DMARC1\;p=reject\;pct=100\;rua=mailto:dmarcreports\@example.net
+_dmarc.example.net	86400	IN	TXT	"v=DMARC1; p=reject; pct=100; rua=mailto:dmarcreports@example.net"
 ```
 
 ## Support
 [Issues](https://github.com/vedetta-com/caesonia/issues)
 
-## Matrix
+## Social
 [#caesonia:matrix.org](https://riot.im/app/#/room/#caesonia:matrix.org) (deadish)
+[#caesonia@bsd.network](https://bsd.network/tags/caesonia)
 
 ## Contribute
 Contributions welcome, [fork](https://github.com/vedetta-com/caesonia/fork)

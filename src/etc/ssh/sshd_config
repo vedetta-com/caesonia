@@ -1,4 +1,4 @@
-#      $OpenBSD: sshd_config,v 1.102 2018/02/16 02:32:40 djm Exp $
+#	$OpenBSD: sshd_config,v 1.103 2018/04/09 20:41:22 tj Exp $
 
 # This is the sshd server system-wide configuration file.  See
 # sshd_config(5) for more information.
@@ -8,17 +8,26 @@
 # possible, but leave them commented.  Uncommented options override the
 # default value.
 
+# (!) see usr/local/share/doc/caesonia/OpenSSH_Principals.md
+
 #Port 22
 #AddressFamily any
 #ListenAddress 0.0.0.0
 #ListenAddress ::
 
-AllowGroups puffy dsync
-
 #HostKey /etc/ssh/ssh_host_rsa_key
-#HostKey /etc/ssh/ssh_host_dsa_key
 #HostKey /etc/ssh/ssh_host_ecdsa_key
 #HostKey /etc/ssh/ssh_host_ed25519_key
+
+# https://man.openbsd.org/sshd_config.5#HostKeyAlgorithms
+#HostKeyAlgorithms ssh-ed25519-cert-v01@openssh.com,ssh-ed25519
+#HostCertificate /etc/ssh/ssh_host_ed25519_key-cert.pub
+
+#TrustedUserCAKeys /etc/ssh/ca/.ssh/ssh_ca_ed25519.pub
+#RevokedKeys /etc/ssh/ca/ssh_ca.krl
+
+# https://man.openbsd.org/sshd_config.5#CASignatureAlgorithms
+#CASignatureAlgorithms ssh-ed25519
 
 # Ciphers and keying
 #RekeyLimit default none
@@ -29,6 +38,8 @@ AllowGroups puffy dsync
 
 # Authentication:
 
+AllowGroups wheel dsync
+
 LoginGraceTime 1m # default: 2m
 PermitRootLogin no
 #StrictModes yes
@@ -36,12 +47,15 @@ PermitRootLogin no
 #MaxSessions 10
 
 #PubkeyAuthentication yes
+# http://man.openbsd.org/sshd_config.5#PubkeyAcceptedKeyTypes
+#PubkeyAcceptedKeyTypes ssh-ed25519-cert-v01@openssh.com,ssh-ed25519
 
 # The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
 # but this is overridden so installations will only check .ssh/authorized_keys
-AuthorizedKeysFile	.ssh/authorized_keys
+#AuthorizedKeysFile	none # default: .ssh/authorized_keys
 
-#AuthorizedPrincipalsFile none
+# http://man.openbsd.org/sshd_config.5#AuthorizedPrincipalsFile
+#AuthorizedPrincipalsFile /etc/ssh/principals/%u # default: none
 
 #AuthorizedKeysCommand none
 #AuthorizedKeysCommandUser nobody
@@ -55,7 +69,7 @@ AuthorizedKeysFile	.ssh/authorized_keys
 #IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
-#PasswordAuthentication yes
+#PasswordAuthentication no # default: yes
 #PermitEmptyPasswords no
 
 # Change to no to disable s/key passwords
@@ -71,14 +85,13 @@ AllowTcpForwarding no # default: yes
 #PrintMotd yes
 #PrintLastLog yes
 #TCPKeepAlive yes
-#UseLogin no
 #PermitUserEnvironment no
 #Compression delayed
 #ClientAliveInterval 0
 #ClientAliveCountMax 3
 #UseDNS no
 #PidFile /var/run/sshd.pid
-MaxStartups 3:50:10 # default: 10:30:100
+#MaxStartups 10:30:100
 #PermitTunnel no
 #ChrootDirectory none
 #VersionAddendum none
@@ -87,8 +100,8 @@ MaxStartups 3:50:10 # default: 10:30:100
 Banner /etc/ssh/sshd_banner # default: none
 
 # override default of no subsystems
-Subsystem	sftp	internal-sftp # internal-sftp for ChrootDirectory
-				      # default: /usr/libexec/sftp-server
+Subsystem	sftp	internal-sftp	# internal-sftp for ChrootDirectory
+					# default: /usr/libexec/sftp-server
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs
@@ -97,7 +110,7 @@ Subsystem	sftp	internal-sftp # internal-sftp for ChrootDirectory
 #	PermitTTY no
 #	ForceCommand cvs server
 
-Match User puffy
+Match Group wheel
 	AllowTcpForwarding yes
 #	PermitOpen host:port
 

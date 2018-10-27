@@ -74,7 +74,7 @@ sh /etc/netstart $(ifconfig egress | awk 'NR == 1{print $1;}' | sed 's/://')
 
 Install packages:
 ```console
-pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras gnupg-2.2.4
+pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras gnupg-2.2.10
 ```
 
 *n.b.*: dovecot package comes with instructions for self-signed certificates, which are not used in this guide:
@@ -131,18 +131,13 @@ ssh -6 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
 
 Download a recent [release](https://github.com/vedetta-com/caesonia/releases):
 ```console
-cd ~ && ftp https://github.com/vedetta-com/caesonia/archive/v6.3.2p1-beta.tar.gz
-tar -C ~ -xzf ~/v6.3.2p1-beta.tar.gz
+cd ~ && ftp https://github.com/vedetta-com/caesonia/archive/v6.4.0-beta.tar.gz
+tar -C ~ -xzf ~/v6.4.0-beta.tar.gz
 ```
 
 *n.b.*: to use [Git or SVN](https://help.github.com/articles/which-remote-url-should-i-use/):
 ```console
 pkg_add git
-```
-
-*n.b.*: Backup MX instructions may be skipped, if not necessary, and disable replication:
-```console
-mv src/etc/dovecot/conf.d/90-replication.conf src/etc/dovecot/conf.d/90-replication.conf.optional
 ```
 
 Update [default values](README.md#a-quick-way-around) in the local copy:
@@ -151,6 +146,7 @@ cd src/
 ```
 
 Backup MX role may be enabled in [`etc/mail/smtpd.conf`](src/etc/mail/smtpd.conf) and depends on DNS record.
+*n.b.*: Backup MX instructions may be skipped, if not applicable.
 
 Update interface name:
 ```console
@@ -184,6 +180,7 @@ find . -type f -exec sed -i "s|hermes|$(dig +short $(hostname | sed "s/$(hostnam
 
 Update the allowed mail relays [source table](https://man.openbsd.org/table.5#Source_tables) [`src/etc/mail/relays`](src/etc/mail/relays) to add the primary and backup MX IPs:
 ```console
+cd ../
 echo "# primary's IP" > src/etc/mail/relays
 dig +short mercury.example.com a >> src/etc/mail/relays
 dig +short mercury.example.com aaaa >> src/etc/mail/relays
@@ -194,13 +191,18 @@ dig +short hermes.example.com aaaa >> src/etc/mail/relays
 
 Update wheel user name "puffy":
 ```console
-cd ../
 sed -i "s|puffy|$USER|g" \
 	src/etc/mail/aliases \
 	src/etc/mail/passwd \
 	src/etc/mail/virtual \
-	src/etc/ssh/sshd_config
 ```
+
+*n.b.*: Without backup MX, remove configuration for user "dsync":
+```console
+sed -i 's/dsync\ //g' src/etc/pf.conf
+```
+
+*n.b.*: Select the "backup" dispatcher in [`smtpd.conf`](https://github.com/vedetta-com/caesonia/blob/v6.4.0-beta/src/etc/mail/smtpd.conf) for Backup MX role: `action "mda" # "backup"`
 
 Update virtual users [credentials table](https://man.openbsd.org/table.5#Credentials_tables) [`src/etc/mail/passwd`](src/etc/mail/passwd) using [`smtpctl encrypt`](https://man.openbsd.org/smtpctl#encrypt):
 ```console
@@ -257,8 +259,12 @@ install -o root -g wheel -m 0755 -d src/etc/rspamd/override.d /etc/rspamd/overri
 install -o root -g wheel -m 0644 -b src/etc/rspamd/local.d/* /etc/rspamd/local.d/
 install -o root -g wheel -m 0644 -b src/etc/rspamd/override.d/* /etc/rspamd/override.d/
 
-install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_config /etc/ssh/
+mkdir -m 700 /var/crash/rspamd
+
 install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_banner /etc/ssh/
+install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_config /etc/ssh/
+
+install -o root -g wheel -m 0644 -b src/root/.ssh/config /root/.ssh/
 
 install -o root -g wheel -m 0755 -d src/etc/ssl/acme /etc/ssl/acme
 install -o root -g wheel -m 0700 -d src/etc/ssl/acme/private /etc/ssl/acme/private
@@ -303,10 +309,6 @@ install -o vmail -g daemon -m 0755 -d src/var/www/openpgpkey/hu /var/www/openpgp
 install -o root -g wheel -m 0755 -d src/var/lib /var/lib
 install -o root -g wheel -m 0755 -d src/var/lib/gnupg /var/lib/gnupg
 install -o root -g wheel -m 2750 -d src/var/lib/gnupg/wks /var/lib/gnupg/wks
-
-install -o root -g wheel -m 0644 -b src/root/.ssh/config /root/.ssh/
-
-mkdir -m 700 /var/crash/rspamd
 ```
 
 ### DNS resolver
@@ -317,6 +319,7 @@ unbound-anchor -a "/var/unbound/db/root.key"
 ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache
 rcctl enable unbound
 rcctl restart unbound
+cp -p /etc/resolv.conf /etc/resolv.conf.old
 cp src/etc/resolv.conf /etc/
 ```
 
@@ -337,6 +340,18 @@ Master/Master replication, on primary and backup MX:
 mv /etc/dovecot/conf.d/90-replication.conf.optional /etc/dovecot/conf.d/90-replication.conf
 ```
 
+### Rspamd
+```console
+touch /var/rspamd/dmarc_whitelist.inc.local
+touch /var/rspamd/spf_dkim_whitelist.inc.local
+touch /var/rspamd/mime_types.inc.local
+touch /etc/rspamd/local.d/mid.inc
+touch /var/rspamd/2tld.inc.local
+touch /etc/rspamd/local.d/greylist-whitelist-domains.inc
+touch /var/rspamd/surbl-whitelist.inc.local
+touch /etc/rspamd/local.d/redirectors.inc
+touch /var/rspamd/rspamd_dynamic
+
 ### Backup local files
 
 Install "changelist.local":
@@ -345,12 +360,12 @@ cp -p /etc/changelist /etc/changelist-6.4
 cat /etc/changelist.local >> /etc/changelist
 ```
 
-Uninstall "changelist.local":
+*n.b.*: Uninstall "changelist.local":
 ```console
 sed -i '/changelist.local/,$d' /etc/changelist
 ```
 
-Remove from "/var/backups":
+*n.b.*: Remove from "/var/backups":
 ```console
 /usr/local/bin/rmchangelist.sh
 ```
@@ -360,7 +375,7 @@ Remove from "/var/backups":
 Turn off `httpd` tls:
 ```console
 sed -i -e "s|^$(echo -e "\t")tls|$(echo -e "\t")#tls|" \
-	-e "/tls port https/s|^$(echo -e "\t")|$(echo -e "\t")#|" \
+	-e "/# (!) TLS/ s|listen on \$IP tls port https|listen on ::1 port http|" \
 	/etc/httpd.conf
 ```
 
@@ -377,13 +392,13 @@ acme-client -vAD $(hostname)
 Turn on `httpd` tls:
 ```console
 sed -i -e "s|^$(echo -e "\t")#tls|$(echo -e "\t")tls|" \
-	-e "/tls port https/s|^$(echo -e "\t")#|$(echo -e "\t")|" \
+	-e "/# (!) TLS/ s|listen on ::1 port http|listen on \$IP tls port https|" \
 	/etc/httpd.conf
 ```
 
 OCSP response:
 ```console
-/usr/local/bin/get-ocsp.sh $(hostname)
+rcctl restart httpd && /usr/local/bin/get-ocsp.sh $(hostname)
 ```
 
 ### OpenPGP Web Key Service ([WKS](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-06))
@@ -406,7 +421,7 @@ echo "permit nopass root as vmail cmd env" >> /etc/doas.conf
 Web Key Service maintains a Web Key Directory ([WKD](https://wiki.gnupg.org/WKD)) which needs the following configuration for each *virtual* domain:
 ```console
 mkdir -m 755 /var/lib/gnupg/wks/example.com
-chown vmail:vmail /var/lib/gnupg/wks/example.com
+chown -R vmail:vmail /var/lib/gnupg/wks
 
 cd /var/lib/gnupg/wks/example.com
 

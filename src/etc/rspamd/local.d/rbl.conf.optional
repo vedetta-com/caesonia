@@ -26,4 +26,7 @@ rbls {
 	dnswl {
 		disabled = true;
 	}
+	virusfree {
+		disabled = true;
+	}
 }

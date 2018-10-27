@@ -1,3 +1,4 @@
 # External sender blacklist
 # https://man.openbsd.org/smtpd.conf#sender
+# `smtpctl update table blacklist-senders`
 @example.bad
