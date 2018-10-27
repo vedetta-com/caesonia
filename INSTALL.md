@@ -146,6 +146,7 @@ cd src/
 ```
 
 Backup MX role may be enabled in [`etc/mail/smtpd.conf`](src/etc/mail/smtpd.conf) and depends on DNS record.
+
 *n.b.*: Backup MX instructions may be skipped, if not applicable.
 
 Update interface name:
@@ -351,6 +352,7 @@ touch /etc/rspamd/local.d/greylist-whitelist-domains.inc
 touch /var/rspamd/surbl-whitelist.inc.local
 touch /etc/rspamd/local.d/redirectors.inc
 touch /var/rspamd/rspamd_dynamic
+```
 
 ### Backup local files
 
