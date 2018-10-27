@@ -1,5 +1,5 @@
 #
-#	$OpenBSD: aliases,v 1.64 2017/03/18 21:18:01 florian Exp $
+#	$OpenBSD: aliases,v 1.66 2018/07/23 14:15:14 florian Exp $
 #
 #  Aliases in this file will NOT be expanded in the header from
 #  Mail, but WILL be visible over networks or from /usr/libexec/mail.local.
@@ -48,13 +48,13 @@ _pkgfetch: /dev/null
 _pkguntar: /dev/null
 _portmap: /dev/null
 _ppp: /dev/null
+_rad: /dev/null
 _radiusd: /dev/null
 _rbootd: /dev/null
 _relayd: /dev/null
 _rebound: /dev/null
 _ripd: /dev/null
 _rstatd: /dev/null
-_rtadvd: /dev/null
 _rusersd: /dev/null
 _rwalld: /dev/null
 _smtpd: /dev/null

@@ -1,4 +1,5 @@
 # Virtual aliases for all virtual domains
+# `smtpctl update table virtuals`
 #
 # RFC 2142: NETWORK OPERATIONS MAILBOX NAMES
 abuse				postmaster
