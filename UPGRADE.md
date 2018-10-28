@@ -93,6 +93,7 @@ pkg_add -u
 
 sievec /var/dovecot/imapsieve/before/report-ham.sieve
 sievec /var/dovecot/imapsieve/before/report-spam.sieve
+sievec /var/dovecot/sieve/before/00-wks.sieve
 sievec /var/dovecot/sieve/before/spamtest.sieve
 
 rcctl enable httpd rspamd dkimproxy_out dovecot smtpd
