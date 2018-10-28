@@ -344,7 +344,7 @@ HostCertificate /etc/ssh/ssh_host_ed25519_key-cert.pub
 TrustedUserCAKeys /etc/ssh/ca/.ssh/ssh_ca_ed25519.pub
 RevokedKeys /etc/ssh/ca/ssh_ca.krl
 # http://man.openbsd.org/sshd_config.5#CASignatureAlgorithms
-#CASignatureAlgorithms  ssh-ed25519
+CASignatureAlgorithms  ssh-ed25519
 
 PermitRootLogin no # default: prohibit-password
 
