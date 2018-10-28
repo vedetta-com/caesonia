@@ -606,7 +606,7 @@ rcctl restart dkimproxy_out
 rcctl reload dovecot
 smtpctl update table virtuals
 smtpctl update table vdomains
-smtpctl update table passwd
+smtpctl update table vpasswd
 smtpctl update table whitelist-senders
 ```
 
