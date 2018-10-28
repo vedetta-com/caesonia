@@ -508,7 +508,6 @@ Following [Bernhard's recommendation](https://wiki.gnupg.org/EasyGpg2016/PubkeyD
 ```console
 server "example.com" {
 	listen on "*" tls port https
-	listen on "::" tls port https
 ...
 	# OpenPGP Web Key Directory
 	location "/.well-known/openpgpkey/*" {
