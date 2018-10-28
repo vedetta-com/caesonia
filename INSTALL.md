@@ -341,19 +341,6 @@ Master/Master replication, on primary and backup MX:
 mv /etc/dovecot/conf.d/90-replication.conf.optional /etc/dovecot/conf.d/90-replication.conf
 ```
 
-### Rspamd
-```console
-touch /var/rspamd/dmarc_whitelist.inc.local
-touch /var/rspamd/spf_dkim_whitelist.inc.local
-touch /var/rspamd/mime_types.inc.local
-touch /etc/rspamd/local.d/mid.inc
-touch /var/rspamd/2tld.inc.local
-touch /etc/rspamd/local.d/greylist-whitelist-domains.inc
-touch /var/rspamd/surbl-whitelist.inc.local
-touch /etc/rspamd/local.d/redirectors.inc
-touch /var/rspamd/rspamd_dynamic
-```
-
 ### Backup local files
 
 Install "changelist.local":
