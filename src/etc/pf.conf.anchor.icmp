@@ -4,84 +4,84 @@ logicmp = "" # "log" or ""
 anchor "ipv4-icmp" inet proto icmp {
  # https://datatracker.ietf.org/doc/draft-ietf-opsec-icmp-filtering/history/
  # https://tools.ietf.org/html/draft-ietf-opsec-icmp-filtering-04
- pass     $logicmp inet proto icmp             icmp-type  3 code  0 max-pkt-rate 100/10
- pass     $logicmp inet proto icmp             icmp-type  3 code  1 max-pkt-rate 100/10
- pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code  2 max-pkt-rate 100/10
+ pass     $logicmp inet proto icmp             icmp-type  3 code  0 max-pkt-rate 200/10
+ pass     $logicmp inet proto icmp             icmp-type  3 code  1 max-pkt-rate 200/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code  2 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type  3 code  2
- pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code  3 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code  3 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type  3 code  3
- pass     $logicmp inet proto icmp             icmp-type  3 code  4 max-pkt-rate 100/10
- pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code  5 max-pkt-rate 100/10
+ pass     $logicmp inet proto icmp             icmp-type  3 code  4 max-pkt-rate 200/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code  5 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type  3 code  5
  pass out $logicmp inet proto icmp from (self) icmp-type  3 code  7
- pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code 11 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code 11 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type  3 code 11
- pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code 12 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code 12 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type  3 code 12
- pass     $logicmp inet proto icmp             icmp-type  3 code 13 max-pkt-rate 100/10
- pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code 14 max-pkt-rate 100/10
+ pass     $logicmp inet proto icmp             icmp-type  3 code 13 max-pkt-rate 200/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code 14 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type  3 code 14
- pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code 15 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type  3 code 15 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type  3 code 15
- pass in  $logicmp inet proto icmp to   (self) icmp-type  5 code  0 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type  5 code  0 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type  5 code  0
- pass in  $logicmp inet proto icmp to   (self) icmp-type  5 code  1 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type  5 code  1 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type  5 code  1
- pass in  $logicmp inet proto icmp to   (self) icmp-type  5 code  2 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type  5 code  2 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type  5 code  2
- pass in  $logicmp inet proto icmp to   (self) icmp-type  5 code  3 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type  5 code  3 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type  5 code  3
- pass     $logicmp inet proto icmp             icmp-type 11 code  0 max-pkt-rate 100/10
- pass     $logicmp inet proto icmp             icmp-type 11 code  1 max-pkt-rate 100/10
- pass in  $logicmp inet proto icmp to   (self) icmp-type 12 code  0 max-pkt-rate 100/10
+ pass     $logicmp inet proto icmp             icmp-type 11 code  0 max-pkt-rate 200/10
+ pass     $logicmp inet proto icmp             icmp-type 11 code  1 max-pkt-rate 200/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type 12 code  0 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type 12 code  0
- pass in  $logicmp inet proto icmp to   (self) icmp-type 12 code  1 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type 12 code  1 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type 12 code  1
- pass     $logicmp inet proto icmp             icmp-type  8 code  0 max-pkt-rate 100/10
- pass     $logicmp inet proto icmp             icmp-type  0 code  0 max-pkt-rate 100/10
- pass in  $logicmp inet proto icmp to   (self) icmp-type 10 code  0 max-pkt-rate 100/10
+ pass     $logicmp inet proto icmp             icmp-type  8 code  0 max-pkt-rate 200/10
+ pass     $logicmp inet proto icmp             icmp-type  0 code  0 max-pkt-rate 200/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type 10 code  0 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type 10 code  0
- pass in  $logicmp inet proto icmp to   (self) icmp-type  9 code  0 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type  9 code  0 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type  9 code  0
- pass in  $logicmp inet proto icmp to   (self) icmp-type 13 code  0 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type 13 code  0 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type 13 code  0
- pass in  $logicmp inet proto icmp to   (self) icmp-type 14 code  0 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type 14 code  0 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type 14 code  0
- pass in  $logicmp inet proto icmp to   (self) icmp-type 17 code  0 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type 17 code  0 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type 17 code  0
- pass in  $logicmp inet proto icmp to   (self) icmp-type 18 code  0 max-pkt-rate 100/10
+ pass in  $logicmp inet proto icmp to   (self) icmp-type 18 code  0 max-pkt-rate 200/10
  pass out $logicmp inet proto icmp from (self) icmp-type 18 code  0
 }
 
 anchor "ipv6-icmp" inet6 proto icmp6 {
  # RFC 4890: Recommendations for Filtering ICMPv6 Messages in Firewalls
- pass     $logicmp inet6 proto icmp6             icmp6-type   1 code  0 max-pkt-rate 100/10
- pass     $logicmp inet6 proto icmp6             icmp6-type   1 code  1 max-pkt-rate 100/10
- pass in  $logicmp inet6 proto icmp6 to   (self) icmp6-type   1 code  2 max-pkt-rate 100/10
+ pass     $logicmp inet6 proto icmp6             icmp6-type   1 code  0 max-pkt-rate 200/10
+ pass     $logicmp inet6 proto icmp6             icmp6-type   1 code  1 max-pkt-rate 200/10
+ pass in  $logicmp inet6 proto icmp6 to   (self) icmp6-type   1 code  2 max-pkt-rate 200/10
  pass out $logicmp inet6 proto icmp6 from (self) icmp6-type   1 code  2
- pass     $logicmp inet6 proto icmp6             icmp6-type   1 code  3 max-pkt-rate 100/10
- pass     $logicmp inet6 proto icmp6             icmp6-type   1 code  4 max-pkt-rate 100/10
- pass in  $logicmp inet6 proto icmp6 to   (self) icmp6-type   1 code  5 max-pkt-rate 100/10
+ pass     $logicmp inet6 proto icmp6             icmp6-type   1 code  3 max-pkt-rate 200/10
+ pass     $logicmp inet6 proto icmp6             icmp6-type   1 code  4 max-pkt-rate 200/10
+ pass in  $logicmp inet6 proto icmp6 to   (self) icmp6-type   1 code  5 max-pkt-rate 200/10
  pass out $logicmp inet6 proto icmp6 from (self) icmp6-type   1 code  5
- pass     $logicmp inet6 proto icmp6             icmp6-type   1 code  6 max-pkt-rate 100/10
- pass     $logicmp inet6 proto icmp6             icmp6-type   2 code  0 max-pkt-rate 100/10
- pass     $logicmp inet6 proto icmp6             icmp6-type   3 code  0 max-pkt-rate 100/10
- pass     $logicmp inet6 proto icmp6             icmp6-type   3 code  1 max-pkt-rate 100/10
- pass in  $logicmp inet6 proto icmp6 to   (self) icmp6-type   4 code  0 max-pkt-rate 100/10
+ pass     $logicmp inet6 proto icmp6             icmp6-type   1 code  6 max-pkt-rate 200/10
+ pass     $logicmp inet6 proto icmp6             icmp6-type   2 code  0 max-pkt-rate 200/10
+ pass     $logicmp inet6 proto icmp6             icmp6-type   3 code  0 max-pkt-rate 200/10
+ pass     $logicmp inet6 proto icmp6             icmp6-type   3 code  1 max-pkt-rate 200/10
+ pass in  $logicmp inet6 proto icmp6 to   (self) icmp6-type   4 code  0 max-pkt-rate 200/10
  pass out $logicmp inet6 proto icmp6 from (self) icmp6-type   4 code  0
- pass in  $logicmp inet6 proto icmp6 to   (self) icmp6-type   4 code  1 max-pkt-rate 100/10
+ pass in  $logicmp inet6 proto icmp6 to   (self) icmp6-type   4 code  1 max-pkt-rate 200/10
  pass out $logicmp inet6 proto icmp6 from (self) icmp6-type   4 code  1
- pass     $logicmp inet6 proto icmp6             icmp6-type   4 code  2 max-pkt-rate 100/10
- pass     $logicmp inet6 proto icmp6             icmp6-type 128 code  0 max-pkt-rate 100/10
- pass     $logicmp inet6 proto icmp6             icmp6-type 129 code  0 max-pkt-rate 100/10
+ pass     $logicmp inet6 proto icmp6             icmp6-type   4 code  2 max-pkt-rate 200/10
+ pass     $logicmp inet6 proto icmp6             icmp6-type 128 code  0 max-pkt-rate 200/10
+ pass     $logicmp inet6 proto icmp6             icmp6-type 129 code  0 max-pkt-rate 200/10
 
  # Mobile IPv6 messages that are needed to assist mobility
- pass $logicmp inet6 proto icmp6 icmp6-type { 144 145 146 147 } max-pkt-rate 100/10
+ pass $logicmp inet6 proto icmp6 icmp6-type { 144 145 146 147 } max-pkt-rate 200/10
 
  # RFC 4890, section 4.4
  # ff02::1: ff00:2:
  pass $logicmp inet6 proto icmp6 \
   to { (self) ff02::/16 } \
   icmp6-type { 130 131 132 133 134 135 136 137 141 142 143 148 149 151 152 153 } \
-  max-pkt-rate 100/10
+  max-pkt-rate 200/10
 }
