@@ -223,11 +223,9 @@ local		type=dir mode=0755
 
 # ./usr/local/bin
 bin		type=dir mode=0755
-    backup.sh	mode=0500 optional
     dovecot-lda.sh \
 		gname=vmail mode=0550
     get-ocsp.sh	mode=0500
-    hier.sh	mode=0500 optional
     learn_all_spam.sh \
 		mode=0500 optional
     learn_ham.sh \
