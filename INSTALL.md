@@ -364,7 +364,7 @@ sed -i '/changelist.local/,$d' /etc/changelist
 Turn off `httpd` tls:
 ```console
 sed -i -e "s|^$(echo -e "\t")tls|$(echo -e "\t")#tls|" \
-	-e "/# (!) TLS/ s|listen on \$IP tls port https|listen on ::1 port http|" \
+	-e "/# (\!) TLS/ s|listen on \$IP tls port https|listen on ::1 port http|" \
 	/etc/httpd.conf
 ```
 
@@ -381,7 +381,7 @@ acme-client -vAD $(hostname)
 Turn on `httpd` tls:
 ```console
 sed -i -e "s|^$(echo -e "\t")#tls|$(echo -e "\t")tls|" \
-	-e "/# (!) TLS/ s|listen on ::1 port http|listen on \$IP tls port https|" \
+	-e "/# (\!) TLS/ s|listen on ::1 port http|listen on \$IP tls port https|" \
 	/etc/httpd.conf
 ```
 
