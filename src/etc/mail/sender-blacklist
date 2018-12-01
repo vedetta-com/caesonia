@@ -1,0 +1,4 @@
+# External sender blacklist
+# https://man.openbsd.org/table.5#Mailaddr_tables
+# `smtpctl update table sender-blacklist`
+@example.bad
