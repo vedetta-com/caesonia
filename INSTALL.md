@@ -244,7 +244,7 @@ install -o root -g wheel -m 0644 -b src/etc/dovecot/dovecot-trash.conf.ext /etc/
 install -o root -g wheel -m 0644 -b src/etc/dovecot/conf.d/* /etc/dovecot/conf.d/
 
 install -o root -g wheel -m 0644 -b src/etc/mail/aliases /etc/mail/
-install -o root -g _smtpd -m 0640 -b src/etc/mail/blacklist /etc/mail/
+install -o root -g _smtpd -m 0640 -b src/etc/mail/sender-blacklist /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/mailname /etc/mail/
 install -o _dovecot -g _smtpd -m 0640 -b src/etc/mail/passwd /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/relays /etc/mail/
@@ -613,14 +613,14 @@ Suppose the foreign address "jane@example.meh" behaves badly.
 
 Blacklist external sender:
 ```console
-echo "jane@example.meh" >> /etc/mail/blacklist
-smtpctl update table blacklist-senders
+echo "jane@example.meh" >> /etc/mail/sender-blacklist
+smtpctl update table sender-blacklist
 ```
 
 or blacklist everybody "@example.meh" for bad behavior:
 ```console
-echo "@example.meh" >> /etc/mail/blacklist
-smtpctl update table blacklist-senders
+echo "@example.meh" >> /etc/mail/sender-blacklist
+smtpctl update table sender-blacklist
 ```
 
 Suppose "example.meh" is a lost cause:
