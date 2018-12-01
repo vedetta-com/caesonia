@@ -75,9 +75,9 @@ mail		type=dir gname=wheel mode=0755
     passwd	uname=_smtpd gname=_dovecot mode=0440
     relays
     sender-blacklist
+    sender-whitelist
     vdomains
     virtual
-    whitelist
 # ./etc/mail
 ..
 
