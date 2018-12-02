@@ -1,6 +1,6 @@
 # Local sender whitelist
 # https://man.openbsd.org/table.5#Mailaddr_tables
-# `smtpctl update table sender-whitelist`
+# `smtpctl update table whitelist`
 @example.com
 @hermes.example.com
 @mercury.example.com

@@ -23,13 +23,13 @@
 /etc/dovecot/conf.d/90-sieve-extprograms.conf
 /etc/dovecot/conf.d/90-sieve.conf
 /etc/dovecot/conf.d/auth-passwdfile.conf.ext
+/etc/mail/blacklist
 /etc/mail/mailname
 +/etc/mail/passwd
 /etc/mail/relays
-/etc/mail/sender-blacklist
-/etc/mail/sender-whitelist
 /etc/mail/vdomains
 /etc/mail/virtual
+/etc/mail/whitelist
 /etc/pf.conf.anchor.block
 /etc/pf.conf.anchor.icmp
 /etc/pf.conf.table.ban
