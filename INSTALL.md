@@ -244,14 +244,14 @@ install -o root -g wheel -m 0644 -b src/etc/dovecot/dovecot-trash.conf.ext /etc/
 install -o root -g wheel -m 0644 -b src/etc/dovecot/conf.d/* /etc/dovecot/conf.d/
 
 install -o root -g wheel -m 0644 -b src/etc/mail/aliases /etc/mail/
+install -o root -g _smtpd -m 0640 -b src/etc/mail/blacklist /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/mailname /etc/mail/
 install -o _dovecot -g _smtpd -m 0640 -b src/etc/mail/passwd /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/relays /etc/mail/
-install -o root -g _smtpd -m 0640 -b src/etc/mail/sender-blacklist /etc/mail/
-install -o root -g _smtpd -m 0640 -b src/etc/mail/sender-whitelist /etc/mail/
 install -o root -g wheel -m 0644 -b src/etc/mail/smtpd.conf /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/vdomains /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/virtual /etc/mail/
+install -o root -g _smtpd -m 0640 -b src/etc/mail/whitelist /etc/mail/
 
 install -o root -g wheel -m 0600 -b src/etc/mtree/special.local /etc/mtree/
 
@@ -577,7 +577,7 @@ sed -i '/^domain/s/$/,example.ca/' /etc/dkimproxy_out.conf
 
 Whitelist local sender:
 ```console
-echo "@example.ca" >> /etc/mail/sender-whitelist
+echo "@example.ca" >> /etc/mail/whitelist
 ```
 
 Add virtual alias:
@@ -605,22 +605,22 @@ rcctl restart dkimproxy_out
 rcctl reload dovecot
 smtpctl update table virtuals
 smtpctl update table vdomains
-smtpctl update table vpasswd
-smtpctl update table sender-whitelist
+smtpctl update table passwd
+smtpctl update table whitelist
 ```
 
 Suppose the foreign address "jane@example.meh" behaves badly.
 
 Blacklist external sender:
 ```console
-echo "jane@example.meh" >> /etc/mail/sender-blacklist
-smtpctl update table sender-blacklist
+echo "jane@example.meh" >> /etc/mail/blacklist
+smtpctl update table blacklist
 ```
 
 or blacklist everybody "@example.meh" for bad behavior:
 ```console
-echo "@example.meh" >> /etc/mail/sender-blacklist
-smtpctl update table sender-blacklist
+echo "@example.meh" >> /etc/mail/blacklist
+smtpctl update table blacklist
 ```
 
 Suppose "example.meh" is a lost cause:
