@@ -245,11 +245,11 @@ install -o root -g wheel -m 0644 -b src/etc/dovecot/conf.d/* /etc/dovecot/conf.d
 
 install -o root -g wheel -m 0644 -b src/etc/mail/aliases /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/blacklist /etc/mail/
-install -o root -g _smtpd -m 0640 -b src/etc/mail/mailname /etc/mail/
+install -o root -g wheel -m 0644 -b src/etc/mail/mailname /etc/mail/
 install -o _dovecot -g _smtpd -m 0640 -b src/etc/mail/passwd /etc/mail/
-install -o root -g _smtpd -m 0640 -b src/etc/mail/relays /etc/mail/
+install -o root -g wheel -m 0644 -b src/etc/mail/relays /etc/mail/
 install -o root -g wheel -m 0644 -b src/etc/mail/smtpd.conf /etc/mail/
-install -o root -g _smtpd -m 0640 -b src/etc/mail/vdomains /etc/mail/
+install -o root -g wheel -m 0644 -b src/etc/mail/vdomains /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/virtual /etc/mail/
 install -o root -g _smtpd -m 0640 -b src/etc/mail/whitelist /etc/mail/
 
