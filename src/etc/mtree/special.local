@@ -72,10 +72,10 @@ conf.d		type=dir mode=0755
 /set type=file gname=_smtpd mode=0640
 mail		type=dir gname=wheel mode=0755
     blacklist
-    mailname
+    mailname	gname=wheel mode=0644
     passwd	uname=_smtpd gname=_dovecot mode=0440
-    relays
-    vdomains
+    relays	gname=wheel mode=0644
+    vdomains	gname=wheel mode=0644
     virtual
     whitelist
 # ./etc/mail
