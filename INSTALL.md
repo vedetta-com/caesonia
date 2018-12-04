@@ -390,7 +390,7 @@ OCSP response:
 rcctl restart httpd && /usr/local/bin/get-ocsp.sh $(hostname)
 ```
 
-### OpenPGP Web Key Service ([WKS](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-06))
+### OpenPGP Web Key Service ([WKS](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-07))
 
 An important aspect of using OpenPGP is trusting the (public) key. Off-channel key exchange is not always practical, OpenPGP DANE protocol lacks confidentially, and HKPS' a mess. OpenPGP proposed a new protocol to automate and build trust in the process of exchanging public keys.
 
