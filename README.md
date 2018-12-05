@@ -147,7 +147,7 @@ Each *virtual* autoconfig subdomain has record type CNAME pointing to Autoconfig
 autoconfig.example.net	86400	IN	CNAME	mercury.example.com
 ```
 
-#### OpenPGP Web Key Directory ([WKD](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-06))
+#### OpenPGP Web Key Directory ([WKD](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-07))
 Each WKD subdomain has record type CNAME pointing to Web Key Server:
 ```console
 wkd.example.com		86400	IN	CNAME	mercury.example.com
