@@ -22,6 +22,6 @@ HOME=/var/log
 30	9	*	*	*	syspatch -c
 # expire non confirmed publication requests
 30	11	*	*	*	doas -u vmail env -i HOME=/var/vmail /usr/local/bin/gpg-wks-server --cron
-# update the root trust anchor for DNSSEC validation
+# update the root trust anchor for DNSSEC validation RFC7958
 20	2	1,14	*	*	unbound-anchor && rcctl restart unbound
 @reboot					echo "Reboot $(date)"
