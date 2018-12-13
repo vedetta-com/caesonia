@@ -316,8 +316,6 @@ install -o root -g wheel -m 2750 -d src/var/lib/gnupg/wks /var/lib/gnupg/wks
 
 Unbound DNS validating resolver from root nameservers, with fallback:
 ```console
-unbound-anchor -a "/var/unbound/db/root.key"
-ftp -o /var/unbound/etc/root.hints https://FTP.INTERNIC.NET/domain/named.cache
 rcctl enable unbound
 rcctl restart unbound
 cp -p /etc/resolv.conf /etc/resolv.conf.old
