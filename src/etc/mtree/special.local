@@ -188,8 +188,8 @@ dsync		type=dir gname=dsync mode=0755 optional
 .ssh		type=dir gname=dsync mode=0750 optional
     authorized_keys \
 		gname=dsync optional
-    id_rsa	uname=dsync gname=dsync mode=0400 optional
-    id_rsa.pub	gname=dsync optional
+    id_*	uname=dsync gname=dsync mode=0400 optional
+    id_*.pub	gname=dsync optional
     known_hosts	gname=dsync optional
 # ./home/dsync/.ssh
 ..
