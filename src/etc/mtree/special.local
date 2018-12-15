@@ -57,7 +57,8 @@ conf.d		type=dir mode=0755
     20-managesieve.conf
     90-plugin.conf
     90-quota.conf
-    90-replication.conf	optional
+    90-replication.conf	\
+		optional
     90-sieve-extprograms.conf
     90-sieve.conf
     auth-passwdfile.conf.ext
@@ -227,7 +228,7 @@ local		type=dir mode=0755
 bin		type=dir mode=0755
     dovecot-lda.sh \
 		gname=vmail mode=0550
-    get-ocsp.sh	mode=0500 optional
+    get-ocsp.sh	mode=0500
     learn_all_spam.sh \
 		mode=0500 optional
     learn_ham.sh \
