@@ -57,7 +57,7 @@ conf.d		type=dir mode=0755
     20-managesieve.conf
     90-plugin.conf
     90-quota.conf
-    90-replication.conf
+    90-replication.conf	optional
     90-sieve-extprograms.conf
     90-sieve.conf
     auth-passwdfile.conf.ext
@@ -99,6 +99,7 @@ local.d		type=dir mode=0755
     antivirus.conf
     classifier-bayes.conf
     mime_types.conf
+    multimap.conf
     options.inc
     rbl.conf.optional \
 		optional
@@ -114,7 +115,8 @@ local.d		type=dir mode=0755
 
 # ./etc/rspamd/override.d
 override.d      type=dir mode=0755
-    bad_emails.list
+    bad_emails.list \
+		optional
     emails.conf.optional \
 		optional
     emails.conf	optional
@@ -178,16 +180,16 @@ home		type=dir mode=0755
 
 
 # ./home/dsync
-dsync		type=dir gname=dsync mode=0755
+dsync		type=dir gname=dsync mode=0755 optional
 
 
 # ./home/dsync/.ssh
-.ssh		type=dir gname=dsync mode=0750
+.ssh		type=dir gname=dsync mode=0750 optional
     authorized_keys \
-		gname=dsync
-    id_rsa	uname=dsync gname=dsync mode=0400
-    id_rsa.pub	gname=dsync
-    known_hosts	gname=dsync
+		gname=dsync optional
+    id_rsa	uname=dsync gname=dsync mode=0400 optional
+    id_rsa.pub	gname=dsync optional
+    known_hosts	gname=dsync optional
 # ./home/dsync/.ssh
 ..
 
@@ -204,8 +206,8 @@ root		type=dir mode=0700
 
 # ./root/.ssh
 .ssh		type=dir mode=0700
-    config	mode=0640
-    known_hosts	mode=0644
+    config	mode=0640 optional
+    known_hosts	mode=0644 optional
 # ./root/.ssh
 ..
 
@@ -225,7 +227,7 @@ local		type=dir mode=0755
 bin		type=dir mode=0755
     dovecot-lda.sh \
 		gname=vmail mode=0550
-    get-ocsp.sh	mode=0500
+    get-ocsp.sh	mode=0500 optional
     learn_all_spam.sh \
 		mode=0500 optional
     learn_ham.sh \
@@ -237,7 +239,7 @@ bin		type=dir mode=0755
     rmchangelist.sh \
 		mode=0500 optional
     wks-server.sh \
-		gname=vmail mode=0550
+		gname=vmail mode=0550 optional
 # ./usr/local/bin
 ..
 
@@ -306,8 +308,10 @@ after		type=dir mode=0750
 
 # ./var/dovecot/sieve/before
 before		type=dir mode=0750
-    00-wks.sieve
-    00-wks.svbin
+    00-wks.sieve \
+		optional
+    00-wks.svbin \
+		optional
     spamtest.sieve
     spamtest.svbin
     *.sieve
@@ -334,27 +338,27 @@ sieve-pipe	type=dir uname=root mode=0750
 
 # ./var/lib
 /set type=file uname=root gname=wheel mode=0755
-lib		type=dir
+lib		type=dir optional
 
 
 # ./var/lib/gnupg
-gnupg		type=dir
+gnupg		type=dir optional
 
 
 # ./var/lib/gnupg/wks
 /set type=file uname=vmail gname=vmail
-wks		type=dir mode=02750
+wks		type=dir mode=02750 optional
 
 
 # ./var/lib/gnupg/wks/*
-*		type=dir
-    hu		type=link uname=root
+*		type=dir optional
+    hu		type=link uname=root optional
     submission-address \
-		type=link uname=root
+		type=link uname=root optional
 
 
 # ./var/lib/gnupg/wks/*/pending
-pending		type=dir mode=0700
+pending		type=dir mode=0700 optional
 # ./var/lib/gnupg/wks/*/pending
 ..
 
@@ -388,45 +392,6 @@ rspamd		type=dir mode=0755
 ..
 
 
-# ./var/nsd
-nsd		type=dir mode=0755
-
-
-# ./var/nsd/db
-db		type=dir gname=_nsd mode=0775
-# ./var/nsd/db
-..
-
-
-# ./var/nsd/etc
-etc		type=dir gname=_nsd mode=0750
-    nsd.conf	gname=_nsd
-# ./var/nsd/etc
-..
-
-
-# ./var/nsd/zones
-zones		type=dir mode=0755
-
-
-# ./var/nsd/zones/master
-master		type=dir mode=0755
-# ./var/nsd/zones/master
-..
-
-
-# ./var/nsd/zones/slave
-slave		type=dir gname=_nsd mode=0775
-# ./var/nsd/zones/slave
-..
-
-# ./var/nsd/zones
-..
-
-# ./var/nsd
-..
-
-
 # ./var/rspamd
 rspamd		type=dir uname=_rspamd gname=_rspamd mode=0755
 # ./var/rspamd
@@ -440,15 +405,9 @@ unbound		type=dir mode=0755
 # ./var/unbound/db
 /set type=file mode=0644
 db		type=dir uname=root gname=_unbound mode=0775
-    root.key	uname=_unbound gname=_unbound
+    root.key	uname=_unbound gname=_unbound optional
+    root.zone   uname=_unbound gname=_unbound optional
 # ./var/unbound/db
-..
-
-
-# ./var/unbound/etc
-etc		type=dir mode=0755
-    root.hints
-# ./var/unbound/etc
 ..
 
 # ./var/unbound
@@ -471,7 +430,7 @@ htdocs		type=dir mode=0755
 
 
 # ./var/www/htdocs/*
-*.*.*		type=dir mode=0755
+*.*.*		type=dir mode=0755 optional
     disklabel.min \
 		optional
     index.html	optional
@@ -480,8 +439,9 @@ htdocs		type=dir mode=0755
 
 
 # ./var/www/htdocs/*/mail
-mail		type=dir mode=0755
-    config-v1.1.xml
+mail		type=dir mode=0755 optional
+    config-v1.1.xml \
+		optional
 # ./var/www/htdocs/*/mail
 ..
 
@@ -501,15 +461,16 @@ logs		type=dir mode=0755
 
 
 # ./var/www/openpgpkey
-openpgpkey	type=dir mode=0755
-    policy
-    submission-address
+openpgpkey	type=dir mode=0755 optional
+    policy	optional
+    submission-address \
+		optional
 
 
 # ./var/www/openpgpkey/hu
-hu		type=dir uname=vmail mode=0755
+hu		type=dir uname=vmail mode=0755 optional
     54f6ry7x1qqtpor16txw5gdmdbbh6a73 \
-		uname=vmail
+		uname=vmail optional
 # ./var/www/openpgpkey/hu
 ..
 
