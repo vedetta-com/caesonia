@@ -37,6 +37,7 @@
 /etc/rspamd/local.d/antivirus.conf
 /etc/rspamd/local.d/classifier-bayes.conf
 /etc/rspamd/local.d/mime_types.conf
+/etc/rspamd/local.d/multimap.conf
 /etc/rspamd/local.d/options.inc
 /etc/rspamd/local.d/rbl.conf.optional
 /etc/rspamd/local.d/replies.conf
@@ -63,7 +64,7 @@
 /var/dovecot/sieve/before/spamtest.sieve
 +/var/dovecot/sieve/before/spamtest.svbin
 /var/unbound/db/root.key
-/var/unbound/etc/root.hints
+/var/unbound/db/root.zone
 /var/www/htdocs/*.*.*/index.html
 /var/www/htdocs/*.*.*/mail/config-v1.1.xml
 /var/www/openpgpkey/hu/54f6ry7x1qqtpor16txw5gdmdbbh6a73
@@ -74,11 +75,14 @@
 /usr/local/bin/learn_all_spam.sh
 /usr/local/bin/learn_ham.sh
 /usr/local/bin/learn_spam.sh
-/usr/local/bin/rmchangelist.sh
 /usr/local/bin/quota-warning.sh
+/usr/local/bin/rmchangelist.sh
 /usr/local/bin/wks-server.sh
 /root/.ssh/config
 /root/.ssh/known_hosts
 /home/dsync/.ssh/authorized_keys
 +/home/dsync/.ssh/id_rsa
-/home/dsync/.ssh/id_rsa.pub
++/home/dsync/.ssh/id_ecdsa
++/home/dsync/.ssh/id_ed25519
+/home/dsync/.ssh/id_*.pub
+/home/dsync/.ssh/known_hosts
