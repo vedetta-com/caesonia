@@ -115,7 +115,7 @@ local.d		type=dir mode=0755
 
 
 # ./etc/rspamd/override.d
-override.d      type=dir mode=0755
+override.d      type=dir mode=0755 optional
     bad_emails.list \
 		optional
     emails.conf.optional \
