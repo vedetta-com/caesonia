@@ -81,5 +81,8 @@
 /root/.ssh/config
 /root/.ssh/known_hosts
 /home/dsync/.ssh/authorized_keys
-+/home/dsync/.ssh/id_*
++/home/dsync/.ssh/id_rsa
++/home/dsync/.ssh/id_ecdsa
++/home/dsync/.ssh/id_ed25519
 /home/dsync/.ssh/id_*.pub
+/home/dsync/.ssh/known_hosts
