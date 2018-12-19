@@ -63,8 +63,8 @@
 +/var/dovecot/sieve/before/00-wks.svbin
 /var/dovecot/sieve/before/spamtest.sieve
 +/var/dovecot/sieve/before/spamtest.svbin
-/var/unbound/db/root.key
-/var/unbound/db/root.zone
++/var/unbound/db/root.key
++/var/unbound/db/root.zone
 /var/www/htdocs/*.*.*/index.html
 /var/www/htdocs/*.*.*/mail/config-v1.1.xml
 /var/www/openpgpkey/hu/54f6ry7x1qqtpor16txw5gdmdbbh6a73
