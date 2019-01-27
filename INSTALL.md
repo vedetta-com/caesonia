@@ -56,6 +56,11 @@ doas tmux
 shutdown -r now
 ```
 
+> If the console entry in the ttys([5](https://man.openbsd.org/ttys.5)) file does not contain the "secure" flag, then [init](https://man.openbsd.org/init.8#DESCRIPTION) will require that the superuser password be entered before the system will start a single-user shell.
+```
+sed -i '/^console/s/ secure//' /etc/ttys
+```
+
 Verify if egress IP **matches** DNS record:
 ```console
 ping -vc1 \
@@ -270,10 +275,10 @@ install -o root -g wheel -m 0644 -b src/root/.ssh/config /root/.ssh/
 install -o root -g wheel -m 0755 -d src/etc/ssl/acme /etc/ssl/acme
 install -o root -g wheel -m 0700 -d src/etc/ssl/acme/private /etc/ssl/acme/private
 
-install -o root -g wheel -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin/
+install -o root -g bin -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/dovecot-lda.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/learn_*.sh /usr/local/bin/
-install -o root -g wheel -m 0500 -b src/usr/local/bin/rmchangelist.sh /usr/local/bin/
+install -o root -g bin -m 0500 -b src/usr/local/bin/rmchangelist.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/quota-warning.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/wks-server.sh /usr/local/bin/
 

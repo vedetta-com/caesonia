@@ -7,7 +7,7 @@
 
 # .
 /set type=file uname=root gname=wheel mode=0644
-.		type=dir mode=0755
+.		type=dir mode=0755 nochange
 
 
 # ./etc
@@ -231,9 +231,9 @@ local		type=dir mode=0755
 bin		type=dir mode=0755
     dovecot-lda.sh \
 		gname=vmail mode=0550
-    get-ocsp.sh	mode=0500
+    get-ocsp.sh	gname=bin mode=0500
     learn_all_spam.sh \
-		mode=0500 optional
+		gname=vmail mode=0500 optional
     learn_ham.sh \
 		gname=vmail mode=0550
     learn_spam.sh \
@@ -241,7 +241,7 @@ bin		type=dir mode=0755
     quota-warning.sh \
 		gname=vmail mode=0550
     rmchangelist.sh \
-		mode=0500 optional
+		gname=bin mode=0500 optional
     wks-server.sh \
 		gname=vmail mode=0550 optional
 # ./usr/local/bin
@@ -356,9 +356,11 @@ wks		type=dir mode=02750 optional
 
 # ./var/lib/gnupg/wks/*
 *		type=dir optional
-    hu		type=link uname=root optional
+    hu		type=link uname=root optional \
+		link=/var/www/openpgpkey/hu
     submission-address \
-		type=link uname=root optional
+		type=link uname=root optional \
+		link=/var/www/openpgpkey/submission-address
 
 
 # ./var/lib/gnupg/wks/*/pending
