@@ -278,3 +278,5 @@ _dmarc.example.net	86400	IN	TXT	"v=DMARC1; p=reject; pct=100; rua=mailto:dmarcre
 ## Contribute
 Contributions welcome, [fork](https://github.com/vedetta-com/caesonia/fork)
 
+Hosted by Open Source Collective 501c6, [contribute](https://opencollective.com/caesonia)
+
