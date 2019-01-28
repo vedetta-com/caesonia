@@ -57,7 +57,7 @@ shutdown -r now
 ```
 
 > If the console entry in the ttys([5](https://man.openbsd.org/ttys.5)) file does not contain the "secure" flag, then [init](https://man.openbsd.org/init.8#DESCRIPTION) will require that the superuser password be entered before the system will start a single-user shell.
-```
+```console
 sed -i '/^console/s/ secure//' /etc/ttys
 ```
 
@@ -240,7 +240,6 @@ install -o root -g wheel -m 0640 -b src/etc/httpd.conf* /etc/
 install -o root -g wheel -m 0644 -b src/etc/login.conf /etc/
 install -o root -g wheel -m 0644 -b src/etc/newsyslog.conf /etc/
 install -o root -g wheel -m 0600 -b src/etc/pf.conf* /etc/
-install -o root -g wheel -m 0644 -b src/etc/resolv.conf.tail /etc/
 install -o root -g wheel -m 0644 -b src/etc/sysctl.conf /etc/
 
 install -o root -g wheel -m 0755 -d src/etc/dovecot/conf.d /etc/dovecot/conf.d
