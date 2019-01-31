@@ -200,7 +200,7 @@ Update wheel user name "puffy":
 sed -i "s|puffy|$USER|g" \
 	src/etc/mail/aliases \
 	src/etc/mail/passwd \
-	src/etc/mail/virtual \
+	src/etc/mail/virtual
 ```
 
 *n.b.*: Without backup MX, remove configuration for user "dsync":
