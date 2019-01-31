@@ -239,11 +239,11 @@ Generate a private and public key:
 mkdir -p /etc/ssl/dkim/private
 chmod 750 /etc/ssl/dkim/private
 ```
-Some web-interfaces allow TXT record with max **1024** bits [key](https://tools.ietf.org/html/rfc8301#section-3.2):
+Some DNS web-interfaces allow TXT record with max **1024** bits [key](https://tools.ietf.org/html/rfc8301#section-3.2) or split "()" RR:
 ```sh
 openssl genrsa -out /etc/ssl/dkim/private/private.key 2048
 openssl rsa -in /etc/ssl/dkim/private/private.key -pubout -out /etc/ssl/dkim/public.key
-chgrp -R _dkimproxy /etc/ssl/dkim/private
+chown -R _rspamd:_dkimproxy /etc/ssl/dkim/private
 chmod 440 /etc/ssl/dkim/private/private.key
 ```
 Add public key in TXT record:
