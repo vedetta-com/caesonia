@@ -233,7 +233,7 @@ bin		type=dir mode=0755
 		gname=vmail mode=0550
     get-ocsp.sh	gname=bin mode=0500
     learn_all_spam.sh \
-		gname=vmail mode=0500 optional
+		gname=vmail mode=0550 optional
     learn_ham.sh \
 		gname=vmail mode=0550
     learn_spam.sh \
