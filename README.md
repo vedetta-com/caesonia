@@ -1,4 +1,7 @@
 # caesonia (beta)
+[![Backers on Open Collective](https://opencollective.com/caesonia/backers/badge.svg)](#backers)
+ [![Sponsors on Open Collective](https://opencollective.com/caesonia/sponsors/badge.svg)](#sponsors) 
+ 
 *Open*BSD Email Service
 
 ![Public Domain](src/var/www/htdocs/mercury.example.com/Milonia_Caesonia-250x259.jpg)
@@ -277,4 +280,34 @@ _dmarc.example.net	86400	IN	TXT	"v=DMARC1; p=reject; pct=100; rua=mailto:dmarcre
 Contributions welcome, [fork](https://github.com/vedetta-com/caesonia/fork)
 
 Hosted by Open Source Collective 501c6, [contribute](https://opencollective.com/caesonia)
+
+
+## Contributors
+
+This project exists thanks to all the people who contribute. 
+<a href="https://github.com/vedetta-com/caesonia/graphs/contributors"><img src="https://opencollective.com/caesonia/contributors.svg?width=890&button=false" /></a>
+
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/caesonia#backer)]
+
+<a href="https://opencollective.com/caesonia#backers" target="_blank"><img src="https://opencollective.com/caesonia/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/caesonia#sponsor)]
+
+<a href="https://opencollective.com/caesonia/sponsor/0/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/caesonia/sponsor/1/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/caesonia/sponsor/2/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/caesonia/sponsor/3/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/caesonia/sponsor/4/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/caesonia/sponsor/5/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/caesonia/sponsor/6/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/caesonia/sponsor/7/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/caesonia/sponsor/8/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/caesonia/sponsor/9/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/9/avatar.svg"></a>
+
 
