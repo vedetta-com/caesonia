@@ -223,15 +223,15 @@ mercury.example.com	86400	IN	SSHFP	4 2 a...
 #### Sender Policy Framework ([SPF](http://www.openspf.org/))
 Each domain and subdomain needs a TXT record with SPF data:
 ```console
-example.com		86400	IN	TXT	"v=spf1 mx mx:example.com -all"
-mercury.example.com	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.1 ip6:2001:0db8::1 -all"
-hermes.example.com	86400	IN	TXT	"v=spf1 a mx ip4:203.0.113.2 ip6:2001:0db8::2 -all"
+example.com		86400	IN	TXT	"v=spf1 mx:example.com -all"
+mercury.example.com	86400	IN	TXT	"v=spf1 a -all"
+hermes.example.com	86400	IN	TXT	"v=spf1 a -all"
 autoconfig.example.com	86400	IN	TXT	"v=spf1 -all"
 ```
 
 Each *virtual* domain and *virtual* subdomain needs a TXT record with SPF data:
 ```console
-example.net		86400	IN	TXT	"v=spf1 include:example.com ~all"
+example.net		86400	IN	TXT	"v=spf1 mx:example.com -all"
 ```
 
 #### Domain Keys Identified Mail ([DKIM](http://www.dkim.org))
