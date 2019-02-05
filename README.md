@@ -226,7 +226,6 @@ Each domain and subdomain needs a TXT record with SPF data:
 example.com		86400	IN	TXT	"v=spf1 mx:example.com -all"
 mercury.example.com	86400	IN	TXT	"v=spf1 a -all"
 hermes.example.com	86400	IN	TXT	"v=spf1 a -all"
-autoconfig.example.com	86400	IN	TXT	"v=spf1 -all"
 ```
 
 Each *virtual* domain and *virtual* subdomain needs a TXT record with SPF data:
