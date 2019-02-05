@@ -1,0 +1,10 @@
+/		256M
+swap		1G
+/var/log	256M
+/tmp		1G
+/usr		2G
+/usr/X11R6	256M
+/usr/local	1G
+/home		16M
+/var		10G-*
+
