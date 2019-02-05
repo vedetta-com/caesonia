@@ -102,6 +102,8 @@ local.d		type=dir mode=0755
     mime_types.conf
     multimap.conf
     options.inc
+    phishing.conf \
+		optional
     rbl.conf.optional \
 		optional
     rbl.conf	optional
