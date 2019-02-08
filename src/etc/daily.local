@@ -10,8 +10,11 @@ if [ -O /etc/mtree/special.local -a \
 fi
 
 next_part "Let's Encrypt \"$(hostname)\":"
-acme-client -v $(hostname) && rcctl restart httpd smtpd dovecot
-/usr/local/bin/get-ocsp.sh $(hostname) && rcctl restart httpd
+acme-client -v $(hostname) && {
+	rcctl reload httpd dovecot
+	rcctl restart smtpd
+}
+/usr/local/bin/get-ocsp.sh $(hostname) && rcctl reload httpd
 
 next_part "Email service statistics:"
 smtpctl show stats
