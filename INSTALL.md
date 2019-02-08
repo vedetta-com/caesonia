@@ -389,7 +389,7 @@ sed -i -e "s|^$(echo -e "\t")#tls|$(echo -e "\t")tls|" \
 
 OCSP response:
 ```console
-rcctl restart httpd && /usr/local/bin/get-ocsp.sh $(hostname)
+rcctl reload httpd && /usr/local/bin/get-ocsp.sh $(hostname)
 ```
 
 ### OpenPGP Web Key Service ([WKS](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-07))
