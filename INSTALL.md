@@ -16,6 +16,7 @@ When searching for a hosting company, some useful keywords are "KVM" and "VPS", 
 Popular forums: 
 - https://lowendbox.com/
 - https://www.webhostingtalk.com/forumdisplay.php?f=104
+- https://github.com/vedetta-com/caesonia/issues/141
 
 Minimum system requirements:
 - 512MB RAM
@@ -27,7 +28,7 @@ The host must be able to mount a recent [OpenBSD ISO](https://www.openbsd.org/fa
 
 ## OpenBSD Installation
 
-A response file is used to provide [answers](src/var/www/htdocs/mercury.example.com/install.conf) to the installation questions, as well as an autopartitioning template for [disklabel](src/var/www/htdocs/mercury.example.com/disklabel.min). Edit and upload these files to a web server, or use default as presented.
+A response file is used to provide [answers](src/var/www/htdocs/mercury.example.com/install.conf) to the installation questions, as well as an autopartitioning template for [disklabel](src/var/www/htdocs/mercury.example.com/). Edit and upload these files to a web server, or use default as presented.
 
 At the (I)nstall, (U)pgrade, (**S**)hell prompt, pick "shell"
 
