@@ -2,7 +2,7 @@
 #
 # Backup: `cp -p /etc/changelist /etc/changelist-6.4`
 # Install: `cat /etc/changelist.local >> /etc/changelist`
-# Uninstall: `sed -i '/changelist.local/,$d' /etc/changelist`
+# Uninstall: `sed -i '/etc/changelist.local/,$d' /etc/changelist`
 # Remove: `/usr/local/bin/rmchangelist.sh`
 
 /etc/dkimproxy_out.conf
