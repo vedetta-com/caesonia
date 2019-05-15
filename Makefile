@@ -28,10 +28,8 @@ BACKUP_IPv6 =	2001:0db8::2
 
 DKIM_SELECTOR =	obsd
 EGRESS =	vio0
-#EGRESS !!=	ifconfig egress | while IFS=: read a b; do printf "%s" "$a" && break; done;
 
 WHEEL_USER =	puffy
-#WHEEL_USER !!=	getent group wheel | while IFS=, read a b; do printf "%s" "$b"; done;
 REPLICATION_USER =	dsync
 VIRTUAL_USER =	${WHEEL_USER}
 
@@ -44,8 +42,8 @@ UPGRADE =	yes
 
 CAESONIA =	${SCRIPT} ${SYSCONF} ${PFCONF} ${MAILCONF} ${SSHCONF} \
 		${MTREECONF} ${DKIMPROXYCONF} ${DOVECOTCONF} ${SIEVE} \
-		${RSPAMDCONF} ${WKD} ${TLSRPT} ${WWW} ${UNBOUNDCONF} ${CRONALLOW} \
-		${CRONTAB}
+		${RSPAMDCONF} ${WKD} ${TLSRPT} ${WWW} ${UNBOUNDCONF} \
+		${CRONALLOW} ${CRONTAB}
 
 # Caesonia
 
@@ -140,9 +138,6 @@ WWW =		${VARBASE:S|^/||}/www/htdocs/${HOSTNAME}/index.html \
 
 CRONALLOW =	${VARBASE:S|^/||}/cron/cron.allow
 CRONTAB =	${VARBASE:S|^/||}/cron/tabs/root
-
-DOC =
-EXAMPLES =
 
 WRKSRC ?=	${HOSTNAME:S|^|${.CURDIR}/|}
 RELEASE !!=	uname -r
