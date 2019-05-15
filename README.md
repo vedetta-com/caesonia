@@ -40,7 +40,7 @@ Given our low memory requirements, and the single-purpose concept of email servi
 
 Antivirus software users (usually) have the service running on their devices. ClamAV can easily be incorporated into this configuration, if affected by the [types of malware](https://www.shadowserver.org/wiki/pmwiki.php/AV/Virus180-DayStats) it protects against, but will require around 1GB additional RAM (or another VPS).
 
-Every email message is important, if properly delivered, for Bayes classification. At least 200 ham and 200 spam messages are required to learn what one considers junk. By default (change to use case), a rspamd score above 50% will send the message to Spam/. Moving messages in and out of Spam/ changes this score. After 95%, the message is flagged as "seen" and can be safely ignored.
+Every email message is important, if properly delivered, for Bayes classification. At least 200 ham and 200 spam messages are required to learn what one considers junk (2000+ for best results). By default (change to use case), a rspamd score above 50% will send the message to Spam/. Moving messages in and out of Spam/ changes this score. After 95%, the message is flagged as "seen" and can be safely ignored.
 
 [spamd](https://man.openbsd.org/spamd) is effective at greylisting and stopping high volume spam, if it becomes a problem. It will be an option when IPv6 is supported, along with [bgp-spamd](https://bgp-spamd.net/). To build IP lists for greylisting, please use [spfwalk](https://github.com/akpoff/spfwalk) with [spf_fetch](https://github.com/akpoff/spf_fetch).
 
@@ -51,70 +51,123 @@ e.g. puffy@mercury.example.com is wheel, with an alias mapped to (virtual) puffy
 
 See the [**Installation Guide**](INSTALL.md) for details.
 
-Install packages:
-```sh
-pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras gnupg-2.2.10
-```
-Add users:
-```sh
-useradd -m -u 2000 -g =uid -c "Virtual Mail" -d /var/vmail -s /sbin/nologin vmail
-useradd -m -u 2001 -g =uid -c "Dsync Replication" -d /home/dsync -s /bin/sh dsync
-```
-## Cheatsheet
-#### A quick way around
-Let's assume we want to change the (default) *virtual* domain name from `example.net` to `example.org`
-```sh
-cd src/
-grep -r example.net .
-```
-After close inspection, apply the substitution:
-```sh
-find . -type f -exec sed -i 's|example.net|example.org|g' {} +
-```
-
-#### Defaults to customize
+Grab a copy of this repository, and put overrides in "Makefile.local" e.g.:
 ```console
-primary domain name: example.com
-virtual domain name: example.com
-                     example.net
+# Makefile.local
 
-primary MX host: mercury.example.com
-primary MX IPv4: 203.0.113.1
-primary MX IPv6: 2001:0db8::1
+DOMAIN_NAME =   example.com
+VHOSTS_NAME =   example.net \
+                example.org
 
-backup MX host: hermes.example.com
-backup MX IPv4: 203.0.113.2
-backup MX IPv6: 2001:0db8::2
+PRIMARY =       yes
 
-DKIM selector: obsd
-external (egress) interface: vio0
+PRIMARY_HOST =	mercury
+PRIMARY_IPv4 =	207.148.16.212
+PRIMARY_IPv6 =	2001:0db8::1
 
-wheel user: puffy
-replication user: dsync
-virtual user: puffy
+BACKUP_HOST =	hermes
+BACKUP_IPv4 =	203.0.113.2
+BACKUP_IPv6 =	2001:0db8::2
 
-autoexpunge: autoexpunge\ =\ 30d
-quota: storage=15G
-max message size: 35M
-full text search: fts
-full sync: replication_full_sync_interval\ =\ 1h
+DKIM_SELECTOR =	obsd
+EGRESS =	vio0
+
+WHEEL_USER =	puffy
+REPLICATION_USER =	dsync
+VIRTUAL_USER =	${WHEEL_USER}
+
+AUTOEXPUNGE =	30d
+MAIL_QUOTA =	15G
+MAX_MESSAGE_SIZE =	35M
+FULL_SYNC_INTERVAL =	1h
+
+UPGRADE =	yes
 ```
-#### Layout
 
-| Filesystem | Mount       | Size    |
-|:---------- |:----------- | -------:|
-| a          | /           |    256M |
-| b          | /swap       |   1024M |
-| d          | /var/log    |    128M |
-| e          | /tmp        |   1024M |
-| f          | /usr        |   1024M |
-| g          | /usr/local  |    512M |
-| h          | /home       |      8M |
-| i          | /var        |   15G-* |
-| *Total*    |             |**20G-***|
+#### Install
+```console
+make install
+```
+
+*n.b.* UPGRADE uses [`sdiff`](https://man.openbsd.org/sdiff) side-by-side diff (with *new* on the right side)
+
+#### Virtual Users
+Update virtual users [credentials table](https://man.openbsd.org/table.5#Credentials_tables) [`src/etc/mail/passwd`](src/etc/mail/passwd) using [`smtpctl encrypt`](https://man.openbsd.org/smtpctl#encrypt):
+```console
+smtpctl encrypt
+> secret
+> $2b$...encrypted...passphrase...
+vi src/etc/mail/passwd
+> puffy@example.com:$2b$...encrypted...passphrase...::::::
+smtpctl update table passwd
+```
+
+*n.b.*: user [quota](src/etc/dovecot/conf.d/90-quota.conf) limit can be [overriden](src/etc/dovecot/conf.d/auth-passwdfile.conf.ext) from [src/etc/mail/passwd](src/etc/mail/passwd):
+```console
+puffy@example.com:$2b$...encrypted...passphrase...::::::userdb_quota_rule=*:storage=7G
+```
+
+Review [virtual domains](https://man.openbsd.org/makemap#VIRTUAL_DOMAINS) [aliasing table](https://man.openbsd.org/table.5#Aliasing_tables) [`src/etc/mail/virtual`](src/etc/mail/virtual).
+
+*n.b.* see [Administration](https://github.com/vedetta-com/caesonia/blob/master/INSTALL.md#administration) for virtual user and domain management
+
+#### Backup MX
+*n.b.* Without backup MX, leave BACKUP_HOST empty in "Makefile.local"
+
+Dovecot Replication user "dsync" [SSH](src/etc/ssh/sshd_config) limited to one "[command](src/home/dsync/.ssh/authorized_keys)" restricted in [`doas.conf`](src/etc/doas.conf) to match "[dsync_remote_cmd](src/etc/dovecot/conf.d/90-replication.conf.optional)". On primary and backup hosts:
+
+```console
+su - dsync
+ssh-keygen
+echo "command=\"doas -u vmail \${SSH_ORIGINAL_COMMAND#*}\" $(cat ~/.ssh/id_rsa.pub)" | \
+	ssh puffy@hermes.example.com "cat >> /home/dsync/.ssh/authorized_keys"
+exit
+```
+
+Alternatively, [OpenSSH certificates](https://github.com/vedetta-com/vedetta/blob/master/src/usr/local/share/doc/vedetta/OpenSSH_Principals.md) allow fine-grained control to local users and hosts. The `force-command` is passed to ssh-keygen as certificate option (-O) instead of using "authorized_keys".
+
+Update [/home/dsync](src/home/dsync), on primary and backup hosts:
+```console
+chown -R root:dsync /home/dsync
+chmod 750 /home/dsync/.ssh
+chmod 640 /home/dsync/.ssh/{authorized_keys,id_*.pub,known_hosts}
+chmod 400 /home/dsync/.ssh/{id_ecdsa,id_ed25519,id_rsa}
+chown dsync /home/dsync/.ssh/{id_ecdsa,id_ed25519,id_rsa}
+```
+
+Update [`/root/.ssh/known_hosts`](src/root/.ssh/known_hosts) on primary and backup hosts:
+```console
+ssh -4 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
+ssh -6 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
+```
+
+#### Client Configuration
+*n.b.*: MUA auto-configuration via [Autoconfiguration](README.md#mozilla-autoconfiguration) and SRV Records for
+ [Locating Email Services](README.md#srv-records-for-locating-email-services)
+
+- IMAP server: mercury.example.com (or hermes.example.com)
+  - Security: TLS
+  - Port: 993
+  - Username: puffy@example.com
+  - Password: ********
+  - Autodetect IMAP namespace :ballot_box_with_check:
+  - Use compression :ballot_box_with_check:
+  - Poll when connecting for push :ballot_box_with_check:
+
+- SMTP server: mercury.example.com (or hermes.example.com)
+  - Security: STARTTLS
+  - Port: 587
+  - Require sign-in :ballot_box_with_check:
+  - Username: puffy@example.com
+  - Authentication: Normal password
+  - Password: ********
 
 ## Prerequisites
-A DNS name server (from a registrar, a free service, VPS host, or self-hosted) is required, which allows editing the following record types: [A](#forward-confirmed-reverse-dns-fcrdns), [AAAA](#forward-confirmed-reverse-dns-fcrdns), [CNAME](#mozilla-autoconfiguration), [SRV](#srv-records-for-locating-email-services), [MX](#mail-exchanger-mx), [CAA](#certification-authority-authorization-caa), [SSHFP](#secure-shell-fingerprint-sshfp), [TXT](#sender-policy-framework-spf)
+A DNS name server (from a registrar, a free service, VPS host, or [self-hosted](https://github.com/vedetta-com/dithematic)) is required, which allows editing the following record types: [A](#forward-confirmed-reverse-dns-fcrdns), [AAAA](#forward-confirmed-reverse-dns-fcrdns), [CNAME](#mozilla-autoconfiguration), [SRV](#srv-records-for-locating-email-services), [MX](#mail-exchanger-mx), [CAA](#certification-authority-authorization-caa), [SSHFP](#secure-shell-fingerprint-sshfp), [TXT](#sender-policy-framework-spf)
+
+*n.b.* see [example zone](https://github.com/vedetta-com/dithematic/blob/master/src/usr/local/share/examples/dithematic/example.com.zone)
+
+**DNSSEC is strongly recommended**
 
 #### Forward-confirmed reverse DNS ([FCrDNS](https://tools.ietf.org/html/draft-ietf-dnsop-reverse-mapping-considerations-06))
 Each MX subdomain has record types A, and AAAA with the VPS' IPv4, and IPv6:
@@ -267,6 +320,41 @@ Each *virtual* domain name needs a TXT record for subdomain *_dmarc* with DMARC 
 _dmarc.example.net	86400	IN	TXT	"v=DMARC1; p=reject; pct=100; rua=mailto:dmarcreports@example.net"
 ```
 
+#### SMTP MTA Strict Transport Security ([MTA-STS](https://tools.ietf.org/html/rfc8461))
+Each domain needs a TXT record for subdomain *_mta-sts* with MTA-STS data:
+```console
+_mta-sts.example.com	86400	IN	TXT	"v=STSv1; id=20190515085700Z;"
+```
+
+Each virtual domain needs a CNAME record for subdomain *_mta-sts* pointing to MTA-STS:
+```console
+_mta-sts.example.net	86400	IN	CNAME	_mta-sts.example.com
+```
+
+#### SMTP TLS Reporting ([SMTP TLSRPT](https://tools.ietf.org/html/rfc8460))
+Each domain and *virtual* domain needs a TXT record for subdomain *_smtp._tls* with TLSRPT:
+```console
+_smtp._tls.example.com	86400	IN	TXT	"v=TLSRPTv1;rua=mailto:tlsreports@example.com"
+```
+
+#### DNS-Based Authentication of Named Entities ([DANE](https://tools.ietf.org/html/rfc7671))
+**requires DNSSEC**
+
+Create a TLSA RR:
+```console
+pkg_add ldns-utils
+ldns-dane create mercury.example.com 443 3 0 1
+ldns-dane create hermes.example.com 443 3 0 1
+```
+
+Each domain and *virtual* domain needs a TLSA record for subdomain "tlsa._dane":
+Each domain and *virtual* domain needs a CNAME record for subdomain _443._tcp.www" pointing to TLSA:
+```console
+tlsa._dane.example.com		86400	IN	TLSA	3 1 1 e3b0c44298fc1c14...
+_443._tcp.mercury.example.com	86400	IN	CNAME	tlsa._dane.example.com
+_443._tcp.hermes.example.com	86400	IN	CNAME	tlsa._dane.example.com
+```
+
 ## Support
 [Issues](https://github.com/vedetta-com/caesonia/issues)
 
@@ -289,7 +377,7 @@ This project exists thanks to all the people who contribute.
 
 ## Backers
 
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/caesonia#backer)]
+Thank you to all our backers! :pray: [[Become a backer](https://opencollective.com/caesonia#backer)]
 
 <a href="https://opencollective.com/caesonia#backers" target="_blank"><img src="https://opencollective.com/caesonia/backers.svg?width=890"></a>
 

@@ -5,16 +5,19 @@
 set -o errexit
 set -o nounset
 
-for USER in $(doveadm user '*'); do
-  echo "Loading $USER"
+# Bail out if non-privileged UID
+[ 0 -eq "$(id -u)" ] || exit 1
 
-  doveadm search -u "$USER" mailbox Spam ALL |
+for USER in $(doveadm user '*')
+  do
+    echo "Loading $USER"
 
-  while read guid uid; do
-    doveadm -f pager fetch -u "$USER" text mailbox-guid "$guid" uid "$uid" \
-    | sed '1d;$d' \
-    | rspamc -h /var/run/rspamd/rspamd.sock -d "$USER" learn_spam
+    doveadm search -u "$USER" mailbox Spam ALL |
+
+    while read guid uid; do
+      doveadm -f pager fetch -u "$USER" text mailbox-guid "$guid" uid "$uid" |
+      sed '1d;$d' |
+      rspamc -h /var/run/rspamd/rspamd.sock -d "$USER" learn_spam
+    done
   done
-
-done
 

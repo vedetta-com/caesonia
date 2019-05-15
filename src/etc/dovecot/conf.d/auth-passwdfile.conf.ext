@@ -5,7 +5,7 @@
 
 passdb {
   driver = passwd-file
-  args = scheme=blf-crypt /etc/mail/passwd # username = user@domain
+  args = scheme=BLF-CRYPT /etc/mail/passwd # username = user@domain
 }
 
 userdb {

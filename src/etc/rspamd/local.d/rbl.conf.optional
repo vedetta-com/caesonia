@@ -5,16 +5,13 @@ rbls {
 	spamhaus {
 		disabled = true;
 	}
-	spamhaus_xbl {
+	spamhaus_received {
 		disabled = true;
 	}
 	mailspike {
 		disabled = true;
 	}
 	senderscore {
-		disabled = true;
-	}
-	abusech {
 		disabled = true;
 	}
 	sem {
@@ -27,6 +24,18 @@ rbls {
 		disabled = true;
 	}
 	virusfree {
+		disabled = true;
+	}
+	nixspam {
+		disabled = true;
+	}
+	blocklistde {
+		disabled = true;
+	}
+	blocklistde_received {
+		disabled = true;
+	}
+	dnswl_dwl {
 		disabled = true;
 	}
 }

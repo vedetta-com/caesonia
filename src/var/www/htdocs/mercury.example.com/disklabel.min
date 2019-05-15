@@ -2,7 +2,7 @@
 swap		1G
 /var/log	128M
 /tmp		1G
-/usr		1G
+/usr		1300M
 /usr/local	512M
 /home		8M
 /var		10G-*

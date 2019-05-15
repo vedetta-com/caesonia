@@ -14,7 +14,9 @@ acme-client -v $(hostname) && {
 	rcctl reload httpd dovecot
 	rcctl restart smtpd
 }
-/usr/local/bin/get-ocsp.sh $(hostname) && rcctl reload httpd
+ocspcheck -vNo /etc/ssl/acme/$(hostname).ocsp.resp.der \
+	/etc/ssl/acme/$(hostname).fullchain.pem &&
+rcctl reload httpd
 
 next_part "Email service statistics:"
 smtpctl show stats

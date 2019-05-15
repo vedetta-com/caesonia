@@ -67,11 +67,11 @@
 +/var/unbound/db/root.zone
 /var/www/htdocs/*.*.*/index.html
 /var/www/htdocs/*.*.*/mail/config-v1.1.xml
+/var/www/mta-sts/mta-sts.txt
 /var/www/openpgpkey/hu/54f6ry7x1qqtpor16txw5gdmdbbh6a73
 /var/www/openpgpkey/policy
 /var/www/openpgpkey/submission-address
 /usr/local/bin/dovecot-lda.sh
-/usr/local/bin/get-ocsp.sh
 /usr/local/bin/learn_all_spam.sh
 /usr/local/bin/learn_ham.sh
 /usr/local/bin/learn_spam.sh
