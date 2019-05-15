@@ -347,12 +347,20 @@ ldns-dane create mercury.example.com 443 3 0 1
 ldns-dane create hermes.example.com 443 3 0 1
 ```
 
-Each domain and *virtual* domain needs a TLSA record for subdomain "tlsa._dane":
-Each domain and *virtual* domain needs a CNAME record for subdomain _443._tcp.www" pointing to TLSA:
+Each domain and *virtual* domain needs a TLSA record for subdomain "_dane":
+Each domain and *virtual* domain needs a CNAME record for subdomain "_tcp" pointing to TLSA:
 ```console
-tlsa._dane.example.com		86400	IN	TLSA	3 1 1 e3b0c44298fc1c14...
-_443._tcp.mercury.example.com	86400	IN	CNAME	tlsa._dane.example.com
-_443._tcp.hermes.example.com	86400	IN	CNAME	tlsa._dane.example.com
+tlsa._dane.mercury.example.com	86400	IN	TLSA	3 1 1 e3b0c44298fc1c14...
+_993._tcp.mercury.example.com	86400	IN	CNAME	tlsa._dane.mercury.example.com
+_587._tcp.mercury.example.com	86400	IN	CNAME	tlsa._dane.mercury.example.com
+_443._tcp.mercury.example.com	86400	IN	CNAME	tlsa._dane.mercury.example.com
+_25._tcp.mercury.example.com	86400	IN	CNAME	tlsa._dane.mercury.example.com
+
+tlsa._dane.hermes.example.com	86400	IN	TLSA	3 1 1 f2c0d55309cf2d25...
+_993._tcp.hermes.example.com	86400	IN	CNAME	tlsa._dane.hermes.example.com
+_587._tcp.hermes.example.com	86400	IN	CNAME	tlsa._dane.hermes.example.com
+_443._tcp.hermes.example.com	86400	IN	CNAME	tlsa._dane.hermes.example.com
+_25._tcp.hermes.example.com	86400	IN	CNAME	tlsa._dane.hermes.example.com
 ```
 
 ## Support
