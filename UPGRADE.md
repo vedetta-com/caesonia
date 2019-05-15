@@ -65,6 +65,7 @@ env UPGRADE=yes make install
 
 OpenSSH 8.0 [new features](https://www.openbsd.org/65.html):
 > ssh(1), ssh-agent(1), ssh-add(1): Add support for ECDSA keys in PKCS#11 tokens.
+
 > ssh-keygen(1): Increase the default RSA key size to 3072 bits, following NIST Special Publication 800-57's guidance for a 128-bit equivalent symmetric security level.
 
 *n.b.*: Train rspamd with messages from all users' Spam folder (if installing new database)

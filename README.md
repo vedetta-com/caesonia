@@ -348,6 +348,7 @@ ldns-dane create hermes.example.com 443 3 0 1
 ```
 
 Each domain and *virtual* domain needs a TLSA record for subdomain "_dane":
+
 Each domain and *virtual* domain needs a CNAME record for subdomain "_tcp" pointing to TLSA:
 ```console
 tlsa._dane.mercury.example.com	86400	IN	TLSA	3 1 1 e3b0c44298fc1c14...
