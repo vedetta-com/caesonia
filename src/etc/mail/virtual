@@ -8,9 +8,10 @@ security			postmaster
 hostmaster			postmaster
 webmaster			postmaster
 dmarcreports			postmaster
+tlsreports			postmaster
 postmaster			puffy@example.com
 
-# Virtual aliases for example.net
+# Virtual aliases
 #
 puffy@example.net		puffy@example.com
 

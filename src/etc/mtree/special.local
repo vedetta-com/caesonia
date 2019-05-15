@@ -233,7 +233,6 @@ local		type=dir mode=0755
 bin		type=dir mode=0755
     dovecot-lda.sh \
 		gname=vmail mode=0550
-    get-ocsp.sh	gname=bin mode=0500
     learn_all_spam.sh \
 		gname=vmail mode=0550 optional
     learn_ham.sh \
@@ -465,6 +464,13 @@ logs		type=dir mode=0755
     access.log	optional
     error.log	optional
 # ./var/www/logs
+..
+
+
+# ./var/www/mta-sts
+mta-sts		type=dir mode=0755
+    mta-sts.txt	optional
+# ./var/www/mta-sts
 ..
 
 

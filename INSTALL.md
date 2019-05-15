@@ -75,7 +75,7 @@ ping6 -vc1 \
 
 Update [hostname.if](src/etc/hostname.vio0) and reset:
 ```console
-sh /etc/netstart $(ifconfig egress | awk 'NR == 1{print $1;}' | sed 's/://')
+sh /etc/netstart $(ifconfig egress | while IFS=: read a b; do printf "%s" "$a" && break; done;)
 ```
 
 Install packages:
@@ -209,6 +209,11 @@ sed -i "s|puffy|$USER|g" \
 sed -i 's/dsync\ //g' src/etc/pf.conf
 ```
 
+*n.b.*: Without backup MX, remove configuration for MTA-STS:
+```console
+sed -i '/hermes/d' src/var/www/mta-sts/mta-sts.txt
+```
+
 *n.b.*: Select the "backup" dispatcher in [`smtpd.conf`](https://github.com/vedetta-com/caesonia/blob/v6.4.0-beta/src/etc/mail/smtpd.conf) for Backup MX role: `action "mda" # "backup"`
 
 Update virtual users [credentials table](https://man.openbsd.org/table.5#Credentials_tables) [`src/etc/mail/passwd`](src/etc/mail/passwd) using [`smtpctl encrypt`](https://man.openbsd.org/smtpctl#encrypt):
@@ -275,7 +280,6 @@ install -o root -g wheel -m 0644 -b src/root/.ssh/config /root/.ssh/
 install -o root -g wheel -m 0755 -d src/etc/ssl/acme /etc/ssl/acme
 install -o root -g wheel -m 0700 -d src/etc/ssl/acme/private /etc/ssl/acme/private
 
-install -o root -g bin -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/dovecot-lda.sh /usr/local/bin/
 install -o root -g vmail -m 0550 -b src/usr/local/bin/learn_*.sh /usr/local/bin/
 install -o root -g bin -m 0500 -b src/usr/local/bin/rmchangelist.sh /usr/local/bin/
@@ -311,6 +315,9 @@ install -o root -g daemon -m 0644 -b src/var/www/openpgpkey/policy /var/www/open
 install -o root -g daemon -m 0644 -b src/var/www/openpgpkey/submission-address /var/www/openpgpkey/
 
 install -o vmail -g daemon -m 0755 -d src/var/www/openpgpkey/hu /var/www/openpgpkey/hu
+
+install -o root -g daemon -m 0755 -d src/var/www/mta-sts
+install -o root -g daemon -m 0644 -b src/var/www/mta-sts/mta-sts.txt
 
 install -o root -g wheel -m 0755 -d src/var/lib /var/lib
 install -o root -g wheel -m 0755 -d src/var/lib/gnupg /var/lib/gnupg
@@ -364,13 +371,6 @@ sed -i '/changelist.local/,$d' /etc/changelist
 
 ### Let's Encrypt
 
-Turn off `httpd` tls:
-```console
-sed -i -e "s|^$(echo -e "\t")tls|$(echo -e "\t")#tls|" \
-	-e "/# (\!) TLS/ s|listen on \$IP tls port https|listen on ::1 port http|" \
-	/etc/httpd.conf
-```
-
 Start `httpd`:
 ```console
 rcctl start httpd
@@ -379,18 +379,14 @@ rcctl start httpd
 Initialize a new account and domain key:
 ```console
 acme-client -vAD $(hostname)
-```
-
-Turn on `httpd` tls:
-```console
-sed -i -e "s|^$(echo -e "\t")#tls|$(echo -e "\t")tls|" \
-	-e "/# (\!) TLS/ s|listen on ::1 port http|listen on \$IP tls port https|" \
-	/etc/httpd.conf
+rcctl reload httpd
 ```
 
 OCSP response:
 ```console
-rcctl reload httpd && /usr/local/bin/get-ocsp.sh $(hostname)
+ocspcheck -vNo /etc/ssl/acme/$(hostname).ocsp.resp.der \
+	/etc/ssl/acme/$(hostname).fullchain.pem
+rcctl reload httpd
 ```
 
 ### OpenPGP Web Key Service ([WKS](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-07))
@@ -601,6 +597,13 @@ smtpctl encrypt
 vi /etc/mail/passwd
 > john@example.ca:$2b$...encrypted...passphrase...::::::
 ```
+
+WiP:
+- Add to httpd.conf
+- Add to acme-client.conf
+- Add to WKD
+- Submit GPG key
+- Remove user
 
 Reload:
 ```console

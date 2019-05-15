@@ -8,7 +8,8 @@
 # possible, but leave them commented.  Uncommented options override the
 # default value.
 
-# (!) see usr/local/share/doc/caesonia/OpenSSH_Principals.md
+# (!) see OpenSSH Certificate Authority guide at
+# https://github.com/vedetta-com/vedetta/blob/master/src/usr/local/share/doc/vedetta/OpenSSH_Principals.md
 
 #Port 22
 #AddressFamily any

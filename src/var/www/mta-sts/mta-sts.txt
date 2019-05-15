@@ -1,0 +1,5 @@
+version: STSv1
+mode: enforce
+mx: mercury.example.com
+mx: hermes.example.com
+max_age: 604800

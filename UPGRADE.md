@@ -1,79 +1,44 @@
 # caesonia (beta)
 *Open*BSD Email Service - Upgrade an existing installation
 
-[`6.3.3-beta`](https://github.com/vedetta-com/caesonia/tree/v6.3.3-beta) to [`6.4.0-beta`](https://github.com/vedetta-com/caesonia/tree/v6.4.0-beta)
+[`6.4.0-beta`](https://github.com/vedetta-com/caesonia/tree/v6.4.0-beta) to [`6.5.0-beta`](https://github.com/vedetta-com/caesonia/tree/v6.5.0-beta)
 
 > Upgrades are only supported from one release to the release immediately following it. Read through and understand this process before attempting it. For critical or physically remote machines, test it on an identical, local system first. -- [OpenBSD Upgrade Guide](https://www.openbsd.org/faq/index.html)
 
 ## Upgrade Guide
 
-Before upgrading to OpenBSD 6.4
-
-[OpenSMTPD queue is not backward compatible](https://poolp.org/posts/2018-05-21/switching-to-opensmtpd-new-config/)
-```console
-smtpctl pause smtp
-smtpctl schedule all
-smtpctl show queue
-```
-
-When the mail queue is empty
-```console
-rcctl stop httpd rspamd dkimproxy_out dovecot smtpd
-rcctl disable httpd rspamd dkimproxy_out dovecot smtpd
-```
-
-Update
-```console
-cd src/
-
-grep -r example.com .
-find . -type f -exec sed -i "s|example.com|$(hostname | sed "s/$(hostname -s).//")|g" {} +
-
-grep -r mercury .
-find . -type f -exec sed -i "s|mercury|$(hostname -s)|g" {} +
-
-cd ../
-
-install -o root -g wheel -m 0644 -b src/etc/dovecot/conf.d/10-mail.conf /etc/dovecot/conf.d/
-install -o root -g wheel -m 0640 -b src/etc/httpd.conf /etc/
-cp -p /etc/resolv.conf /etc/resolv.conf.old
-cp src/etc/resolv.conf /etc/
-install -o root -g wheel -m 0644 -b src/etc/rspamd/local.d/rbl.conf.optional /etc/rspamd/local.d/
-install -o root -g wheel -m 0644 -b src/etc/ssh/sshd_config /etc/ssh/
-install -o root -g wheel -m 0500 -b src/usr/local/bin/get-ocsp.sh /usr/local/bin/
-install -o root -g wheel -m 0644 -b src/etc/daily.local /etc/
-install -o root -g wheel -m 0600 -b src/etc/mtree/special.local /etc/mtree/
-install -o root -g wheel -m 0644 -b src/var/unbound/etc/unbound.conf /var/unbound/etc/
-crontab -u root src/var/cron/tabs/root
-```
-
-*n.b.*: Without backup MX, remove configuration for user "dsync"
-```console
-sed -i 's/dsync\ //g' src/etc/pf.conf
-```
-
-*n.b.*: Select the "backup" dispatcher in [`smtpd.conf`](https://github.com/vedetta-com/caesonia/blob/v6.4.0-beta/src/etc/mail/smtpd.conf) for Backup MX role: `action "mda" # "backup"`
-
-```console
-install -o root -g wheel -m 0644 -b src/etc/mail/smtpd.conf /etc/mail/
-
-install -o root -g wheel -m 0600 -b src/etc/pf.conf /etc/
-install -o root -g wheel -m 0600 -b src/etc/pf.conf.table.martians /etc/
-```
-
 Upgrade
 ```console
 cd /tmp
-ftp https://cdn.openbsd.org/pub/OpenBSD/6.4/amd64/bsd.rd
-ftp https://cdn.openbsd.org/pub/OpenBSD/6.4/amd64/SHA256.sig
-signify -C -p /etc/signify/openbsd-64-base.pub -x SHA256.sig bsd.rd && \
-	cp -p /bsd.rd /bsd.rd-6.3 && cp /tmp/bsd.rd /
-echo "https://cdn.openbsd.org/pub/OpenBSD" > /etc/installurl
+ftp https://cdn.openbsd.org/pub/OpenBSD/6.5/amd64/bsd.rd
+ftp https://cdn.openbsd.org/pub/OpenBSD/6.5/amd64/SHA256.sig
+signify -C -p /etc/signify/openbsd-65-base.pub -x SHA256.sig bsd.rd && \
+	cp -p /bsd.rd /bsd.rd-6.4 && cp /tmp/bsd.rd /
 
-rm /dev/audio /dev/audioctl
-rm /etc/rc.d/rtadvd /usr/sbin/rtadvd /usr/share/man/man5/rtadvd.conf.5 /usr/share/man/man8/rtadvd.8
-userdel _rtadvd
-groupdel _rtadvd
+rm /usr/include/openssl/asn1_mac.h
+
+rm /usr/bin/c2ph \
+ /usr/bin/pstruct \
+ /usr/libdata/perl5/Locale/Codes/API.pod \
+ /usr/libdata/perl5/Module/CoreList/TieHashDelta.pm \
+ /usr/libdata/perl5/Unicode/Collate/Locale/bg.pl \
+ /usr/libdata/perl5/Unicode/Collate/Locale/fr.pl \
+ /usr/libdata/perl5/Unicode/Collate/Locale/ru.pl \
+ /usr/libdata/perl5/unicore/lib/Sc/Cham.pl \
+ /usr/libdata/perl5/unicore/lib/Sc/Ethi.pl \
+ /usr/libdata/perl5/unicore/lib/Sc/Hebr.pl \
+ /usr/libdata/perl5/unicore/lib/Sc/Hmng.pl \
+ /usr/libdata/perl5/unicore/lib/Sc/Khar.pl \
+ /usr/libdata/perl5/unicore/lib/Sc/Khmr.pl \
+ /usr/libdata/perl5/unicore/lib/Sc/Lana.pl \
+ /usr/libdata/perl5/unicore/lib/Sc/Lao.pl \
+ /usr/libdata/perl5/unicore/lib/Sc/Talu.pl \
+ /usr/libdata/perl5/unicore/lib/Sc/Tibt.pl \
+ /usr/libdata/perl5/unicore/lib/Sc/Xsux.pl \
+ /usr/libdata/perl5/unicore/lib/Sc/Zzzz.pl \
+ /usr/share/man/man1/c2ph.1 \
+ /usr/share/man/man1/pstruct.1 \
+ /usr/share/man/man3p/Locale::Codes::API.3p
 
 reboot
 boot: bsd.rd
@@ -90,28 +55,23 @@ sysmerge
 How should I deal with this? [Leave it for later] i
 
 pkg_add -u
-
-sievec /var/dovecot/imapsieve/before/report-ham.sieve
-sievec /var/dovecot/imapsieve/before/report-spam.sieve
-sievec /var/dovecot/sieve/before/00-wks.sieve
-sievec /var/dovecot/sieve/before/spamtest.sieve
-
-rcctl enable httpd rspamd dkimproxy_out dovecot smtpd
-rcctl start httpd rspamd dkimproxy_out dovecot smtpd
-cp -p /etc/changelist /etc/changelist-6.4
-cat /etc/changelist.local >> /etc/changelist
-rm /etc/changelist-6.3
-rm /bsd.rd-6.2
 ```
+
+Upgrade caesonia (see [Makefile](https://github.com/vedetta-com/caesonia/blob/master/Makefile).local):
+```console
+cd caesonia
+env UPGRADE=yes make install
+```
+
+OpenSSH 8.0 [new features](https://www.openbsd.org/65.html):
+> ssh(1), ssh-agent(1), ssh-add(1): Add support for ECDSA keys in PKCS#11 tokens.
+
+> ssh-keygen(1): Increase the default RSA key size to 3072 bits, following NIST Special Publication 800-57's guidance for a 128-bit equivalent symmetric security level.
 
 *n.b.*: Train rspamd with messages from all users' Spam folder (if installing new database)
 ```console
 /usr/local/bin/learn_all_spam.sh
 ```
 
-Consider using [SSH certificates](https://github.com/vedetta-com/caesonia/blob/v6.4.0-beta/usr/local/share/doc/caesonia/OpenSSH_Principals.md) and manage access to local users with principals.
-```console
-install -o root -g wheel -m 0755 -d src/usr/local/share/doc/caesonia /usr/local/share/doc/caesonia
-install -o root -g wheel -m 0644 -b src/usr/local/share/doc/caesonia/OpenSSH_Principals.md /usr/local/share/doc/caesonia/
-```
+Consider using [SSH certificates](https://github.com/vedetta-com/vedetta/blob/master/src/usr/local/share/doc/vedetta/OpenSSH_Principals.md) and manage access to local users with principals.
 
