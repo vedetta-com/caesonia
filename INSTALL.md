@@ -80,7 +80,7 @@ sh /etc/netstart $(ifconfig egress | while IFS=: read a b; do printf "%s" "$a" &
 
 Install packages:
 ```console
-pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras gnupg-2.2.10
+pkg_add dovecot dovecot-pigeonhole dkimproxy rspamd opensmtpd-extras gnupg-2.2.12
 ```
 
 *n.b.*: dovecot package comes with instructions for self-signed certificates, which are not used in this guide:
