@@ -341,7 +341,7 @@ _smtp._tls.example.com	86400	IN	TXT	"v=TLSRPTv1;rua=mailto:tlsreports@example.co
 **requires DNSSEC**
 
 Create a TLSA RR:
-```console
+```sh
 pkg_add ldns-utils
 ldns-dane create mercury.example.com 443 3 0 1
 ldns-dane create hermes.example.com 443 3 0 1
