@@ -333,16 +333,21 @@ _mta-sts.example.net	86400	IN	CNAME	_mta-sts.example.com
 
 Each domain and *virtual* domain needs a CNAME record for subdomain *mta-sts* pointing to MTA-STS policy
 ```console
-mta-sts.example.com		86400	IN	CNAME	hermes.example.com
-mta-sts.mercury.example.com	86400	IN	CNAME	hermes.example.com
-mta-sts.hermes.example.com	86400	IN	CNAME	hermes.example.com
-mta-sts.example.net		86400	IN	CNAME	hermes.example.com
+mta-sts.example.com		86400	IN	CNAME	mercury.example.com
+mta-sts.mercury.example.com	86400	IN	CNAME	mercury.example.com
+mta-sts.hermes.example.com	86400	IN	CNAME	mercury.example.com
+```
+```console
+mta-sts.example.net		86400	IN	CNAME	mercury.example.com
 ```
 
 #### SMTP TLS Reporting ([SMTP TLSRPT](https://tools.ietf.org/html/rfc8460))
 Each domain and *virtual* domain needs a TXT record for subdomain *_smtp._tls* with TLSRPT:
 ```console
 _smtp._tls.example.com	86400	IN	TXT	"v=TLSRPTv1;rua=mailto:tlsreports@example.com"
+```
+```console
+_smtp._tls.example.net	86400	IN	TXT	"v=TLSRPTv1;rua=mailto:tlsreports@example.net"
 ```
 
 #### DNS-Based Authentication of Named Entities ([DANE](https://tools.ietf.org/html/rfc7671))
@@ -415,5 +420,4 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/caesonia/sponsor/7/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/7/avatar.svg"></a>
 <a href="https://opencollective.com/caesonia/sponsor/8/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/caesonia/sponsor/9/website" target="_blank"><img src="https://opencollective.com/caesonia/sponsor/9/avatar.svg"></a>
-
 
