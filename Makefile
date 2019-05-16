@@ -239,7 +239,8 @@ config:
 		${WRKSRC}/${MAILCONF:M*relays}
 	sed -i \
 		-e '/hermes/d' \
-		${WRKSRC}/${TLSRPT:M*mta-sts.txt}
+		${WRKSRC}/${TLSRPT:M*mta-sts.txt} \
+		${WRKSRC}/${SYSCONF:M*acme-client.conf}
 	find ${WRKSRC} -type f -exec sed -i \
 		-e 's|mercury|${PRIMARY_HOST}|' \
 		{} +
