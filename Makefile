@@ -188,7 +188,7 @@ config:
 	sed -i \
 		-e '/autoconfig.example.net/{p;s|.*|		autoconfig.${_VHOSTS_NAME} \\|;}' \
 		-e '/mta-sts.example.net/{p;s|.*|		mta-sts.${_VHOSTS_NAME} \\|;}' \
-		-e '/wkd.example.net/{p;s|.*|            	wkd.${_VHOSTS_NAME} \\|;}' \
+		-e '/wkd.example.net/{p;s|.*|		wkd.${_VHOSTS_NAME} \\|;}' \
 		${WRKSRC}/${SYSCONF:M*acme-client.conf}
 	sed -i \
 		-e '/^puffy@example.net/{p;s|.*|${VIRTUAL_USER}@${_VHOSTS_NAME}		\
