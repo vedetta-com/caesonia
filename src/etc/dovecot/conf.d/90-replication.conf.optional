@@ -36,6 +36,15 @@ service aggregator {
   }
 }
 
+# The mail process statistics tracking needs access to the stats-writer socket
+service stats {
+  unix_listener stats-writer {
+    user = vmail
+    group = vmail
+    mode = 0660
+  }
+}
+
 # How many dsyncs can be run in parallel
 replication_max_conns = 10
 
