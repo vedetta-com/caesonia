@@ -326,9 +326,17 @@ Each domain needs a TXT record for subdomain *_mta-sts* with MTA-STS data:
 _mta-sts.example.com	86400	IN	TXT	"v=STSv1; id=20190515085700Z;"
 ```
 
-Each virtual domain needs a CNAME record for subdomain *_mta-sts* pointing to MTA-STS:
+Each *virtual* domain name needs a CNAME record for subdomain *_mta-sts* pointing to MTA-STS TXT record:
 ```console
 _mta-sts.example.net	86400	IN	CNAME	_mta-sts.example.com
+```
+
+Each domain and *virtual* domain needs a CNAME record for subdomain *mta-sts* pointing to MTA-STS policy
+```console
+mta-sts.example.com		86400	IN	CNAME	hermes.example.com
+mta-sts.mercury.example.com	86400	IN	CNAME	hermes.example.com
+mta-sts.hermes.example.com	86400	IN	CNAME	hermes.example.com
+mta-sts.example.net		86400	IN	CNAME	hermes.example.com
 ```
 
 #### SMTP TLS Reporting ([SMTP TLSRPT](https://tools.ietf.org/html/rfc8460))
