@@ -55,10 +55,13 @@ sysmerge
 How should I deal with this? [Leave it for later] i
 
 pkg_add -u
+syspatch
+reboot
 ```
 
 Upgrade caesonia (see [Makefile](https://github.com/vedetta-com/caesonia/blob/master/Makefile).local):
 ```console
+rm /usr/local/bin/get-ocsp.sh
 cd caesonia
 env UPGRADE=yes make install
 ```
