@@ -293,7 +293,7 @@ _dmarc.example.com	86400	IN	TXT	"v=DMARC1; p=reject; pct=100; rua=mailto:dmarcre
 ```
 
 #### SMTP MTA Strict Transport Security ([MTA-STS](https://tools.ietf.org/html/rfc8461))
-Primary domain has record type TXT for subdomain *_mta-sts* with MTA-STS reporting data
+Primary domain has record type TXT for *_mta-sts* subdomain with MTA-STS reporting data
 ```console
 _mta-sts.example.com	86400	IN	TXT	"v=STSv1; id=20190515085700Z;"
 ```
@@ -304,7 +304,7 @@ _mta-sts.mercury.example.com	86400	IN	CNAME	_mta-sts.example.com
 _mta-sts.hermes.example.com	86400	IN	CNAME	_mta-sts.example.com
 ```
 
-Each *virtual* domain has record type CNAME for subdomain *_mta-sts* pointing to MTA-STS TXT record
+Each *virtual* domain has record type CNAME for *_mta-sts* subdomain pointing to MTA-STS TXT record
 ```console
 _mta-sts.example.net	86400	IN	CNAME	_mta-sts.example.com
 ```
@@ -321,7 +321,7 @@ mta-sts.hermes.example.com	86400	IN	CNAME	mercury.example.com
 ```
 
 #### SMTP TLS Reporting ([SMTP TLSRPT](https://tools.ietf.org/html/rfc8460))
-Primary and *virtual* domains have records type TXT for subdomain *_smtp._tls* with TLS reporting data
+Primary and *virtual* domains have records type TXT for *_smtp._tls* subdomain with TLS reporting data
 ```console
 _smtp._tls.example.com	86400	IN	TXT	"v=TLSRPTv1;rua=mailto:tlsreports@example.com"
 ```
@@ -342,7 +342,7 @@ tlsa._dane.mercury.example.com	86400	IN	TLSA	3 1 1 e3b0c44298fc1c14...
 tlsa._dane.hermes.example.com	86400	IN	TLSA	3 1 1 f2c0d55309cf2d25...
 ```
 
-Primary domain has records type CNAME for each service *_tcp* MX subdomain pointing to TLSA RR
+Primary domain has records type CNAME for each *_service._tcp* MX subdomain pointing to TLSA RR
 ```console
 _993._tcp.mercury.example.com	86400	IN	CNAME	tlsa._dane.mercury.example.com
 _587._tcp.mercury.example.com	86400	IN	CNAME	tlsa._dane.mercury.example.com
