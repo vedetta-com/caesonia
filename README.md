@@ -198,7 +198,7 @@ Primary and *virtual* domains have identical records type CNAME for *autoconfig*
 autoconfig.example.com	86400	IN	CNAME	mercury.example.com
 ```
 
-#### OpenPGP Web Key Directory ([WKD](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-07))
+#### OpenPGP Web Key Directory ([WKD](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-08))
 Primary and *virtual* domains have identical records type CNAME for *wkd* subdomain pointing to Web Key Server
 ```console
 wkd.example.com		86400	IN	CNAME	mercury.example.com
