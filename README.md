@@ -314,7 +314,7 @@ Primary and *virtual* domains have identical records type CNAME for *mta-sts* su
 mta-sts.example.com		86400	IN	CNAME	mercury.example.com
 ```
 
-Primary domain has records type CNAME for each *mta-sts* MX subdomain return receipt notifications ( DSNs and MDNs) pointing to MTA-STS policy
+Primary domain has records type CNAME for each *mta-sts* MX subdomain return receipt notifications (DSNs and MDNs) pointing to MTA-STS policy
 ```console
 mta-sts.mercury.example.com	86400	IN	CNAME	mercury.example.com
 mta-sts.hermes.example.com	86400	IN	CNAME	mercury.example.com
