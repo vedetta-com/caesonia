@@ -281,14 +281,9 @@ chown -R _rspamd:_dkimproxy /etc/ssl/dkim/private
 chmod 440 /etc/ssl/dkim/private/private.key
 ```
 
-Primary and *virtual* domains have identical records type TXT for *selector* subdomain with DKIM public key
+Primary and *virtual* domains have identical records type TXT for *selector._domainkey* subdomain with DKIM public key
 ```console
 obsd._domainkey.example.com	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
-```
-
-Each *virtual* domain name needs a TXT record with the (same) public key:
-```console
-obsd._domainkey.example.net	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
 ```
 
 #### Domain-based Message Authentication, Reporting & Conformance ([DMARC](https://dmarc.org/))
