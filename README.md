@@ -92,7 +92,7 @@ make install
 *n.b.* UPGRADE uses [`sdiff`](https://man.openbsd.org/sdiff) side-by-side diff (with *new* on the right side)
 
 #### Virtual Users
-Update virtual users [credentials table](https://man.openbsd.org/table.5#Credentials_tables) [`src/etc/mail/passwd`](src/etc/mail/passwd) using [`smtpctl encrypt`](https://man.openbsd.org/smtpctl#encrypt):
+Update virtual users [credentials table](https://man.openbsd.org/table.5#Credentials_tables) [`src/etc/mail/passwd`](src/etc/mail/passwd) using [`smtpctl encrypt`](https://man.openbsd.org/smtpctl#encrypt)
 ```console
 smtpctl encrypt
 > secret
@@ -102,19 +102,19 @@ vi src/etc/mail/passwd
 smtpctl update table passwd
 ```
 
-*n.b.*: user [quota](src/etc/dovecot/conf.d/90-quota.conf) limit can be [overriden](src/etc/dovecot/conf.d/auth-passwdfile.conf.ext) from [src/etc/mail/passwd](src/etc/mail/passwd):
+*n.b.*: user [quota](src/etc/dovecot/conf.d/90-quota.conf) limit can be [overriden](src/etc/dovecot/conf.d/auth-passwdfile.conf.ext) from [src/etc/mail/passwd](src/etc/mail/passwd)
 ```console
 puffy@example.com:$2b$...encrypted...passphrase...::::::userdb_quota_rule=*:storage=7G
 ```
 
-Review [virtual domains](https://man.openbsd.org/makemap#VIRTUAL_DOMAINS) [aliasing table](https://man.openbsd.org/table.5#Aliasing_tables) [`src/etc/mail/virtual`](src/etc/mail/virtual).
+Review [virtual domains](https://man.openbsd.org/makemap#VIRTUAL_DOMAINS) [aliasing table](https://man.openbsd.org/table.5#Aliasing_tables) [`src/etc/mail/virtual`](src/etc/mail/virtual)
 
 *n.b.* see [Administration](https://github.com/vedetta-com/caesonia/blob/master/INSTALL.md#administration) for virtual user and domain management
 
 #### Backup MX
 *n.b.* Without backup MX, leave BACKUP_HOST empty in "Makefile.local"
 
-Dovecot Replication user "dsync" [SSH](src/etc/ssh/sshd_config) limited to one "[command](src/home/dsync/.ssh/authorized_keys)" restricted in [`doas.conf`](src/etc/doas.conf) to match "[dsync_remote_cmd](src/etc/dovecot/conf.d/90-replication.conf.optional)". On primary and backup hosts:
+Dovecot Replication user "dsync" [SSH](src/etc/ssh/sshd_config) limited to one "[command](src/home/dsync/.ssh/authorized_keys)" restricted in [`doas.conf`](src/etc/doas.conf) to match "[dsync_remote_cmd](src/etc/dovecot/conf.d/90-replication.conf.optional)". On primary and backup hosts
 
 ```console
 su - dsync
@@ -126,7 +126,7 @@ exit
 
 Alternatively, [OpenSSH certificates](https://github.com/vedetta-com/vedetta/blob/master/src/usr/local/share/doc/vedetta/OpenSSH_Principals.md) allow fine-grained control to local users and hosts. The `force-command` is passed to ssh-keygen as certificate option (-O) instead of using "authorized_keys".
 
-Update [/home/dsync](src/home/dsync), on primary and backup hosts:
+Update [/home/dsync](src/home/dsync), on primary and backup hosts
 ```console
 chown -R root:dsync /home/dsync
 chmod 750 /home/dsync/.ssh
@@ -135,7 +135,7 @@ chmod 400 /home/dsync/.ssh/{id_ecdsa,id_ed25519,id_rsa}
 chown dsync /home/dsync/.ssh/{id_ecdsa,id_ed25519,id_rsa}
 ```
 
-Update [`/root/.ssh/known_hosts`](src/root/.ssh/known_hosts) on primary and backup hosts:
+Update [`/root/.ssh/known_hosts`](src/root/.ssh/known_hosts) on primary and backup hosts
 ```console
 ssh -4 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
 ssh -6 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
@@ -167,7 +167,7 @@ A DNS name server (from a registrar, a free service, VPS host, or [self-hosted](
 
 *n.b.* see [example zone](https://github.com/vedetta-com/dithematic/blob/master/src/usr/local/share/examples/dithematic/example.com.zone)
 
-**DNSSEC is strongly recommended**
+**DNSSEC is [recommended](https://www.icann.org/news/announcement-2019-02-22-en)**
 
 #### Forward-confirmed reverse DNS ([FCrDNS](https://tools.ietf.org/html/draft-ietf-dnsop-reverse-mapping-considerations-06))
 Primary domain has record types A, and AAAA for each MX subdomain with the relays' IPv4, and IPv6
@@ -330,8 +330,8 @@ Primary and *virtual* domains have records type TXT for subdomain *_smtp._tls* w
 _smtp._tls.example.com	86400	IN	TXT	"v=TLSRPTv1;rua=mailto:tlsreports@example.com"
 ```
 
-#### DNS-Based Authentication of Named Entities ([DANE](https://tools.ietf.org/html/rfc7671))
-**requires DNSSEC** and manual TLS key rotation using the procedure form RFC7671
+#### SMTP Security via Opportunistic DNS-Based Authentication of Named Entities ([DANE](https://tools.ietf.org/html/rfc7671)) Transport Layer Security ([TLS](https://tools.ietf.org/html/rfc7672))
+**requires DNSSEC** and manual server key rotation using the procedure form rfc7671
 
 Print each relay's TLSA resource record
 ```sh
