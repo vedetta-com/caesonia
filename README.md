@@ -262,6 +262,7 @@ example.com		86400	IN	TXT	"v=spf1 mx:example.com -all"
 ```
 
 Primary domain has record type TXT for each MX subdomain return receipt notifications (DSNs and MDNs) with relays' IP SPF data
+```console
 mercury.example.com	86400	IN	TXT	"v=spf1 a -all"
 hermes.example.com	86400	IN	TXT	"v=spf1 a -all"
 ```
