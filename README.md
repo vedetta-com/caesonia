@@ -163,7 +163,7 @@ ssh -6 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
   - Password: ********
 
 ## Prerequisites
-A DNS name server (from a registrar, a free service, VPS host, or [self-hosted](https://github.com/vedetta-com/dithematic)) is required, which allows editing the following record types: [A](#forward-confirmed-reverse-dns-fcrdns), [AAAA](#forward-confirmed-reverse-dns-fcrdns), [CNAME](#mozilla-autoconfiguration), [SRV](#srv-records-for-locating-email-services), [MX](#mail-exchanger-mx), [CAA](#certification-authority-authorization-caa), [SSHFP](#secure-shell-fingerprint-sshfp), [TXT](#sender-policy-framework-spf)
+A DNS name server (from a registrar, a free service, VPS host, or [self-hosted](https://github.com/vedetta-com/dithematic)) is required, which allows editing the following record types: [A](#forward-confirmed-reverse-dns-fcrdns), [AAAA](#forward-confirmed-reverse-dns-fcrdns), [MX](#mail-exchanger-mx), [CNAME](#mozilla-autoconfiguration), [SRV](#srv-records-for-locating-email-services), [CAA](#certification-authority-authorization-caa), [SSHFP](#secure-shell-fingerprint-sshfp), [TXT](#sender-policy-framework-spf)
 
 *n.b.* see [example zone](https://github.com/vedetta-com/dithematic/blob/master/src/usr/local/share/examples/dithematic/example.com.zone)
 
@@ -190,6 +190,13 @@ dig +short mercury.example.com aaaa
 > 2001:0db8::1
 dig +short -x 2001:0db8::1
 > mercury.example.com.
+```
+
+#### Mail eXchanger ([MX](https://tools.ietf.org/html/rfc5321))
+Primary and *virtual* domains have identical records type MX with priority and relay hostnames
+```console
+example.com	86400	IN	MX	10 mercury.example.com
+example.com	86400	IN	MX	20 hermes.example.com
 ```
 
 #### Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration)
@@ -225,13 +232,6 @@ _pop3._tcp.example.com		86400	IN	SRV	0 0 0	.
 _pop3s._tcp.example.com		86400	IN	SRV	0 0 0	.
 ```
 
-#### Mail eXchanger ([MX](https://tools.ietf.org/html/rfc5321))
-Primary and *virtual* domains have identical MX records with priority and relay hostnames
-```console
-example.com	86400	IN	MX	10 mercury.example.com
-example.com	86400	IN	MX	20 hermes.example.com
-```
-
 #### Certification Authority Authorization ([CAA](https://tools.ietf.org/html/rfc6844))
 Primary and *virtual* domains have identical records type CAA with *[letsencrypt.org](https://letsencrypt.org/)* as the only CA allowed to issue certificates
 ```console
@@ -245,7 +245,7 @@ Print the SSHFP fingerprint resource record on each hostname
 ssh-keygen -r mercury.example.com
 ```
 
-Primary domain has record type SSHFP for each MX subdomain with a fingerprint of the server's public key
+Primary domain has records type SSHFP for each MX subdomain with a fingerprint of the server's public key
 ```console
 mercury.example.com	86400	IN	SSHFP	1 1 2...
 mercury.example.com	86400	IN	SSHFP	1 2 5...
@@ -303,7 +303,7 @@ _mta-sts.example.com	86400	IN	TXT	"v=STSv1; id=20190515085700Z;"
 ```
 
 Primary domain has records type CNAME for each *_mta-sts* MX subdomain return receipt notifications (DSNs and MDNs) pointing to MTA-STS TXT record
-```
+```console
 _mta-sts.mercury.example.com	86400	IN	CNAME	_mta-sts.example.com
 _mta-sts.hermes.example.com	86400	IN	CNAME	_mta-sts.example.com
 ```
