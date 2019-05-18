@@ -51,7 +51,7 @@ e.g. puffy@mercury.example.com is wheel, with an alias mapped to (virtual) puffy
 
 See the [**Installation Guide**](INSTALL.md) for details.
 
-Grab a copy of this repository, and put overrides in "Makefile.local" e.g.:
+Grab a copy of this repository, and put overrides in "[Makefile](Makefile).local" e.g.:
 ```console
 # Makefile.local
 
@@ -170,12 +170,12 @@ A DNS name server (from a registrar, a free service, VPS host, or [self-hosted](
 **DNSSEC is strongly recommended**
 
 #### Forward-confirmed reverse DNS ([FCrDNS](https://tools.ietf.org/html/draft-ietf-dnsop-reverse-mapping-considerations-06))
-Each MX subdomain has record types A, and AAAA with the VPS' IPv4, and IPv6:
+Primary domain has record types A, and AAAA for each MX subdomain with the relays' IPv4, and IPv6
 ```console
 mercury.example.com	86400	IN	A	203.0.113.1
 mercury.example.com	86400	IN	AAAA	2001:0db8::1
 ```
-Each IPv4 and IPv6 has record type PTR with the MX subdomain (reverse DNS configured on VPS host):
+Each IPv4 and IPv6 has record type PTR with the MX subdomain (reverse DNS configured on VPS host)
 ```console
 ...6				IN	PTR 	mercury.example.com
 ```
@@ -193,40 +193,30 @@ dig +short -x 2001:0db8::1
 ```
 
 #### Mozilla [Autoconfiguration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration)
-Each autoconfig subdomain has record type CNAME pointing to Autoconfiguration server:
+Primary and *virtual* domains have identical records type CNAME for *autoconfig* subdomain pointing to Autoconfiguration server
 ```console
 autoconfig.example.com	86400	IN	CNAME	mercury.example.com
 ```
 
-Each *virtual* autoconfig subdomain has record type CNAME pointing to Autoconfiguration server:
-```console
-autoconfig.example.net	86400	IN	CNAME	mercury.example.com
-```
-
 #### OpenPGP Web Key Directory ([WKD](https://tools.ietf.org/html/draft-koch-openpgp-webkey-service-07))
-Each WKD subdomain has record type CNAME pointing to Web Key Server:
+Primary and *virtual* domains have identical records type CNAME for *wkd* subdomain pointing to Web Key Server
 ```console
 wkd.example.com		86400	IN	CNAME	mercury.example.com
 ```
 
-Each *virtual* WKD subdomain has record type CNAME pointing to Web Key Server:
-```console
-wkd.example.net		86400	IN	CNAME	mercury.example.com
-```
-
 #### SRV Records for OpenPGP [Web Key Directory](https://wiki.gnupg.org/WKD)
-Each domain has record type SRV for WKD subdomain
+Primary domain has record type SRV with primary WKD subdomain
 ```console
 _openpgpkey._tcp.example.com	86400	IN	SRV	0 0 443	wkd.example.com
 ```
 
-Each *virtual* domain has record type SRV for *virtual* WKD subdomain
+Each *virtual* domain has record type SRV with *virtual* WKD subdomain
 ```console
 _openpgpkey._tcp.example.net	86400	IN	SRV	0 0 443	wkd.example.net
 ```
 
 #### SRV Records for [Locating Email Services](https://tools.ietf.org/html/rfc6186)
-Each domain and *virtual* domain has record types SRV for simple MUA auto-configuration:
+Primary and *virtual* domains have identical records type SRV for simple MUA auto-configuration
 ```console
 _submission._tcp.example.com	86400	IN	SRV	0 1 587	mercury.example.com
 _imap._tcp.example.com		86400	IN	SRV	0 0 0	.
@@ -236,34 +226,26 @@ _pop3s._tcp.example.com		86400	IN	SRV	0 0 0	.
 ```
 
 #### Mail eXchanger ([MX](https://tools.ietf.org/html/rfc5321))
-Each domain has first priority MX record *mercury.example.com*
-
-Each domain has second priority MX record *hermes.example.com*
+Primary and *virtual* domains have identical MX records with priority and relay hostnames
 ```console
 example.com	86400	IN	MX	10 mercury.example.com
 example.com	86400	IN	MX	20 hermes.example.com
 ```
 
-Each *virtual* domain has first priority MX record *mercury.example.com*
-
-Each *virtual* domain has second priority MX record *hermes.example.com*
-```console
-example.net	86400	IN	MX	10 mercury.example.com
-example.net	86400	IN	MX	20 hermes.example.com
-```
-
 #### Certification Authority Authorization ([CAA](https://tools.ietf.org/html/rfc6844))
-Primary domain name's CAA record sets *[letsencrypt.org](https://letsencrypt.org/)* as the only CA allowed to issue certificates:
+Primary and *virtual* domains have identical records type CAA with *[letsencrypt.org](https://letsencrypt.org/)* as the only CA allowed to issue certificates
 ```console
 example.com	86400	IN	CAA	128 issue "letsencrypt.org"
 example.com	86400	IN	CAA	128 issuewild ";"
 ```
 
 #### Secure Shell Fingerprint ([SSHFP](https://man.openbsd.org/ssh#VERIFYING_HOST_KEYS))
-Each MX subdomain needs their hosts's SSHFP records:
+Print the SSHFP fingerprint resource record on each hostname
 ```sh
 ssh-keygen -r mercury.example.com
 ```
+
+Primary domain has record type SSHFP for each MX subdomain with a fingerprint of the server's public key
 ```console
 mercury.example.com	86400	IN	SSHFP	1 1 2...
 mercury.example.com	86400	IN	SSHFP	1 2 5...
@@ -273,33 +255,32 @@ mercury.example.com	86400	IN	SSHFP	4 1 7...
 mercury.example.com	86400	IN	SSHFP	4 2 a...
 ```
 
-#### Sender Policy Framework ([SPF](http://www.openspf.org/))
-Each domain and subdomain needs a TXT record with SPF data:
+#### Sender Policy Framework ([SPF](https://tools.ietf.org/html/rfc7208))
+Primary and *virtual* domains have identical records type TXT with primary domain SPF data
 ```console
 example.com		86400	IN	TXT	"v=spf1 mx:example.com -all"
+```
+
+Primary domain has record type TXT for each MX subdomain return receipt notifications (DSNs and MDNs) with relays' IP SPF data
 mercury.example.com	86400	IN	TXT	"v=spf1 a -all"
 hermes.example.com	86400	IN	TXT	"v=spf1 a -all"
 ```
 
-Each *virtual* domain and *virtual* subdomain needs a TXT record with SPF data:
-```console
-example.net		86400	IN	TXT	"v=spf1 mx:example.com -all"
-```
-
 #### Domain Keys Identified Mail ([DKIM](http://www.dkim.org))
-Generate a private and public key:
+Generate a private and public key
 ```sh
 mkdir -p /etc/ssl/dkim/private
 chmod 750 /etc/ssl/dkim/private
 ```
-Some DNS web-interfaces allow TXT record with max **1024** bits [key](https://tools.ietf.org/html/rfc8301#section-3.2) or split ("") RR:
+*n.b.* some DNS web-interfaces allow TXT record with max **1024** bits [key](https://tools.ietf.org/html/rfc8301#section-3.2) or split ("") RR
 ```sh
 openssl genrsa -out /etc/ssl/dkim/private/private.key 2048
 openssl rsa -in /etc/ssl/dkim/private/private.key -pubout -out /etc/ssl/dkim/public.key
 chown -R _rspamd:_dkimproxy /etc/ssl/dkim/private
 chmod 440 /etc/ssl/dkim/private/private.key
 ```
-Add public key in TXT record:
+
+Primary and *virtual* domains have identical records type TXT for *selector* subdomain with DKIM public key
 ```console
 obsd._domainkey.example.com	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
 ```
@@ -310,63 +291,62 @@ obsd._domainkey.example.net	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
 ```
 
 #### Domain-based Message Authentication, Reporting & Conformance ([DMARC](https://dmarc.org/))
-Each domain name needs a TXT record for subdomain *_dmarc* with DMARC data:
+Primary and *virtual* domains have record type TXT for *_dmarc* subdomain with DMARC policy data
 ```console
 _dmarc.example.com	86400	IN	TXT	"v=DMARC1; p=reject; pct=100; rua=mailto:dmarcreports@example.com"
 ```
 
-Each *virtual* domain name needs a TXT record for subdomain *_dmarc* with DMARC data:
-```console
-_dmarc.example.net	86400	IN	TXT	"v=DMARC1; p=reject; pct=100; rua=mailto:dmarcreports@example.net"
-```
-
 #### SMTP MTA Strict Transport Security ([MTA-STS](https://tools.ietf.org/html/rfc8461))
-Each domain needs a TXT record for subdomain *_mta-sts* with MTA-STS data:
+Primary domain has record type TXT for subdomain *_mta-sts* with MTA-STS reporting data
 ```console
 _mta-sts.example.com	86400	IN	TXT	"v=STSv1; id=20190515085700Z;"
 ```
 
-Each *virtual* domain name needs a CNAME record for subdomain *_mta-sts* pointing to MTA-STS TXT record:
+Primary domain has records type CNAME for each *_mta-sts* MX subdomain return receipt notifications (DSNs and MDNs) pointing to MTA-STS TXT record
+```
+_mta-sts.mercury.example.com	86400	IN	CNAME	_mta-sts.example.com
+_mta-sts.hermes.example.com	86400	IN	CNAME	_mta-sts.example.com
+```
+
+Each *virtual* domain has record type CNAME for subdomain *_mta-sts* pointing to MTA-STS TXT record
 ```console
 _mta-sts.example.net	86400	IN	CNAME	_mta-sts.example.com
 ```
 
-Each domain and *virtual* domain needs a CNAME record for subdomain *mta-sts* pointing to MTA-STS policy
+Primary and *virtual* domains have identical records type CNAME for *mta-sts* subdomain pointing to MTA-STS policy
 ```console
 mta-sts.example.com		86400	IN	CNAME	mercury.example.com
+```
+
+Primary domain has records type CNAME for each *mta-sts* MX subdomain return receipt notifications ( DSNs and MDNs) pointing to MTA-STS policy
+```console
 mta-sts.mercury.example.com	86400	IN	CNAME	mercury.example.com
 mta-sts.hermes.example.com	86400	IN	CNAME	mercury.example.com
 ```
-```console
-mta-sts.example.net		86400	IN	CNAME	mercury.example.com
-```
 
 #### SMTP TLS Reporting ([SMTP TLSRPT](https://tools.ietf.org/html/rfc8460))
-Each domain and *virtual* domain needs a TXT record for subdomain *_smtp._tls* with TLSRPT:
+Primary and *virtual* domains have records type TXT for subdomain *_smtp._tls* with TLS reporting data
 ```console
 _smtp._tls.example.com	86400	IN	TXT	"v=TLSRPTv1;rua=mailto:tlsreports@example.com"
-```
-```console
-_smtp._tls.example.net	86400	IN	TXT	"v=TLSRPTv1;rua=mailto:tlsreports@example.net"
 ```
 
 #### DNS-Based Authentication of Named Entities ([DANE](https://tools.ietf.org/html/rfc7671))
 **requires DNSSEC** and manual TLS key rotation using the procedure form RFC7671
 
-Create a TLSA RR:
+Print each relay's TLSA resource record
 ```sh
 pkg_add ldns-utils
 ldns-dane create mercury.example.com 443 3 1 1
 ldns-dane create hermes.example.com 443 3 1 1
 ```
 
-Each domain needs a TLSA record for subdomain "_dane":
+Primary domain has records type TLSA for each *tlsa._dane* MX subdomain
 ```console
 tlsa._dane.mercury.example.com	86400	IN	TLSA	3 1 1 e3b0c44298fc1c14...
 tlsa._dane.hermes.example.com	86400	IN	TLSA	3 1 1 f2c0d55309cf2d25...
 ```
 
-Each domain needs a CNAME record for subdomain "_tcp" pointing to TLSA:
+Primary domain has records type CNAME for each service *_tcp* MX subdomain pointing to TLSA RR
 ```console
 _993._tcp.mercury.example.com	86400	IN	CNAME	tlsa._dane.mercury.example.com
 _587._tcp.mercury.example.com	86400	IN	CNAME	tlsa._dane.mercury.example.com
