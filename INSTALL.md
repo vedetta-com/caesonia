@@ -551,6 +551,14 @@ rcctl restart sshd httpd dkimproxy_out rspamd dovecot smtpd
   - Poll when connecting for push :ballot_box_with_check:
 
 - SMTP server: mercury.example.com (or hermes.example.com)
+  - Security: TLS
+  - Port: 465
+  - Require sign-in :ballot_box_with_check:
+  - Username: puffy@example.com
+  - Authentication: Normal password
+  - Password: ********
+
+- SMTP server: mercury.example.com (or hermes.example.com)
   - Security: STARTTLS
   - Port: 587
   - Require sign-in :ballot_box_with_check:
