@@ -233,9 +233,10 @@ _openpgpkey._tcp.example.net	86400	IN	SRV	0 0 443	wkd.example.net
 #### SRV Records for [Locating Email Services](https://tools.ietf.org/html/rfc6186)
 Primary and *virtual* domains have identical records type SRV for simple MUA auto-configuration
 ```console
-_submission._tcp.example.com	86400	IN	SRV	0 1 587	mercury.example.com
-_imap._tcp.example.com		86400	IN	SRV	0 0 0	.
+_submission._tcp.example.com	86400	IN	SRV	0 1 465 mercury.example.com
+_submission._tcp.example.com	86400	IN	SRV	5 1 587	mercury.example.com
 _imaps._tcp.example.com		86400	IN	SRV	0 1 993	mercury.example.com
+_imap._tcp.example.com		86400	IN	SRV	0 0 0   .
 _pop3._tcp.example.com		86400	IN	SRV	0 0 0	.
 _pop3s._tcp.example.com		86400	IN	SRV	0 0 0	.
 ```
