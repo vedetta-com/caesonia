@@ -261,7 +261,7 @@ Primary and *virtual* domains have identical records type TXT with primary domai
 example.com		86400	IN	TXT	"v=spf1 mx:example.com -all"
 ```
 
-Primary domain has record type TXT for each MX subdomain to return receipt notifications (DSNs and MDNs) with relays' IP SPF data
+Primary domain has record type TXT for each MX subdomain, to return receipt notifications (DSNs and MDNs), with relays' IP SPF data
 ```console
 mercury.example.com	86400	IN	TXT	"v=spf1 a -all"
 hermes.example.com	86400	IN	TXT	"v=spf1 a -all"
