@@ -237,8 +237,8 @@ _submission._tcp.example.com	86400	IN	SRV	0 1 465 mercury.example.com
 _submission._tcp.example.com	86400	IN	SRV	5 1 587	mercury.example.com
 _imaps._tcp.example.com		86400	IN	SRV	0 1 993	mercury.example.com
 _imap._tcp.example.com		86400	IN	SRV	0 0 0   .
+_pop3s._tcp.example.com		86400	IN	SRV	0 0 0   .
 _pop3._tcp.example.com		86400	IN	SRV	0 0 0	.
-_pop3s._tcp.example.com		86400	IN	SRV	0 0 0	.
 ```
 
 #### Certification Authority Authorization ([CAA](https://tools.ietf.org/html/rfc6844))
