@@ -261,7 +261,7 @@ Primary and *virtual* domains have identical records type TXT with primary domai
 example.com		86400	IN	TXT	"v=spf1 mx:example.com -all"
 ```
 
-Primary domain has record type TXT for each MX subdomain return receipt notifications (DSNs and MDNs) with relays' IP SPF data
+Primary domain has record type TXT for each MX subdomain, to return receipt notifications (DSNs and MDNs), with relays' IP SPF data
 ```console
 mercury.example.com	86400	IN	TXT	"v=spf1 a -all"
 hermes.example.com	86400	IN	TXT	"v=spf1 a -all"
@@ -298,12 +298,6 @@ Primary domain has record type TXT for *_mta-sts* subdomain with MTA-STS reporti
 _mta-sts.example.com	86400	IN	TXT	"v=STSv1; id=20190515085700Z;"
 ```
 
-Primary domain has records type CNAME for each *_mta-sts* MX subdomain return receipt notifications (DSNs and MDNs) pointing to MTA-STS TXT record
-```console
-_mta-sts.mercury.example.com	86400	IN	CNAME	_mta-sts.example.com
-_mta-sts.hermes.example.com	86400	IN	CNAME	_mta-sts.example.com
-```
-
 Each *virtual* domain has record type CNAME for *_mta-sts* subdomain pointing to MTA-STS TXT record
 ```console
 _mta-sts.example.net	86400	IN	CNAME	_mta-sts.example.com
@@ -311,13 +305,7 @@ _mta-sts.example.net	86400	IN	CNAME	_mta-sts.example.com
 
 Primary and *virtual* domains have identical records type CNAME for *mta-sts* subdomain pointing to MTA-STS policy
 ```console
-mta-sts.example.com		86400	IN	CNAME	mercury.example.com
-```
-
-Primary domain has records type CNAME for each *mta-sts* MX subdomain return receipt notifications (DSNs and MDNs) pointing to MTA-STS policy
-```console
-mta-sts.mercury.example.com	86400	IN	CNAME	mercury.example.com
-mta-sts.hermes.example.com	86400	IN	CNAME	mercury.example.com
+mta-sts.example.com	86400	IN	CNAME	mercury.example.com
 ```
 
 #### SMTP TLS Reporting ([SMTP TLSRPT](https://tools.ietf.org/html/rfc8460))
