@@ -310,9 +310,9 @@ realinstall:
 	${INSTALL} -d ${BASESYSCONFDIR}/ssl/dkim/private
 .for _NAME in ${DOMAIN_NAME} ${VHOSTS_NAME}
 	${INSTALL} -d ${VARBASE}/lib/gnupg/wks/${_NAME}/pending
-	ln -sf /var/www/openpgpkey/hu \
+	ln -sf ${VARBASE}/www/openpgpkey/hu \
 		${VARBASE}/lib/gnupg/wks/${_NAME}
-	ln -sf /var/www/openpgpkey/submission-address \
+	ln -sf ${VARBASE}/www/openpgpkey/submission-address \
 		${VARBASE}/lib/gnupg/wks/${_NAME}
 .endfor
 .for _CAESONIA in ${CAESONIA:N*cron/tabs*}
@@ -326,7 +326,7 @@ afterinstall:
 	crontab -u root ${WRKSRC}/${CRONTAB}
 .endif
 	group info -e vmail || user info -e vmail \
-	|| user add -u 2000 -g =uid -c "Virtual Mail" -s /sbin/nologin -b /var -m vmail
+	|| user add -u 2000 -g =uid -c "Virtual Mail" -s /sbin/nologin -b ${VARBASE} -m vmail
 .if !empty(BACKUP_HOST)
 	group info -e dsync || user info -e dsync \
 	|| user add -u 2001 -g =uid -c "Dsync Replication" -s /bin/ksh -m dsync
@@ -338,14 +338,14 @@ afterinstall:
 .for _SIEVE in ${SIEVE}
 	sievec /${_SIEVE}
 .endfor
-	doas -u vmail /usr/bin/env -i HOME=/var/vmail \
+	doas -u vmail /usr/bin/env -i HOME=${VARBASE}/vmail \
 		gpg2 -K --with-wkd-hash key-submission@${DOMAIN_NAME} || \
-		doas -u vmail /usr/bin/env -i HOME=/var/vmail \
-			gpg2 --batch --passphrase "" --quick-gen-key key-submission@${DOMAIN_NAME}
+			doas -u vmail /usr/bin/env -i HOME=${VARBASE}/vmail \
+				gpg2 --batch --passphrase "" --quick-gen-key key-submission@${DOMAIN_NAME}
 	chown vmail ${VARBASE}/www/openpgpkey/hu
 	[[ -r ${VARBASE}/www/openpgpkey/hu/54f6ry7x1qqtpor16txw5gdmdbbh6a73 ]] || \
-		doas -u vmail /usr/bin/env -i HOME=/var/vmail \
-			gpg2 -o ${VARBASE}/lib/gnupg/wks/${DOMAIN_NAME}/hu/54f6ry7x1qqtpor16txw5gdmdbbh6a73 \
+		doas -u vmail /usr/bin/env -i HOME=${VARBASE}/vmail \
+		gpg2 -o ${VARBASE}/lib/gnupg/wks/${DOMAIN_NAME}/hu/54f6ry7x1qqtpor16txw5gdmdbbh6a73 \
 			--export-options export-minimal --export key-submission@${DOMAIN_NAME}
 	[[ -r ${BASESYSCONFDIR}/ssl/dkim/private/private.key ]] || (umask 077; \
 		openssl genrsa -out ${BASESYSCONFDIR}/ssl/dkim/private/private.key 2048; \
