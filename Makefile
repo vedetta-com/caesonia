@@ -341,7 +341,7 @@ afterinstall:
 	doas -u vmail /usr/bin/env -i HOME=${VARBASE}/vmail \
 		gpg2 -K --with-wkd-hash key-submission@${DOMAIN_NAME} || \
 			doas -u vmail /usr/bin/env -i HOME=${VARBASE}/vmail \
-				gpg2 --batch --passphrase "" --quick-gen-key key-submission@${DOMAIN_NAME}
+			gpg2 --batch --passphrase "" --quick-gen-key key-submission@${DOMAIN_NAME}
 	chown vmail ${VARBASE}/www/openpgpkey/hu
 	[[ -r ${VARBASE}/www/openpgpkey/hu/54f6ry7x1qqtpor16txw5gdmdbbh6a73 ]] || \
 		doas -u vmail /usr/bin/env -i HOME=${VARBASE}/vmail \
