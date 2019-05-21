@@ -310,7 +310,6 @@ realinstall:
 	${INSTALL} -d ${BASESYSCONFDIR}/ssl/dkim/private
 .for _NAME in ${DOMAIN_NAME} ${VHOSTS_NAME}
 	${INSTALL} -d ${VARBASE}/lib/gnupg/wks/${_NAME}/pending
-	cd ${VARBASE}/lib/gnupg/wks/${_NAME}
 	ln -sf /var/www/openpgpkey/hu \
 		${VARBASE}/lib/gnupg/wks/${_NAME}
 	ln -sf /var/www/openpgpkey/submission-address \
