@@ -19,7 +19,7 @@ HOME=/var/log
 30	5	1	*	*	/bin/sh /etc/monthly
 #0	*	*	*	*	sleep $((RANDOM \% 2048)) && /usr/libexec/spamd-setup
 # list available patches
-30	9	*	*	*	syspatch -c; ; fw_update -i
+30	9	*	*	*	syspatch -c; fw_update -i
 # expire non confirmed publication requests
 30	11	*	*	*	doas -u vmail /usr/bin/env -i HOME=/var/vmail /usr/local/bin/gpg-wks-server --cron
 @reboot					echo "Reboot $(date)"
