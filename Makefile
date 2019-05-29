@@ -288,7 +288,7 @@ clean:
 	@rm -r ${WRKSRC}
 
 beforeinstall: upgrade
-	rcctl stop httpd dkimproxy_out rspamd dovecot smtpd || [[ "$$?" -eq 1 ]]
+	-rcctl stop smtpd httpd dkimproxy_out rspamd dovecot
 .for _PKG in ${PKG}
 	env PKG_PATH= pkg_info ${_PKG} > /dev/null || pkg_add ${_PKG}
 .endfor
@@ -325,14 +325,14 @@ afterinstall:
 .if !empty(CRONTAB)
 	crontab -u root ${WRKSRC}/${CRONTAB}
 .endif
-	group info -e vmail || user info -e vmail \
-	|| user add -u 2000 -g =uid -c "Virtual Mail" -s /sbin/nologin -b ${VARBASE} -m vmail
+	user info -e vmail \
+		|| user add -u 2000 -g =uid -c "Virtual Mail" -s /sbin/nologin -b ${VARBASE} -m vmail
 .if !empty(BACKUP_HOST)
-	group info -e dsync || user info -e dsync \
-	|| user add -u 2001 -g =uid -c "Dsync Replication" -s /bin/ksh -m dsync
+	user info -e dsync \
+		|| user add -u 2001 -g =uid -c "Dsync Replication" -s /bin/ksh -m dsync
 .endif
 	[[ -r ${BASESYSCONFDIR}/changelist-${RELEASE} ]] \
-	|| cp ${BASESYSCONFDIR}/changelist ${BASESYSCONFDIR}/changelist-${RELEASE}
+		|| cp ${BASESYSCONFDIR}/changelist ${BASESYSCONFDIR}/changelist-${RELEASE}
 	sed -i '/changelist.local/,$$d' ${BASESYSCONFDIR}/changelist
 	cat ${BASESYSCONFDIR}/changelist.local >> ${BASESYSCONFDIR}/changelist
 .for _SIEVE in ${SIEVE}
@@ -356,7 +356,7 @@ afterinstall:
 	mtree -qef ${BASESYSCONFDIR}/mtree/special.local -p / -U
 	pfctl -f /etc/pf.conf
 	rcctl disable check_quotas sndiod
-	rcctl check sndiod && rcctl stop sndiod || [[ "$$?" -eq 1 ]]
+	-rcctl check sndiod && rcctl stop sndiod
 	rcctl enable unbound sshd httpd dkimproxy_out rspamd dovecot smtpd
 	rcctl restart unbound sshd httpd
 	ftp -o - https://${HOSTNAME}/index.html \
