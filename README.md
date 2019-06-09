@@ -282,17 +282,26 @@ Generate a private and public key
 mkdir -p /etc/ssl/dkim/private
 chmod 750 /etc/ssl/dkim/private
 ```
-*n.b.* some DNS web-interfaces allow TXT record with max **1024** bits [key](https://tools.ietf.org/html/rfc8301#section-3.2) or split ("") RR
+> Signers SHOULD use RSA keys of at least 2048 bits. -- https://tools.ietf.org/html/rfc8301#section-3.2
+
 ```sh
-openssl genrsa -out /etc/ssl/dkim/private/private.key 2048
+(umask 337; openssl genrsa -out /etc/ssl/dkim/private/private.key 2048)
 openssl rsa -in /etc/ssl/dkim/private/private.key -pubout -out /etc/ssl/dkim/public.key
 chown -R _rspamd:_dkimproxy /etc/ssl/dkim/private
-chmod 440 /etc/ssl/dkim/private/private.key
 ```
 
-Generate content for TXT records
+> Widely used DNS configuration software places a practical limit on key sizes, because the software only handles a single 256-octet string in a TXT record, and RSA keys significantly longer than 1024 bits don't fit in 256 octets. -- https://tools.ietf.org/html/rfc8301#section-1
+
+> Multiple strings in a single DNS record are useful in constructing records that would exceed the 255-byte maximum length of a string within a single TXT RR record -- https://tools.ietf.org/html/rfc4408#section-3.1.3
+
+Generate the TXT-DATA field for DKIM TXT record
 ```sh
-echo "v=DKIM1; k=rsa; p=$(cat /etc/ssl/dkim/public.key | sed '1d' | sed '$d' | tr -d '\n')"
+echo "v=DKIM1; k=rsa; p=$(sed -e '1d' -e '$d' /etc/ssl/dkim/public.key | tr -d '\n')"
+```
+
+Alternatively
+```sh
+(umask 337; rspamadm dkim_keygen -d example.com -s 'obsd' -k /etc/ssl/dkim/private/private.key -b 2048 -t rsa > /etc/ssl/dkim/public.key)
 ```
 
 Primary and *virtual* domains have identical records type TXT for *selector._domainkey* subdomain with DKIM public key
