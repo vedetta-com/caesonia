@@ -306,7 +306,10 @@ Alternatively
 
 Primary and *virtual* domains have identical records type TXT for *selector._domainkey* subdomain with DKIM public key
 ```console
-obsd._domainkey.example.com	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
+obsd._domainkey.example.com	86400	IN	TXT	( "v=DKIM1; k=rsa; "
+	"p=abcd"
+	"ef"
+) ;
 ```
 
 #### Domain-based Message Authentication, Reporting & Conformance ([DMARC](https://dmarc.org/))
