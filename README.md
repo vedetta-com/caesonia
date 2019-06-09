@@ -292,7 +292,7 @@ chown -R _rspamd:_dkimproxy /etc/ssl/dkim/private
 
 > Widely used DNS configuration software places a practical limit on key sizes, because the software only handles a single 256-octet string in a TXT record, and RSA keys significantly longer than 1024 bits don't fit in 256 octets. -- https://tools.ietf.org/html/rfc8301#section-1
 
-> Multiple strings in a single DNS record are useful in constructing records that would exceed the 255-byte maximum length of a string within a single TXT RR record -- https://tools.ietf.org/html/rfc4408#section-3.1.3
+> Multiple strings in a single DNS record are useful in constructing records that would exceed the 255-byte maximum length of a string within a single TXT RR record. -- https://tools.ietf.org/html/rfc4408#section-3.1.3
 
 Generate the TXT-DATA field for DKIM TXT record
 ```sh
