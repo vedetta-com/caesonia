@@ -290,6 +290,11 @@ chown -R _rspamd:_dkimproxy /etc/ssl/dkim/private
 chmod 440 /etc/ssl/dkim/private/private.key
 ```
 
+Generate content for TXT records
+```sh
+echo "v=DKIM1; k=rsa; p=$(cat /etc/ssl/dkim/public.key | sed '1d' | sed '$d' | tr -d '\n')"
+```
+
 Primary and *virtual* domains have identical records type TXT for *selector._domainkey* subdomain with DKIM public key
 ```console
 obsd._domainkey.example.com	86400	IN	TXT	"v=DKIM1; k=rsa; p=M..."
