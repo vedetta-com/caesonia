@@ -301,7 +301,7 @@ echo "v=DKIM1; k=rsa; p=$(sed -e '1d' -e '$d' /etc/ssl/dkim/public.key | tr -d '
 
 Alternatively
 ```sh
-(umask 337; rspamadm dkim_keygen -d example.com -s 'obsd' -k /etc/ssl/dkim/private/private.key -b 2048 -t rsa > /etc/ssl/dkim/public.key)
+(umask 337; rspamadm dkim_keygen -d example.com -s 'obsd' -k /etc/ssl/dkim/private/private.key -b 2048 -t rsa) > /etc/ssl/dkim/public.key
 ```
 
 Primary and *virtual* domains have identical records type TXT for *selector._domainkey* subdomain with DKIM public key

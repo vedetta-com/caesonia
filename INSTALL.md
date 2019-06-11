@@ -437,9 +437,8 @@ vi /etc/mail/passwd
 
 Create the submission key:
 ```console
-doas -u vmail \
-	env -i HOME=/var/vmail \
-	gpg2 --batch --passphrase '' --quick-gen-key key-submission@example.com
+doas -u vmail /usr/local/bin/gpg2 --batch --passphrase "" \
+	--quick-gen-key key-submission@example.com
 ```
 
 Verify:
@@ -459,9 +458,8 @@ doas -u vmail \
 
 Publish the key, using the hash of the string "key-submission" (i.e. 54f6ry7x1qqtpor16txw5gdmdbbh6a73):
 ```console
-doas -u vmail \
-	env -i HOME=/var/vmail \
-	gpg2 -o /var/lib/gnupg/wks/example.com/hu/54f6ry7x1qqtpor16txw5gdmdbbh6a73 \
+doas -u vmail /usr/local/bin/gpg2 \
+	-o /var/lib/gnupg/wks/example.com/hu/54f6ry7x1qqtpor16txw5gdmdbbh6a73 \
 		--export-options export-minimal --export key-submission@example.com
 ```
 
