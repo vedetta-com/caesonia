@@ -414,10 +414,10 @@ chown -R vmail:vmail /var/lib/gnupg/wks
 cd /var/lib/gnupg/wks/example.com
 
 ln -sf /var/www/openpgpkey/hu .
-chown -h vmail:vmail hu
+chown -h root:vmail hu
 
 ln -s /var/www/openpgpkey/submission-address .
-chown -h vmail:vmail submission-address
+chown -h root:vmail submission-address
 
 doas -u vmail \
 	env -i HOME=/var/vmail \
