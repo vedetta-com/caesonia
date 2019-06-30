@@ -12,7 +12,7 @@ service replicator {
 }
 
 # Configure how and where to replicate
-dsync_remote_cmd = ssh -i/home/dsync/.ssh/id_rsa -l%{login} %{host} doveadm dsync-server -u%u
+dsync_remote_cmd = ssh -i/home/dsync/.ssh/id_rsa -l%{login} %{host} /usr/local/bin/doveadm dsync-server -u%u
 plugin {
   mail_replica = remote:dsync@hermes.example.com
 
