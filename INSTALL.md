@@ -137,8 +137,8 @@ ssh -6 -i/home/dsync/.ssh/id_rsa -ldsync hermes.example.com "exit"
 
 Download a recent [release](https://github.com/vedetta-com/caesonia/releases):
 ```console
-cd ~ && ftp https://github.com/vedetta-com/caesonia/archive/v6.4.0-beta.tar.gz
-tar -C ~ -xzf ~/v6.4.0-beta.tar.gz
+cd ~ && ftp https://github.com/vedetta-com/caesonia/archive/v6.5.0-beta.tar.gz
+tar -C ~ -xzf ~/v6.5.0-beta.tar.gz
 ```
 
 *n.b.*: to use [Git or SVN](https://help.github.com/articles/which-remote-url-should-i-use/):
@@ -214,7 +214,7 @@ sed -i 's/dsync\ //g' src/etc/pf.conf
 sed -i '/hermes/d' src/var/www/mta-sts/mta-sts.txt
 ```
 
-*n.b.*: Select the "backup" dispatcher in [`smtpd.conf`](https://github.com/vedetta-com/caesonia/blob/v6.4.0-beta/src/etc/mail/smtpd.conf) for Backup MX role: `action "mda" # "backup"`
+*n.b.*: Select the "backup" dispatcher in [`smtpd.conf`](https://github.com/vedetta-com/caesonia/blob/v6.5.0-beta/src/etc/mail/smtpd.conf) for Backup MX role: `action "mda" # "backup"`
 
 Update virtual users [credentials table](https://man.openbsd.org/table.5#Credentials_tables) [`src/etc/mail/passwd`](src/etc/mail/passwd) using [`smtpctl encrypt`](https://man.openbsd.org/smtpctl#encrypt):
 ```console
@@ -355,7 +355,7 @@ mv /etc/dovecot/conf.d/90-replication.conf.optional /etc/dovecot/conf.d/90-repli
 
 Install "changelist.local":
 ```console
-cp -p /etc/changelist /etc/changelist-6.4
+cp -p /etc/changelist /etc/changelist-6.5
 cat /etc/changelist.local >> /etc/changelist
 ```
 
