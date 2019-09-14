@@ -2,6 +2,7 @@
 *Open*BSD Email Service - Installation Guide
 
 * [OpenBSD Installation](#openbsd-installation)
+* [OpenBSD Configuration](#openbsd-configuration)
 * [Email Service Configuration](#email-service-configuration)
 * [Email Service Installation](#email-service-installation)
 * [Client Configuration](#client-configuration)
@@ -57,11 +58,6 @@ doas tmux
 shutdown -r now
 ```
 
-> If the console entry in the ttys([5](https://man.openbsd.org/ttys.5)) file does not contain the "secure" flag, then [init](https://man.openbsd.org/init.8#DESCRIPTION) will require that the superuser password be entered before the system will start a single-user shell.
-```console
-sed -i '/^console/s/ secure//' /etc/ttys
-```
-
 Verify if egress IP **matches** DNS record:
 ```console
 ping -vc1 \
@@ -76,6 +72,17 @@ ping6 -vc1 \
 Update [hostname.if](src/etc/hostname.vio0) and reset:
 ```console
 sh /etc/netstart $(ifconfig egress | while IFS=: read a b; do printf "%s" "$a" && break; done;)
+```
+
+Create [Makefile.local](README.md#getting-started) to customize the email service, and continue with the steps from [README.md](README.md#install) for a guided installation and configuration.
+
+Otherwise, please follow the instructions below on how to manually install and configure the email service.
+
+## OpenBSD Configuration
+
+> If the console entry in the ttys(5) file does not contain the "secure" flag, then init will require that the superuser password be entered before the system will start a single-user shell.
+```console
+sed -i '/^console/s/ secure//' /etc/ttys
 ```
 
 Install packages:
@@ -332,6 +339,13 @@ rcctl enable unbound
 rcctl restart unbound
 cp -p /etc/resolv.conf /etc/resolv.conf.old
 cp src/etc/resolv.conf /etc/
+```
+
+### Rspamd and Dovecot
+
+```console
+usermod -L rspamd _rspamd
+usermod -L dovecot _dovecot
 ```
 
 ### Sieve
