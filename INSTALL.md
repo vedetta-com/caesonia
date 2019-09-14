@@ -341,13 +341,6 @@ cp -p /etc/resolv.conf /etc/resolv.conf.old
 cp src/etc/resolv.conf /etc/
 ```
 
-### Rspamd and Dovecot
-
-```console
-usermod -L rspamd _rspamd
-usermod -L dovecot _dovecot
-```
-
 ### Sieve
 
 Compile sieve scripts:
