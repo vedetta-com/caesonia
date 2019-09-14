@@ -331,8 +331,6 @@ afterinstall:
 	user info -e dsync \
 		|| user add -u 2001 -g =uid -c "Dsync Replication" -s /bin/ksh -m dsync
 .endif
-	user mod -L dovecot _dovecot
-	user mod -L rspamd _rspamd
 	[[ -r ${BASESYSCONFDIR}/changelist-${RELEASE} ]] \
 		|| cp ${BASESYSCONFDIR}/changelist ${BASESYSCONFDIR}/changelist-${RELEASE}
 	sed -i '/changelist.local/,$$d' ${BASESYSCONFDIR}/changelist
