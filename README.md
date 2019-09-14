@@ -49,7 +49,7 @@ e.g. puffy@mercury.example.com is wheel, with an alias mapped to (virtual) puffy
 
 ## Getting started
 
-See the [**Installation Guide**](INSTALL.md) for details.
+See [**Prerequisites**](#prerequisites) and the [**Installation Guide**](INSTALL.md) for details.
 
 Grab a copy of this repository, and put overrides in "[Makefile](Makefile).local" e.g.:
 ```console
