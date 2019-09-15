@@ -9,6 +9,9 @@ if [ -O /etc/mtree/special.local -a \
 	mtree -e -p / -f /etc/mtree/special.local
 fi
 
+next_part "Checking packages:"
+pkg_add -su
+
 next_part "Let's Encrypt \"$(hostname)\":"
 acme-client -v $(hostname) && {
 	rcctl reload httpd dovecot
